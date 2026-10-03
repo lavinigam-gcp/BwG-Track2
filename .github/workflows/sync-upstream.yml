@@ -1,0 +1,112 @@
+name: Sync CE428 Lab Material & Skills
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Checks every 15 minutes (~2s when unchanged)
+  workflow_dispatch:       # Manual on-demand trigger via GitHub UI or `gh workflow run`
+  repository_dispatch:
+    types: [sync-ce428]
+
+concurrency:
+  group: sync-ce428-upstream
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_REPO: CloudVLab/gcp-ce-content
+  UPSTREAM_BRANCH: main
+  UPSTREAM_BASE_PATH: labs/ce428-build-with-google-track-2/terraform
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout BwG-Track2
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Compare upstream vs. local Git Tree SHAs (2s pre-check)
+        id: tree_check
+        env:
+          GH_TOKEN: ${{ secrets.UPSTREAM_PAT }}
+        run: |
+          set -euo pipefail
+
+          UPSTREAM_JSON=$(gh api "repos/${UPSTREAM_REPO}/contents/${UPSTREAM_BASE_PATH}?ref=${UPSTREAM_BRANCH}")
+
+          UPSTREAM_LAB_SHA=$(echo "$UPSTREAM_JSON" | jq -r '.[] | select(.name == "lab_material" and .type == "dir") | .sha')
+          UPSTREAM_SKILLS_SHA=$(echo "$UPSTREAM_JSON" | jq -r '.[] | select(.name == "skills" and .type == "dir") | .sha')
+
+          if [[ -z "$UPSTREAM_LAB_SHA" || -z "$UPSTREAM_SKILLS_SHA" ]]; then
+            echo "::error::Failed to resolve upstream tree SHAs from ${UPSTREAM_REPO}/${UPSTREAM_BASE_PATH}"
+            exit 1
+          fi
+
+          LOCAL_LAB_SHA=$(git rev-parse --verify -q HEAD:lab_material || echo "none")
+          LOCAL_SKILLS_SHA=$(git rev-parse --verify -q HEAD:skills || echo "none")
+
+          echo "lab_material -> upstream: ${UPSTREAM_LAB_SHA} | local: ${LOCAL_LAB_SHA}"
+          echo "skills       -> upstream: ${UPSTREAM_SKILLS_SHA} | local: ${LOCAL_SKILLS_SHA}"
+
+          if [[ "$UPSTREAM_LAB_SHA" == "$LOCAL_LAB_SHA" && "$UPSTREAM_SKILLS_SHA" == "$LOCAL_SKILLS_SHA" ]]; then
+            echo "Trees are 100% identical to ${UPSTREAM_REPO}@${UPSTREAM_BRANCH}. Skipping checkout."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changes detected on ${UPSTREAM_REPO}@${UPSTREAM_BRANCH}. Proceeding with sparse-checkout sync."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "upstream_lab_sha=${UPSTREAM_LAB_SHA}" >> "$GITHUB_OUTPUT"
+            echo "upstream_skills_sha=${UPSTREAM_SKILLS_SHA}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sparse-checkout lab_material and skills from gcp-ce-content
+        if: steps.tree_check.outputs.changed == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.UPSTREAM_REPO }}
+          ref: ${{ env.UPSTREAM_BRANCH }}
+          token: ${{ secrets.UPSTREAM_PAT }}
+          path: _upstream
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            ${{ env.UPSTREAM_BASE_PATH }}/lab_material
+            ${{ env.UPSTREAM_BASE_PATH }}/skills
+
+      - name: Sync folders and push to BwG-Track2 main
+        if: steps.tree_check.outputs.changed == 'true'
+        env:
+          EXPECTED_LAB_SHA: ${{ steps.tree_check.outputs.upstream_lab_sha }}
+          EXPECTED_SKILLS_SHA: ${{ steps.tree_check.outputs.upstream_skills_sha }}
+        run: |
+          set -euo pipefail
+
+          UPSTREAM_FULL_SHA=$(git -C _upstream rev-parse HEAD)
+          UPSTREAM_SHORT_SHA=$(git -C _upstream rev-parse --short HEAD)
+          UPSTREAM_SUBJECT=$(git -C _upstream log -1 --pretty=%s)
+
+          mkdir -p lab_material skills
+          rsync -av --delete "_upstream/${UPSTREAM_BASE_PATH}/lab_material/" "lab_material/"
+          rsync -av --delete "_upstream/${UPSTREAM_BASE_PATH}/skills/" "skills/"
+          rm -rf _upstream
+
+          git add lab_material skills
+
+          if git diff --cached --quiet; then
+            echo "No file changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(sync): update lab_material and skills from ${UPSTREAM_REPO}@${UPSTREAM_SHORT_SHA}" \
+                     -m "Upstream-Commit: ${UPSTREAM_FULL_SHA}" \
+                     -m "Upstream-Subject: ${UPSTREAM_SUBJECT}"
+
+          NEW_LAB_SHA=$(git rev-parse HEAD:lab_material)
+          NEW_SKILLS_SHA=$(git rev-parse HEAD:skills)
+          echo "Verified committed tree SHAs -> lab_material: ${NEW_LAB_SHA}, skills: ${NEW_SKILLS_SHA}"
+
+          git push origin HEAD:main
