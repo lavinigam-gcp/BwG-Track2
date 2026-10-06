@@ -18,7 +18,7 @@ Static checks on the file:
   - every "mN_stepK.txt L<n>" citation points at a line that exists in that evidence file
   - nothing a page must never show: service-account addresses, resource paths, agent-badge
     identifiers, role names, the project id or number, email addresses, customer IDs, and every
-    value in .build/mN_private.txt (written by show_facts.py)
+    value in .build/mN_private.txt (written by show_facts.py), the exposed discount code
 Render checks (headless Chromium):
   - no JavaScript error on load, or when each button is pressed once
   - no network request
@@ -60,6 +60,7 @@ LEAKS = [
     ),
     ("long number (project number or resource id)", r"(?<![\d.])\d{12,}(?![\d.])"),
     ("customer ID", r"\bCUST-\d+"),
+    ("the exposed discount code (say 'the exposed discount code')", r"\bNVST-[A-Z]+-\d+"),
     # prose names only: API identifiers such as reasoningEngines.query in a quoted log line are allowed
     ("old product name (say Agent Runtime)", r"(?i)reasoning[ -]engines?\b|agent engine|vertex ai|managed agent runtime"),
     ("reworded or invented API text (quote it exactly or drop it)",

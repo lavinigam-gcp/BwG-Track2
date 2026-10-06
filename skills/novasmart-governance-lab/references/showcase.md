@@ -2,9 +2,11 @@
 
 > Read this file **and the module's recipe file** — `showcase-m0.md` for **M0 Step 7 · Show what you
 > found**, `showcase-m1.md` for **M1 Step 7 · Show what you changed**, `showcase-m2.md` for **M2 Step 7 ·
-> Show what you controlled** — at every Show prompt, before you build. `../SKILL.md` and the module's
-> `mN.md` still apply; this file replaces the answer blocks with the short shape in §7. Below, `N` is the
-> module number and "the recorded steps" are M0 Steps 1–4, or M1 or M2 Steps 1–5.
+> Show what you controlled**, `showcase-m3.md` for **M3 Step 7 · Show what you screened**, `showcase-m4.md`
+> for **M4 Step 5 · Show what you measured** (read "Step 7" below as Step 5 there) — at every Show prompt,
+> before you build. `../SKILL.md` and the module's `mN.md` still apply; this file replaces the answer blocks
+> with the short shape in §7. Below, `N` is the module number and "the recorded steps" are M0 Steps 1–4,
+> M1-M3 Steps 1–5, or M4 Steps 1–4.
 >
 > ⛔ **Nothing in the estate changes, and no estate command runs** — no `gcloud`, `curl` or `bq`. Every
 > page is built from what the recorded steps already wrote down.
@@ -91,11 +93,11 @@ labels, rings, bars, timelines. Draw simple SVG icons; emoji are not icons.
 **How it looks.** It should look designed, not like a document.
 - **White page, edge to edge** — presentations and games too; never a dark background or slide frame.
   Text `#202124`, secondary text `#5F6368`, hairlines `#DADCE0`, panel fill `#F8F9FA`.
-- **Colour means the same thing on every page:** blue `#4285F4` listed, known, normal · green `#34A853`
+- **Color means the same thing on every page:** blue `#4285F4` listed, known, normal · green `#34A853`
   changed for the better, confirmed in a re-read · yellow `#FBBC05` an inference, a caution, something
   shared · red `#EA4335` a gap: unlisted, shared, refused · gray `#9AA0A6` not run yet, not read,
-  unknown. For text in those colours use `#1A73E8`, `#188038`, `#B06000`, `#C5221F`. Colour is never the
-  only signal: every coloured thing also carries a word.
+  unknown. For text in those colors use `#1A73E8`, `#188038`, `#B06000`, `#C5221F`. Color is never the
+  only signal: every colored thing also carries a word.
 - Type: `font-family: "Google Sans", Roboto, Arial, sans-serif`; identifiers in monospace. Hero title
   40–48 px, panel headings 22–26 px, body 16 px, nothing under 13 px.
 - **A hero band** first: the module tag (*Module 0 · See Everything*), a title, the one-sentence takeaway,

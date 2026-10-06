@@ -2,8 +2,8 @@
 """
 show_facts.py - the fact sheet a module's Show step builds from.
 
-The Show step (M0, M1 and M2 Step 7) turns the module's recorded work into a page. Its only source is the
-module's evidence files, but those are large (one step's entry can run past 60 KB) and a command's
+The Show step (M0-M3 Step 7, M4 Step 5) turns the module's recorded work into a page. Its only source
+is the module's evidence files, but those are large (one step's entry can run past 60 KB) and a command's
 printed output is cut to its last few KB, so `cat` cannot re-read them. This script reads the LATEST
 entry of each recorded step file and writes one compact fact sheet:
 
@@ -20,6 +20,8 @@ every email address, customer record values). show_check.py reads it.
 Usage:   python3 show_facts.py 0     (Module 0: Steps 1-4)
          python3 show_facts.py 1     (Module 1: Steps 1-5)
          python3 show_facts.py 2     (Module 2: Steps 1-5)
+         python3 show_facts.py 3     (Module 3: Steps 1-5; Step 6 What's next has no file)
+         python3 show_facts.py 4     (Module 4: Steps 1-4)
 Reads only files under /config/Desktop/novasmart-evidence/. Runs no cloud command, changes nothing.
 """
 
@@ -34,7 +36,7 @@ HOME_DIR = os.environ.get("NOVASMART_SHOW_HOME", "/config")
 EVIDENCE_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-evidence")
 BUILD_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-showcase", ".build")
 
-STEPS = {0: [1, 2, 3, 4], 1: [1, 2, 3, 4, 5], 2: [1, 2, 3, 4, 5]}
+STEPS = {0: [1, 2, 3, 4], 1: [1, 2, 3, 4, 5], 2: [1, 2, 3, 4, 5], 3: [1, 2, 3, 4, 5], 4: [1, 2, 3, 4]}
 STEP_TITLES = {
     0: {
         1: "Check your environment",
@@ -56,6 +58,19 @@ STEP_TITLES = {
         4: "Prove the rogue caller is out",
         5: "Lock down what the back office can reach and do",
     },
+    3: {
+        1: "See if the agents can be talked into breaking their rules",
+        2: "See what is screening messages today",
+        3: "Turn the screening on",
+        4: "Prove the attacks are blocked",
+        5: "Sum up what you can actually claim",
+    },
+    4: {
+        1: "Run the evaluation and read the scorecard",
+        2: "Build a tougher set and run it",
+        3: "See the fix before you make it",
+        4: "Make the change and see what is actually running",
+    },
 }
 
 # What each module's What's next step says is still open: the only wording a page or answer may use
@@ -67,6 +82,20 @@ STILL_OPEN = {
     2: "Cloud permissions stack, and a handful of broad project-wide roles still carry the ability to call "
     "any agent in the project. Closing the back office's own list did not touch those. M3 · Protect the "
     "Content is where you screen what customers can talk your agents into.",
+    # M3: quoted from m3-instructions.md Step 6 · What's next (its remaining-work sentences and the M4 line).
+    3: "The customer-record attack still works, because that agent is not behind the door and this screen "
+    "cannot reach it. The screen is set to fail open, so a screen that cannot run lets everything through "
+    "without a sound. And the discount code sitting in plain text in the storefront is untouched. M4 · "
+    "Evaluate and Decide (Optional Module) is where you stop spot-checking and start measuring: run the "
+    "agent against a full scenario set — the deals it should settle, the ones it should escalate, the ones "
+    "it should refuse, and the traps it should catch — and read the score before you roll it out to every "
+    "store.",
+    # M4: quoted from m4-instructions.md "See it in the console" (M4 is the last module, so this is what it
+    # leaves open).
+    4: "Its entry is the one the earlier modules left. Nothing here changed it: not the scorecards, not the "
+    "tougher set, and not the wording change, which exists only in the folder on this workstation. Getting "
+    "that change in front of a customer means a deployment, and that is a separate decision with a separate "
+    "owner.",
 }
 
 # JSON leaf keys worth a page: names, identities, times, columns, access, statuses.
@@ -139,12 +168,51 @@ CUSTOMER_HINTS = {
     "lifetime_value",
     "last_purchase_date",
 }
+# Extra leaf keys per module: M3's gateway attach, extension and filter settings and the blocked
+# reply; M4's per-case evaluation fields (a judge's numeric score is left out: no page shows one).
+KEEP_EXTRA = {
+    3: {
+        "agentGateway",
+        "failOpen",
+        "service",
+        "action",
+        "resources",
+        "filterEnforcement",
+        "confidenceLevel",
+        "filterType",
+        "customPromptSafetyErrorCode",
+        "customPromptSafetyErrorMessage",
+        "customResponseSafetyErrorCode",
+        "customResponseSafetyErrorMessage",
+        "logSanitizeOperations",
+        "matchState",
+        "filterMatchState",
+        "invocationResult",
+    },
+    4: {
+        "prompt",
+        "request",
+        "reference",
+        "response",
+        "final_response",
+        "expected_response",
+        "explanation",
+        "error",
+        "case_id",
+        "eval_case_id",
+        "eval_id",
+        "metric",
+        "metric_name",
+        "judge_model",
+    },
+}
 TEXT_HEAD, TEXT_TAIL, TEXT_MAX = 25, 10, 40
 ANSI = re.compile(r"\x1b\[[0-9;]*m|\[[0-9;]*m(?=\S)")
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
 PROJECT_ID = re.compile(r"qwiklabs-gcp-[0-9a-z-]+[0-9a-z]")
 PROJECT_NUM = re.compile(r"projects/(\d{10,14})\b")
 CUST_ID = re.compile(r"\bCUST-\d+\b")
+SECRET_CODE = re.compile(r"\bNVST-[A-Z]+-\d+\b")  # the exposed discount code (M3, M4): never on a page
 
 private = set()
 
@@ -179,10 +247,22 @@ def scan_private(text):
         private.add(m.group(1))
     for m in CUST_ID.finditer(text):
         private.add(m.group(0))
+    for m in SECRET_CODE.finditer(text):
+        private.add(m.group(0))
 
 
 def is_customer_record(d):
     return isinstance(d, dict) and len(CUSTOMER_HINTS & set(d)) >= 2
+
+
+def has_customer_record(node):
+    if is_customer_record(node):
+        return True
+    if isinstance(node, dict):
+        return any(has_customer_record(v) for v in node.values())
+    if isinstance(node, list):
+        return any(has_customer_record(v) for v in node)
+    return False
 
 
 def collect_customer_values(node):
@@ -282,6 +362,13 @@ def try_json(block, i):
     head = block[i][1].strip()
     if not head or head[0] not in "[{":
         return None, i
+    if head[-1] in "]}":
+        try:
+            one = json.loads(head)
+        except ValueError:
+            one = None
+        if has_customer_record(one):
+            return one, i  # a one-line JSON value holding customer records: withhold their values
     indent = len(block[i][1]) - len(block[i][1].lstrip())
     for j in range(i, len(block)):
         t = block[j][1]
@@ -340,7 +427,7 @@ def render_output(block, out):
                 i += 1
                 continue
         obj, j = try_json(block, i)
-        if obj is not None and j > i:
+        if obj is not None and j >= i:
             flush()
             render_json(obj, block[i][0], block[j][0], out)
             i = j + 1
@@ -407,9 +494,10 @@ def render_entry(lines, first_no, out, brief=False):
 
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ("0", "1", "2"):
+    if len(sys.argv) != 2 or sys.argv[1] not in [str(k) for k in STEPS]:
         sys.exit(__doc__)
     mod = int(sys.argv[1])
+    KEEP.update(KEEP_EXTRA.get(mod, ()))
     edir = os.path.join(EVIDENCE_DIR, f"m{mod}")
     os.makedirs(BUILD_DIR, exist_ok=True)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -481,7 +569,7 @@ def main():
         )
     print(
         f"Never on a page: {len(private)} values (project id and number, email addresses, customer "
-        f"record values) in {priv}; show_check.py checks the page against them."
+        f"record values, the exposed discount code) in {priv}; show_check.py checks the page against them."
     )
     print(
         "\nThis turn, before you build (showcase.md):\n"

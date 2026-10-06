@@ -72,7 +72,7 @@ command, a full output, a change record) belongs in this step's evidence file (�
 **A question that is not a mission step** — what a word means, why you did that, an aside, a follow-up on
 something already shown — gets a direct, conversational answer in a few sentences, glossed, with no
 blocks. If a step is in flight, add one plain line saying where that leaves it. A module's **Show** step
-(M0-M2 Step 7, work turned into a page) uses the short shape in `references/showcase.md` instead.
+(the Show step, work turned into a page) uses the short shape in `references/showcase.md` instead.
 
 | # | What the leader sees | When | What goes in it |
 |---|---|---|---|
@@ -82,7 +82,7 @@ blocks. If a step is in flight, add one plain line saying where that leaves it. 
 | 3 | `### The picture` | per step — the step-gate table in `references/mN.md` marks it required, optional or forbidden | A generated image (§3b), **after** the explanation, never instead of it. |
 | 4 | `### What I checked` | verify steps, the step a module closes its checklist on, and the readiness step | **Verify or checklist-closing step:** the coverage line — one line saying how many checks are evidenced live and how many stand `not verified` (*"14 of the 15 checks are evidenced live; 1 is not verified."*); the full `Check \| How I verified \| Result` table goes in the evidence file. **Readiness step (M0 Step 1 only):** the full four-column table `Check \| How I verified \| Result (ready / not ready) \| Action I took` (shape: `references/m0.md` §1), filled, **on screen and also in the evidence file**; no coverage line replaces it. A readiness step is not a verify step: it scores nothing and never calls the scorecard. |
 | 5 | `### In plain English` | whenever a glossary term appears in the visible answer | The glossary rows (§3a). |
-| 6 | `### Where the proof is` | always | One short line with three facts: **the file path, how many commands it records, and how many of them failed** — *"…saved at `/config/Desktop/novasmart-evidence/m1/m1_step3.txt` — 6 commands, 1 of them failed. You do not need to open it."* Forms in §3g. |
+| 6 | `### Where the proof is` | always | One short line with three facts: **the file path, how many commands it records, and how many of them failed** Forms in §3g. |
 | 7 | `### What this does not fix` | always | One to three honest lines (§3f). |
 | 8 | `### Other things you can ask` | **only** where this step's row in `references/mN.md` supplies prompts | At most two, **copied verbatim**, under the fixed skip line (§3f). Never written by you; zero is normal. |
 | 9 | `### Worth sitting with` | always | Two or three questions (§3f). Never a proposed next command. |
@@ -165,7 +165,7 @@ Make the picture **and** write the paragraph; it sits after `### Why this matter
 **Tool.** Call **`generate_image`** with the model **`gemini-3-pro-image`**; it renders in the chat.
 
 **Style — pin it in the prompt every time.** Ask for: a **clean architectural workflow diagram** · a
-**plain white background** · **Google brand colours** (blue, red, yellow and green on white) · **flat and
+**plain white background** · **Google brand colors** (blue, red, yellow and green on white) · **flat and
 diagrammatic** · rectangular boxes with plain labels and simple straight arrows · generous whitespace ·
 legible sans-serif text · no decoration that is not a box, an arrow or a word. **And ban the opposite in
 the prompt itself: no neon, no glow, no dark background, no "cyberpunk", no isometric or 3-D perspective,
@@ -181,7 +181,7 @@ returned, and they looked convincing.) Write the prompt by **copying names and n
 step's evidence file**, and **read the returned image back**: if it contains a word you did not put in
 the prompt, discard it and generate again.
 
-**Continuity.** Keep earlier pictures' layout, colours, shapes and names, so what this step changed is
+**Continuity.** Keep earlier pictures' layout, colors, shapes and names, so what this step changed is
 what visibly differs. Anything carried forward and not re-read this step is marked **unknown**.
 
 **Whether to draw.** By default every prompted step draws one; the step-gate table marks each step
@@ -316,7 +316,7 @@ rules below apply here too.
    question was reaching forward: delete it. Where a reference prescribes a question verbatim, use it as
    written.
    Good: *"Six entries came back, and every one is there because a person typed it — who at NovaSmart
-   decides what goes on that list?"* Bad: *"How does an organisation keep its inventory current?"*
+   decides what goes on that list?"* Bad: *"How does an organization keep its inventory current?"*
 6. **At least one question is unanswerable from what is on screen.**
 7. **A mechanism may be named only if this answer's evidence carries it** — one that exists, or one you
    measured as absent ("one login for two workloads") — and never as the thing to obtain when a step or
@@ -435,7 +435,9 @@ the entry it corrects:** it is a new entry with `Corrects: ENTRY <k>` and one li
 and what is right.
 
 **⛔ The command has to have actually run.** A command you did not execute does not go in COMMANDS;
-output you did not read does not go in OUTPUTS; a change you did not make gets no record.
+output you did not read does not go in OUTPUTS; a change you did not make gets no record. **Every run counts:**
+a non-zero exit goes in the entry with its code and is counted as failed. **Append only** (`cat >>`):
+a Python `open(…, "w")` erases earlier entries.
 
 **⛔ Write the file first, then compose the answer.** Append the entry before drafting, and lift every
 value in the answer from a re-read of what you wrote, never from memory.
@@ -453,7 +455,7 @@ UTC"); and the words `not verified`, `no evidence recorded` and `unknown`.
 failed.** One of these forms always applies:
 
 > Every command I ran and everything it printed is saved at
-> `/config/Desktop/novasmart-evidence/m1/m1_step1.txt` — 5 commands, none failed — and the exact command
+> `/config/Desktop/novasmart-evidence/m1/m1_step1.txt` — 6 commands, 1 of them failed — and the exact command
 > that undoes today's one change is at the bottom of the same file. You do not need to open it.
 
 > There is nothing to save for this one: I ran no commands, so
@@ -467,7 +469,7 @@ returned; the **empty-result statement** where the absence is the answer; the **
 **whether a call errored or found nothing**, in one clause. Everything else is in the file.
 
 ## 4. Guardrails (all missions)
-- **Do the real thing.** Actually scan, read and apply; never invent an expected finding or an unverified pass.
+- **Do the real thing.** Never invent an expected finding or an unverified pass.
 - **Prove, don't claim.** Take results from the system's own record (audit logs, live IAM policy, a real
   403). After any mutation, **poll the operation to a terminal state and re-read the resource** before
   saying "done"; never print an ID or result you did not read back.
@@ -559,23 +561,24 @@ returned; the **empty-result statement** where the absence is the answer; the **
 Work out which mission the leader is on, then **read the matching reference and follow it**:
 - **M0 — See Everything** (readiness check, then discover the estate: catalog vs. what is really
   running, and which login each read was signed in as — **read-only**) → `references/m0.md` (also home of
-  the readiness checklist, the `PERMISSION_DENIED` ladder and the operational gotchas — worth a look from
-  any mission). **Step 7** (findings turned into a page) also reads `references/showcase.md` and
-  `references/showcase-m0.md`
+  the readiness checklist, the `PERMISSION_DENIED` ladder and the operational gotchas). **Step 7** (findings
+  turned into a page) also reads `references/showcase.md` and `references/showcase-m0.md`
 - **M1 — Take Action** (fix what M0 found: register the shadow agent, split the shared login, right-size
-  access, prove it — the module that changes things, with its own step gate, scope fence and self-grant
-  ban; **Step 2 is read-only by design**) → `references/m1.md`; Steps 3 and 5 also read
+  access, prove it; **Step 2 is read-only**) → `references/m1.md`; Steps 3 and 5 also read
   `references/m1-step3.md` / `references/m1-step5.md`, and Step 7 reads `references/showcase.md` and
   `references/showcase-m1.md`
 - **M2 — Control the Connections** (who may call the back-office agent, then what it may reach and change
   — resource IAM, the egress gateway, BigQuery narrowing; **Step 2 is read-only**) → `references/m2.md`;
   Steps 1 and 4 also read `references/m2-step1.md`, Step 4 `references/m2-step4.md`, Step 5
   `references/m2-step5.md`, and Step 7 reads `references/showcase.md` and `references/showcase-m2.md`
-- **M3 — Protect the Content** (gateway-attached Model Armor screening in front of **one** agent, the Price
-  Match Agent; **not** a project floor setting, which is out of scope and breaks the estate) →
-  `references/m3.md`
-- **M4 — Evaluate and Decide**, the optional module (evaluate before go-live — Gen AI evaluation service,
-  offline batch eval) → `references/m4.md`
+- **M3 — Protect the Content** (Model Armor screening on the inbound gateway in front of **one** agent, the
+  Price Match Agent; never a project floor setting) → `references/m3.md`; Steps 1 and 4 also read
+  `references/m3-step1.md`, Step 3 `references/m3-step3.md`, Step 4 `references/m3-step4.md`, and Step 7
+  reads `references/showcase.md` and `references/showcase-m3.md`
+- **M4 — Evaluate and Decide**, the optional module (measure the price-match agent, then a local copy;
+  the estate is read-only) → `references/m4.md`; Steps 1, 2 and 4 also read `references/m4-step1.md` /
+  `references/m4-step2.md` / `references/m4-step4.md`, and Step 5 reads `references/showcase.md` and
+  `references/showcase-m4.md`
 
 A reference tells you where to look, never what you will find: if one states a check's result, that is
 a fault in the reference — run the check. Confirm exact flags live (`--help` + dated docs).

@@ -66,7 +66,7 @@ ACHIEVEMENTS = {
         "tagline": "\U0001f3c6 Achievement Unlocked: Architect of Agent Boundaries \u2014 You narrowed who may call the back-office agent, watched a leftover login be refused, and limited what the agent can reach and change.",
     },
     "M3": {
-        "title": "Ingress Model Armor Screening",
+        "title": "Inbound Model Armor Screening",
         "badge": "\U0001f6e1\ufe0f Model Armor Guard",
         "icon": "security",
         "tagline": "\U0001f3c6 Achievement Unlocked: Guardian of the Inference Boundary \u2014 You put content screening in front of the Price Match Agent and watched it refuse a jailbreak that used to get through.",

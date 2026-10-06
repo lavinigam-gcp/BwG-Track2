@@ -14,7 +14,7 @@ M0 was a look. These rules come from `m0.md` and bind every page.
   locations counts once and is drawn once, marked as listed in both. Give the per-location counts and the
   distinct total as separate, labelled figures. Spell names as the catalog returns them.
 - **Built-ins** — Google's own entries that NovaSmart did not deploy — get **one plain sentence**. Never a
-  group, colour, legend, column or "(Built-in)" tag of their own: draw them exactly like the other catalog
+  group, color, legend, column or "(Built-in)" tag of their own: draw them exactly like the other catalog
   entries, with Step 3's verdict. Never a finding, a gap or a risk.
 - **What runs (Step 3)** = the Agent Runtime agents plus the agent on Cloud Run. `novasmart-mcp` (the tool
   layer), `novasmart-store-portal` (the store website) and `remote-browser-*` (the lab workstation) are not
