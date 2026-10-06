@@ -1,0 +1,35 @@
+# Local environment, credentials, and secrets
+.env
+.env.*
+*.pem
+*.key
+*credentials*.json
+.gcloud/
+
+# Internal/local workflow notes, custom lab links, and scratch files
+*links*
+custom-*
+local-*
+notes/
+scratch/
+*.local.*
+.lavi-working/
+_upstream*/
+
+# Internal diagram generation specs
+lab_material/images/specs/
+
+# Python / Node / runtime artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
