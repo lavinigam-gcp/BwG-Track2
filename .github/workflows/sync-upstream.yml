@@ -16,7 +16,7 @@ permissions:
 
 env:
   UPSTREAM_REPO: CloudVLab/gcp-ce-content
-  UPSTREAM_BRANCH: main
+  UPSTREAM_BRANCH: ce428-version-2-feat1
   UPSTREAM_BASE_PATH: labs/ce428-build-with-google-track-2/terraform
 
 jobs:
