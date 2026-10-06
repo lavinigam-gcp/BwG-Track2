@@ -2,7 +2,7 @@
 """
 show_facts.py - the fact sheet a module's Show step builds from.
 
-The Show step (M0 and M1 Step 7) turns the module's recorded work into a page. Its only source is the
+The Show step (M0, M1 and M2 Step 7) turns the module's recorded work into a page. Its only source is the
 module's evidence files, but those are large (one step's entry can run past 60 KB) and a command's
 printed output is cut to its last few KB, so `cat` cannot re-read them. This script reads the LATEST
 entry of each recorded step file and writes one compact fact sheet:
@@ -19,6 +19,7 @@ every email address, customer record values). show_check.py reads it.
 
 Usage:   python3 show_facts.py 0     (Module 0: Steps 1-4)
          python3 show_facts.py 1     (Module 1: Steps 1-5)
+         python3 show_facts.py 2     (Module 2: Steps 1-5)
 Reads only files under /config/Desktop/novasmart-evidence/. Runs no cloud command, changes nothing.
 """
 
@@ -33,7 +34,7 @@ HOME_DIR = os.environ.get("NOVASMART_SHOW_HOME", "/config")
 EVIDENCE_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-evidence")
 BUILD_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-showcase", ".build")
 
-STEPS = {0: [1, 2, 3, 4], 1: [1, 2, 3, 4, 5]}
+STEPS = {0: [1, 2, 3, 4], 1: [1, 2, 3, 4, 5], 2: [1, 2, 3, 4, 5]}
 STEP_TITLES = {
     0: {
         1: "Check your environment",
@@ -48,6 +49,13 @@ STEP_TITLES = {
         4: "Cut off what shouldn't have access",
         5: "Prove it worked",
     },
+    2: {
+        1: "See who can call the back office",
+        2: "See what locking it down would cost",
+        3: "Lock it to the front desk",
+        4: "Prove the rogue caller is out",
+        5: "Lock down what the back office can reach and do",
+    },
 }
 
 # What each module's What's next step says is still open: the only wording a page or answer may use
@@ -55,7 +63,10 @@ STEP_TITLES = {
 STILL_OPEN = {
     0: "register the shadow agent, give each agent its own identity, and scope its access down to "
     "what its job actually needs (Module 1)",
-    1: "who may call whom, starting with who may call the back-office margin agent (Module 2)",
+    1: "who may call whom, starting with who is allowed to call that back-office margin agent (Module 2)",
+    2: "Cloud permissions stack, and a handful of broad project-wide roles still carry the ability to call "
+    "any agent in the project. Closing the back office's own list did not touch those. M3 · Protect the "
+    "Content is where you screen what customers can talk your agents into.",
 }
 
 # JSON leaf keys worth a page: names, identities, times, columns, access, statuses.
@@ -396,7 +407,7 @@ def render_entry(lines, first_no, out, brief=False):
 
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ("0", "1"):
+    if len(sys.argv) != 2 or sys.argv[1] not in ("0", "1", "2"):
         sys.exit(__doc__)
     mod = int(sys.argv[1])
     edir = os.path.join(EVIDENCE_DIR, f"m{mod}")
@@ -478,7 +489,7 @@ def main():
         "  - Data block first; write the page with write_to_file; run show_check.py until RESULT: clean;\n"
         "    then open every screenshot it lists and fix what looks wrong.\n"
         "  - Nothing beyond the files on the page or in the answer, and no recommendation of your own.\n"
-        f"  - Still open, on the page and in the answer, in these words only: {STILL_OPEN[mod]}."
+        f"  - Still open, on the page and in the answer, in these words only: {STILL_OPEN[mod].rstrip('.')}."
     )
 
 

@@ -178,7 +178,7 @@ The read at 19:23:22 UTC has a blank `principalEmail` and the badge in `principa
 | Guardrail | No change; no identifiers, project ID, email address or customer value on the page |
 | Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m1_identity_map.html` |
 
-**Why it matters:** an evidence file can be too long to re-read in one command, so the fact sheet copies the latest entry of each step with its line numbers, and the check renders the page so agy looks at it before answering.
+**Why it matters:** an evidence file can be too long to re-read in one command, so the fact sheet copies the latest entry of each step with its line numbers, and the check renders the page so agy looks at it before answering. In a later run on October 5, agy built all five pages, 27 to 44 KB each, and each passed the check.
 
 *Optional prompts:* the three "Try this too" questions were answered read-only and logged to `m1_other.txt`; nothing changed.
 

@@ -10,7 +10,12 @@ Usage (run exactly like this, so Chromium is found):
 Static checks on the file:
   - one self-contained file: no script, style, font or image fetched from the network
   - the page's facts sit in <script type="application/json" id="evidence">, and it parses
-  - no emoji standing in for icons (draw SVG icons)
+  - no role names (bigquery.admin, aiplatform.user ...); every <svg> has role="img"; no <select>;
+    no reworded API text; no roadmap/remediation; every HH:MM:SS time is in the fact sheet; the fact sheet
+    is newer than the other pages (re-run show_facts.py per page); white page, Google Sans, labels >= 11 px
+  - no emoji standing in for icons (draw SVG icons); no clickable <div>; prefers-reduced-motion honoured
+    when anything moves; a Play button comes with Pause and Step
+  - every "mN_stepK.txt L<n>" citation points at a line that exists in that evidence file
   - nothing a page must never show: service-account addresses, resource paths, agent-badge
     identifiers, role names, the project id or number, email addresses, customer IDs, and every
     value in .build/mN_private.txt (written by show_facts.py)
@@ -35,6 +40,9 @@ import sys
 
 HOME_DIR = os.environ.get("NOVASMART_SHOW_HOME", "/config")
 BUILD_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-showcase", ".build")
+EVIDENCE_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-evidence")
+CITE = re.compile(r"(m\d)_(step\d+|other)\.txt\W{0,3}L(\d+)(?:\s*[-–]\s*L?(\d+))?")
+CLICK_DIV = re.compile(r"<(div|span|li|td|tr|article|section|p|img|svg|g|rect)\b[^>]*\sonclick\s*=", re.I)
 
 LEAKS = [
     (
@@ -52,7 +60,16 @@ LEAKS = [
     ),
     ("long number (project number or resource id)", r"(?<![\d.])\d{12,}(?![\d.])"),
     ("customer ID", r"\bCUST-\d+"),
-    ("old product name (say Agent Runtime)", r"(?i)reasoning[ -]?engines?|agent engine|vertex ai|managed agent runtime"),
+    # prose names only: API identifiers such as reasoningEngines.query in a quoted log line are allowed
+    ("old product name (say Agent Runtime)", r"(?i)reasoning[ -]engines?\b|agent engine|vertex ai|managed agent runtime"),
+    ("reworded or invented API text (quote it exactly or drop it)",
+     r"Permission to query agent denied|\bagentruntime\.|AgentExecutionService"),
+    ("a plan or remedy of your own (no roadmap, remediation or action items)",
+     r"(?i)\broadmap\b|\bremediat\w*|\bAction:"),
+    ("role name (say what it lets you do)",
+     r"\b(?:bigquery|aiplatform|iap|storage|run|logging|resourcemanager)\.(?:admin|user|jobUser|dataViewer|"
+     r"dataEditor|dataOwner|viewer|egressor|invoker|objectViewer|objectAdmin|expressUser|securityAdmin|"
+     r"agentContextEditor)\b"),
 ]
 EXTERNAL = re.compile(
     r"""(?:\b(?:src|href)\s*=\s*["']?|url\(\s*["']?|@import\s+["']?)(?:https?:)?//(?!localhost|127\.0\.0\.1)""",
@@ -93,6 +110,32 @@ def static_checks(path, html, problems, notes):
         except ValueError as e:
             problems.append(f"evidence block does not parse as JSON: {e}")
 
+    lengths = {}
+    bad_cites = []
+    for m in CITE.finditer(html):
+        mod, step, lo, hi = m.group(1), m.group(2), int(m.group(3)), int(m.group(4) or m.group(3))
+        f = os.path.join(EVIDENCE_DIR, mod, f"{mod}_{step}.txt")
+        if f not in lengths:
+            lengths[f] = (sum(1 for _ in open(f, encoding="utf-8", errors="replace"))
+                          if os.path.isfile(f) else 0)
+        if not lengths[f] or max(lo, hi) > lengths[f]:
+            bad_cites.append(f"{mod}_{step}.txt L{lo}" + (f"-L{hi}" if hi != lo else "")
+                             + (f" (the file has {lengths[f]} lines)" if lengths[f] else " (no such file)"))
+    for c in sorted(set(bad_cites))[:5]:
+        problems.append(f"cites {c} - cite only lines the fact sheet shows")
+    for m in list(CLICK_DIV.finditer(html))[:3]:
+        problems.append(f"line {line_of(html, m.start())}: a clickable <{m.group(1)}> - use a <button> so "
+                        "the keyboard reaches it")
+    svgs = len(re.findall(r"<svg\b", html, re.I))
+    labelled = len(re.findall(r"<svg\b[^>]*role\s*=\s*[\"']img[\"']", html, re.I))
+    if svgs and labelled < svgs:
+        problems.append(f"{svgs - labelled} of {svgs} <svg> drawings lack role=\"img\" (add it and a <title>)")
+    if re.search(r"<select\b", html, re.I):
+        problems.append("a <select> dropdown - use buttons the viewer can press")
+    if re.search(r"transition\s*:|@keyframes|animation\s*:|\.animate\(", html) and \
+            "prefers-reduced-motion" not in html:
+        problems.append("the page moves but never checks prefers-reduced-motion - honour it")
+
     for m in EXTERNAL.finditer(html):
         problems.append(
             f"line {line_of(html, m.start())}: fetches from the network "
@@ -129,6 +172,22 @@ def static_checks(path, html, problems, notes):
                 f"never-on-a-page list: {v!r}"
             )
         notes.append(f"private list: {len(values)} values checked, {len(found)} found")
+        facts_file = os.path.join(BUILD_DIR, f"{mod}_facts.txt")
+        if os.path.isfile(facts_file):
+            facts = open(facts_file, encoding="utf-8", errors="replace").read()
+            text = re.sub(r"<script\b(?![^>]*application/json)[^>]*>.*?</script>|<style\b.*?</style>", " ",
+                          html, flags=re.S | re.I)
+            odd = sorted({t for t in re.findall(r"\b\d{2}:\d{2}:\d{2}\b", text) if t not in facts})
+            for t in odd[:5]:
+                problems.append(f"time {t} is not in the fact sheet - an event with no recorded time gets no time")
+            newer = [os.path.basename(f) for f in
+                     (os.path.join(os.path.dirname(os.path.abspath(path)), n)
+                      for n in os.listdir(os.path.dirname(os.path.abspath(path))))
+                     if os.path.basename(f).startswith(mod + "_") and f.endswith(".html")
+                     and os.path.abspath(f) != os.path.abspath(path)
+                     and os.path.getmtime(f) > os.path.getmtime(facts_file)]
+            if newer:
+                problems.append(f"the fact sheet is older than {newer[0]} - run show_facts.py again for this page")
     else:
         notes.append(f"private list: {priv_file} not found - run show_facts.py first")
 
@@ -195,6 +254,25 @@ def render_checks(path, html, poster, problems, notes):
 
             # Press each visible button once and watch for errors.
             pg, errors, _ = open_page(1440, 900)
+            look = pg.evaluate("""() => {
+              const bg = e => getComputedStyle(e).backgroundColor;
+              const tiny = [...document.querySelectorAll('svg text')]
+                .filter(t => { const r = t.getBoundingClientRect(); return r.height > 0 && r.height < 11; }).length;
+              return {html: bg(document.documentElement), body: bg(document.body),
+                      font: getComputedStyle(document.body).fontFamily, tiny};
+            }""")
+            if look["body"] not in ("rgb(255, 255, 255)", "rgba(0, 0, 0, 0)") or \
+                    look["html"] not in ("rgb(255, 255, 255)", "rgba(0, 0, 0, 0)"):
+                problems.append(f"the page is not white edge to edge (html {look['html']}, body {look['body']})")
+            if "google sans" not in look["font"].lower():
+                problems.append(f'the body font is {look["font"]!r} - use "Google Sans", Roboto, Arial, sans-serif')
+            if look["tiny"] > 3:
+                problems.append(f"{look['tiny']} diagram labels render under 11 px tall - enlarge them")
+            labels = [t.strip().lower() for t in pg.locator("button").all_inner_texts()]
+            if any(re.search(r"\b(play|replay)\b(?!\s+again)", t) for t in labels) and not (
+                any("pause" in t for t in labels) and any("step" in t for t in labels)
+            ):
+                problems.append("a Play button without Pause and Step buttons - add both")
             buttons = pg.locator("button:visible")
             count = min(buttons.count(), 25)
             for i in range(count):

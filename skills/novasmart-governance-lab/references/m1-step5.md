@@ -82,8 +82,11 @@ Take `date -u +%Y-%m-%dT%H:%M:%SZ` before each, and keep every reply in the file
 - `### Why this matters`: what the rows show, in plain words. On screen, a principal is whose badge it is
   (*the personalization agent's own badge*, *the promo agent's new login*); no `principal://`, email or
   `roles/` (`m1.md` §2 Close check 5). Verbatim values are in the file.
-- **No picture** — FORBIDDEN. If the leader expects one, say in one line: this is a result, shown as rows
-  traceable to log entries.
+- **The picture** (REQUIRED, `../SKILL.md` §3b) draws only what this turn's log rows show: the
+  personalization agent's own badge reading customer data, labelled with the read's UTC time; the promo
+  agent's new login with an arrow labelled *refused* and the denial's UTC time (you caused and observed it
+  this turn); Price Match *answered* only if its reply is in the file. Never a pass, tick, "verified", a
+  count of checks or the coverage line: the verdict lives in the table.
 - `### What I checked`: **one coverage line, never a table** — *"15 of the 16 checks are evidenced live; 1 is
   not verified."* Both numbers counted off the rows you wrote in the file, and both present there.
 - **The table** (§9 order, all 16 rows, `Check | How I verified | Result`) goes into this turn's entry in

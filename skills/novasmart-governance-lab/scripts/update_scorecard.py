@@ -35,8 +35,8 @@ REPORT_PATH = os.path.join(REPORT_DIR, REPORT_NAME)
 
 STATE_FILE = os.path.join(REPORT_DIR, "novasmart_governance_scorecard_state.json")
 TARGET_HTML_PATHS = [
-    REPORT_PATH,                             # the copy served over HTTP
-    os.path.join(DESKTOP_DIR, REPORT_NAME)   # convenience copy on the Desktop
+    REPORT_PATH,  # the copy served over HTTP
+    os.path.join(DESKTOP_DIR, REPORT_NAME),  # convenience copy on the Desktop
 ]
 
 SERVE_PORT = 8088
@@ -49,35 +49,36 @@ SCORED_MISSIONS = ["M1", "M2", "M3"]
 ACHIEVEMENTS = {
     "M0": {
         "title": "Estate Visibility & Discovery",
-        "badge": "\U0001F50D Scout of the Estate",
+        "badge": "\U0001f50d Scout of the Estate",
         "icon": "visibility",
-        "tagline": "\U0001F3C6 Achievement Unlocked: Scout of the Estate \u2014 You swept the estate and surfaced workloads nobody had catalogued."
+        "tagline": "\U0001f3c6 Achievement Unlocked: Scout of the Estate \u2014 You swept the estate and surfaced workloads nobody had catalogued.",
     },
     "M1": {
         "title": "Identity & Data Least Privilege",
-        "badge": "\U0001F194 Identity Fortress",
+        "badge": "\U0001f194 Identity Fortress",
         "icon": "fingerprint",
-        "tagline": "\U0001F3C6 Achievement Unlocked: Eliminator of Shared Credentials \u2014 You split the shared login, gave each workload its own identity, and cut its access back to what the job needs."
+        "tagline": "\U0001f3c6 Achievement Unlocked: Eliminator of Shared Credentials \u2014 You split the shared login, gave each workload its own identity, and cut its access back to what the job needs.",
     },
     "M2": {
         "title": "Inbound & Outbound Perimeter Controls",
-        "badge": "\U0001F6AA Perimeter Shield",
+        "badge": "\U0001f6aa Perimeter Shield",
         "icon": "shield",
-        "tagline": "\U0001F3C6 Achievement Unlocked: Architect of Agent Boundaries \u2014 You locked the back-office agent so only the front desk can call it, and watched an unauthorised caller be refused."
+        "tagline": "\U0001f3c6 Achievement Unlocked: Architect of Agent Boundaries \u2014 You narrowed who may call the back-office agent, watched a leftover login be refused, and limited what the agent can reach and change.",
     },
     "M3": {
         "title": "Ingress Model Armor Screening",
-        "badge": "\U0001F6E1\uFE0F Model Armor Guard",
+        "badge": "\U0001f6e1\ufe0f Model Armor Guard",
         "icon": "security",
-        "tagline": "\U0001F3C6 Achievement Unlocked: Guardian of the Inference Boundary \u2014 You put content screening in front of the Price Match Agent and watched it refuse a jailbreak that used to get through."
+        "tagline": "\U0001f3c6 Achievement Unlocked: Guardian of the Inference Boundary \u2014 You put content screening in front of the Price Match Agent and watched it refuse a jailbreak that used to get through.",
     },
     "M4": {
         "title": "Continuous Quality Evaluation & Decision",
-        "badge": "\U0001F3C6 Sovereign AI Executive",
+        "badge": "\U0001f3c6 Sovereign AI Executive",
         "icon": "military_tech",
-        "tagline": "\U0001F3C6 Grand Achievement Unlocked: Sovereign AI Executive \u2014 You measured the agent before trusting it, applied a fix, and measured again."
-    }
+        "tagline": "\U0001f3c6 Grand Achievement Unlocked: Sovereign AI Executive \u2014 You measured the agent before trusting it, applied a fix, and measured again.",
+    },
 }
+
 
 def load_state():
     if os.path.exists(STATE_FILE):
@@ -88,6 +89,7 @@ def load_state():
             pass
     return {"missions": {}, "last_updated": None}
 
+
 def save_state(state):
     try:
         with open(STATE_FILE, "w", encoding="utf-8") as f:
@@ -95,34 +97,43 @@ def save_state(state):
     except Exception as e:
         print(f"Warning: could not save state to {STATE_FILE}: {e}", file=sys.stderr)
 
+
 def render_html_report(state):
     missions = state.get("missions", {})
     total_missions = len(SCORED_MISSIONS)
-    passed_missions = sum(1 for c in SCORED_MISSIONS
-                          if missions.get(c, {}).get("status") == "PASS")
-    progress_pct = int((passed_missions / total_missions) * 100) if total_missions > 0 else 0
+    passed_missions = sum(
+        1 for c in SCORED_MISSIONS if missions.get(c, {}).get("status") == "PASS"
+    )
+    progress_pct = (
+        int((passed_missions / total_missions) * 100) if total_missions > 0 else 0
+    )
 
     cards_html = []
     for code in SCORED_MISSIONS:
         m_info = ACHIEVEMENTS.get(code, {})
         m_data = missions.get(code)
-        
+
         if m_data and m_data.get("status") == "PASS":
             status_class = "pass"
             status_badge = "PASSED"
             badge_title = m_info.get("badge", code)
-            timestamp = m_data.get("timestamp", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
+            timestamp = m_data.get(
+                "timestamp", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+            )
             tagline = m_data.get("tagline", m_info.get("tagline", ""))
             checks = m_data.get("checks", [])
-            
-            checks_html = "".join([
-                f"""<tr>
+
+            checks_html = "".join(
+                [
+                    f"""<tr>
                     <td><span class="chk-icon pass">✓</span></td>
-                    <td class="chk-title">{c.get('name', 'Check')}</td>
-                    <td class="chk-proof"><code>{c.get('proof', 'Verified')}</code></td>
+                    <td class="chk-title">{c.get("name", "Check")}</td>
+                    <td class="chk-proof"><code>{c.get("proof", "Verified")}</code></td>
                     <td><span class="pill pass">PASS</span></td>
-                </tr>""" for c in checks
-            ])
+                </tr>"""
+                    for c in checks
+                ]
+            )
             if not checks_html:
                 checks_html = f"<tr><td colspan='4' style='color:#34a853; text-align:center;'>All module security controls verified live.</td></tr>"
 
@@ -132,7 +143,7 @@ def render_html_report(state):
                     <div class="mission-identity">
                         <span class="mission-code">{code}</span>
                         <div class="mission-titles">
-                            <h3>{m_info.get('title', 'Mission')}</h3>
+                            <h3>{m_info.get("title", "Mission")}</h3>
                             <span class="badge-tag">{badge_title}</span>
                         </div>
                     </div>
@@ -158,17 +169,22 @@ def render_html_report(state):
         elif m_data and m_data.get("status") == "FAIL":
             status_badge = "NON-COMPLIANT"
             badge_title = "⚠️ Incomplete Controls"
-            timestamp = m_data.get("timestamp", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
+            timestamp = m_data.get(
+                "timestamp", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+            )
             checks = m_data.get("checks", [])
-            
-            checks_html = "".join([
-                f"""<tr>
-                    <td><span class="chk-icon {'pass' if c.get('result') == 'PASS' else 'fail'}">{'✓' if c.get('result') == 'PASS' else '✗'}</span></td>
-                    <td class="chk-title">{c.get('name', 'Check')}</td>
-                    <td class="chk-proof"><code>{c.get('proof', 'Discrepancy observed')}</code></td>
-                    <td><span class="pill {'pass' if c.get('result') == 'PASS' else 'fail'}">{c.get('result', 'FAIL')}</span></td>
-                </tr>""" for c in checks
-            ])
+
+            checks_html = "".join(
+                [
+                    f"""<tr>
+                    <td><span class="chk-icon {"pass" if c.get("result") == "PASS" else "fail"}">{"✓" if c.get("result") == "PASS" else "✗"}</span></td>
+                    <td class="chk-title">{c.get("name", "Check")}</td>
+                    <td class="chk-proof"><code>{c.get("proof", "Discrepancy observed")}</code></td>
+                    <td><span class="pill {"pass" if c.get("result") == "PASS" else "fail"}">{c.get("result", "FAIL")}</span></td>
+                </tr>"""
+                    for c in checks
+                ]
+            )
             if not checks_html:
                 checks_html = f"<tr><td colspan='4' style='color:#ea4335; text-align:center;'>Some required security controls have not been applied.</td></tr>"
 
@@ -178,7 +194,7 @@ def render_html_report(state):
                     <div class="mission-identity">
                         <span class="mission-code failed">{code}</span>
                         <div class="mission-titles">
-                            <h3>{m_info.get('title', 'Mission')}</h3>
+                            <h3>{m_info.get("title", "Mission")}</h3>
                             <span class="badge-tag failed">{badge_title}</span>
                         </div>
                     </div>
@@ -208,7 +224,7 @@ def render_html_report(state):
                     <div class="mission-identity">
                         <span class="mission-code pending">{code}</span>
                         <div class="mission-titles">
-                            <h3>{m_info.get('title', 'Mission')}</h3>
+                            <h3>{m_info.get("title", "Mission")}</h3>
                             <span class="badge-tag pending">🔒 Awaiting Verification</span>
                         </div>
                     </div>
@@ -337,7 +353,7 @@ body {{
     </header>
 
     <main>
-        { "".join(cards_html) }
+        {"".join(cards_html)}
     </main>
 </div>
 </body>
@@ -353,11 +369,17 @@ body {{
             # "Successfully updated" having written nothing at all.
             print(f"Warning: could not write {target}: {e}", file=sys.stderr)
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Update Governance Scorecard state and HTML")
+    parser = argparse.ArgumentParser(
+        description="Update Governance Scorecard state and HTML"
+    )
     parser.add_argument("--mission", required=True, choices=SCORED_MISSIONS)
     parser.add_argument("--status", required=True, choices=["PASS", "FAIL"])
-    parser.add_argument("--checks-json", help="JSON string containing list of checks: [{'name': '...', 'proof': '...'}]")
+    parser.add_argument(
+        "--checks-json",
+        help="JSON string containing list of checks: [{'name': '...', 'proof': '...'}]",
+    )
     args = parser.parse_args()
 
     # Both the state file and the served report live here.
@@ -368,7 +390,7 @@ def main():
 
     state = load_state()
     m_info = ACHIEVEMENTS.get(args.mission, {})
-    
+
     checks = []
     if args.checks_json:
         try:
@@ -380,32 +402,37 @@ def main():
     # A PASS with no evidence behind it is a fabricated all-clear - the exact failure
     # this lab exists to teach against. Refuse to render one.
     if args.status == "PASS" and not checks:
-        print("ERROR: --status PASS requires --checks-json with at least one check.",
-              file=sys.stderr)
-        print("       Each check needs a name and the proof you actually observed, e.g.",
-              file=sys.stderr)
-        print("       --checks-json '[{\"name\":\"...\",\"proof\":\"...\"}]'",
-              file=sys.stderr)
+        print(
+            "ERROR: --status PASS requires --checks-json with at least one check.",
+            file=sys.stderr,
+        )
+        print(
+            "       Each check needs a name and the proof you actually observed, e.g.",
+            file=sys.stderr,
+        )
+        print(
+            '       --checks-json \'[{"name":"...","proof":"..."}]\'', file=sys.stderr
+        )
         sys.exit(2)
 
     state["missions"][args.mission] = {
         "status": args.status,
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "tagline": m_info.get("tagline", ""),
-        "checks": checks
+        "checks": checks,
     }
     state["last_updated"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     save_state(state)
     render_html_report(state)
-    
+
     # Ensure background HTTP server is running on port 8088
     import subprocess
     import socket
 
     def is_port_open(port):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            return s.connect_ex(('127.0.0.1', port)) == 0
+            return s.connect_ex(("127.0.0.1", port)) == 0
 
     # Serve ONLY the dedicated report directory. Serving the skill directory
     # would publish SKILL.md and references/*.md - the full answer key for
@@ -413,18 +440,31 @@ def main():
     web_root = REPORT_DIR
     if not is_port_open(SERVE_PORT):
         subprocess.Popen(
-            ["python3", "-m", "http.server", str(SERVE_PORT),
-             "--bind", "127.0.0.1", "--directory", web_root],
+            [
+                "python3",
+                "-m",
+                "http.server",
+                str(SERVE_PORT),
+                "--bind",
+                "127.0.0.1",
+                "--directory",
+                web_root,
+            ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-            start_new_session=True
+            start_new_session=True,
         )
 
     # Launch browser automatically in background. In this lab a PATH shim ahead
     # of the real xdg-open only logs the URL and exits 0, so this may silently
     # do nothing - the printed links below are the reliable route.
     try:
-        subprocess.Popen(["xdg-open", SCORECARD_URL], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        subprocess.Popen(
+            ["xdg-open", SCORECARD_URL],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
     except Exception:
         pass
 
@@ -432,8 +472,11 @@ def main():
     print(f"📊 Live Scorecard URL: {SCORECARD_URL}")
     print(f"📄 Or open the file directly: file://{REPORT_PATH}")
     print(f"📁 On disk: {REPORT_PATH}")
-    print(f"   (a copy is also on the Desktop: {os.path.join(DESKTOP_DIR, REPORT_NAME)})")
+    print(
+        f"   (a copy is also on the Desktop: {os.path.join(DESKTOP_DIR, REPORT_NAME)})"
+    )
     print("   If the browser does not open by itself, paste one of the links above.")
+
 
 if __name__ == "__main__":
     main()

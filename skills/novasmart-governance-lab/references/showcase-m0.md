@@ -34,7 +34,10 @@ M0 was a look. These rules come from `m0.md` and bind every page.
   it: the Cloud Run robot (`serverless-robot-prod`) means *came through Cloud Run*; the Agent Runtime
   service agent (`gcp-sa-aiplatform`) means *came through Agent Runtime*. Every other row — the project's
   setup login, a person, an agent's own badge from earlier tests — is either labelled as what the file
-  says it is, in a separate muted list, or left out. Never count it as the shared login's.
+  says it is (*"the project's setup login"*, without guessing why it ran), in a separate muted list, or
+  left out. Never count it as the shared login's.
+- **Never label a read with the test request that may have caused it** ("promo extract", "loyalty
+  check"): the log does not link a read to a request.
 - **Whether agy's test request landed:** quote `post-mark rows`. When it is 0, every read shown is an
   *earlier read found in the log*, never one agy caused.
 - **Columns:** each read shows its column names (from `tableDataRead.fields`). Two different column lists
@@ -44,11 +47,14 @@ M0 was a look. These rules come from `m0.md` and bind every page.
 - **What the log can and cannot tell** is exactly this, and nothing added: it **can** tell the login, the
   time, the runtime it came through, the table and the columns; it **cannot** tell which agent, or which
   customer. No extra rows of your own (tickets, exports, owners, intent).
-- **Nothing is fixed.** Step 5's decision belongs to the leader: show it open (own it or shut it down?
-  does a marketing agent need customer data? what is the blast radius of over-granting?) unless they
-  stated their call this session, then quote it as theirs.
-- **Still open / next:** Module 1 only as M0 Step 6 says it: *register the shadow agent, give each agent
-  its own identity, and scope its access down to what its job actually needs.*
+- **Nothing is fixed.** Step 5's decision belongs to the leader: show it open, with its three questions
+  word for word — *"Own it or kill it? Do you shut the promo agent down, or bring it under a named owner —
+  and why?"* · *"Does a marketing agent need the whole customer database, or any of it?"* · *"What is the
+  blast radius if you over-grant access now, just to be safe, and the agent is later tricked or
+  breached?"* — unless they stated their call this session, then quote it as theirs. There is no Step 5
+  or Step 6 evidence file: never cite one.
+- **Still open / next:** Module 1 only as M0 Step 6 says it, word for word: *register the shadow agent,
+  give each agent its own identity, and scope its access down to what its job actually needs.*
 - **No scorecard, no verdict** ("healthy", "all clear", "compliant"). M0 is not scored.
 - **Footer on every page:** *"Nothing was changed — this was a look."*
 

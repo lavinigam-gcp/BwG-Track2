@@ -40,8 +40,9 @@ M1 changed the estate. These rules come from `m1.md` and bind every page.
   BigQuery admin) · *run queries* · *read the customer dataset* · *read the seed files* · and so on.
 - **No customer values.** The legitimate read returned a customer record: show *"returned 1 record (values
   not shown)"*.
-- **Still open / next:** Module 2 only as M1 Step 6 says it: who may call whom, starting with who may call
-  the back-office margin agent.
+- **Still open / next:** Module 2 only as M1 Step 6 says it, word for word: *who may call whom, starting
+  with who is allowed to call that back-office margin agent.* There is no Step 6 evidence file: never cite
+  one.
 - **Footer on every page:** *"Every change is on record with a way to undo it"* — only if every change in
   the files has an undo line; otherwise say which does not.
 

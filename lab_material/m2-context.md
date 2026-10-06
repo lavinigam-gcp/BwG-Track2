@@ -8,15 +8,15 @@ The rhythm is the one you learned in M1. You brief agy in plain English, it does
 
 Three things about this module are worth flagging before you start.
 
-First, only one of the four steps changes anything. Step 1 reads, Step 2 reads, Step 4 tests, and only Step 3 writes. That ratio is deliberate, and it is the honest shape of most governance work: the change itself is a single sentence, and everything around it is knowing what to change and being able to show afterwards that it worked.
+First, only two of the five working steps change anything. Steps 1 and 2 read, Step 4 tests, and Steps 3 and 5 write. That ratio is deliberate, and it is the honest shape of most governance work: each change is a single sentence, and everything around it is knowing what to change and being able to show afterwards that it worked.
 
 Second, agy still does not pause. If your next sentence is "lock it down", the lock exists a moment later. In M1 you learned to create the pause yourself, by asking a question that only reads before you ask for anything that writes. Step 2 is that pause, and here it is doing real work: cutting a caller list down to one name is exactly the kind of change that can quietly break a working part of the business.
 
-Third, access changes do not take effect the instant they are saved. They propagate through the platform over a minute or two, so a test run immediately afterwards can still show the old behaviour and tell you nothing at all. agy waits before it tests. If you test by hand, wait too.
+Third, access changes do not take effect the instant they are saved. They propagate through the platform over a few minutes, so a test run immediately afterwards can still show the old behavior and tell you nothing at all. agy waits before it tests. If you test by hand, wait too.
 
 One framing helps throughout. M1 governed identity and access — who is acting, and what data may they touch. M2 governs connection — who may call whom. These are separate controls and neither implies the other. An agent can hold no data access whatsoever and still be able to reach an agent that holds all of it.
 
-A word on the product you might expect to see doing this job. Agent Gateway is the Agent Platform's networking control: it sits between agents and polices which of them may reach which agent, tool or endpoint. NovaSmart has two gateways provisioned and has never attached an agent to either, so nothing is routed through them today. You will change that in Step 5. But notice what it governs. A gateway controls where an agent may go, not who may come in to see it, and not what the agent may do once it arrives. Those are three different questions, and this module answers all three with three different controls. Keeping them apart is most of the skill.
+A word on the product you might expect to see doing this job. Agent Gateway is the Agent Platform's networking control: it sits between agents and polices which of them may reach which agent, tool or endpoint. NovaSmart has two gateways provisioned and has never attached an agent to either, so nothing is routed through them today. You will change that in Step 5. But notice what it governs. The gateway this module uses is NovaSmart's outbound gateway. It controls where the agent may go. It does not decide who may call the agent (that is the agent's own list) or what the agent may do with the data (that is the database's permissions). NovaSmart's other gateway faces inward and comes up in M3. Those are three different questions, and this module answers all three with three different controls. Keeping them apart is most of the skill.
 
 ## Step 1 · See who can call the back office
 
@@ -42,7 +42,9 @@ Then there is `test-agent-caller`: a service account sitting in the project with
 
 Only one of these sits on the back office's own list, which is the thing this module changes: the leftover test login. The others reach it by other means, and Step 3 returns to that in detail — noting it here so the picture you carry into the fix is the accurate one rather than the comfortable one.
 
-This is not a retail problem. Swap the margin logic for whatever your own organisation would least like consulted without oversight — the billing engine, the patient record system, the eligibility service. The rule is the same wherever you apply it: the sensitive back end should name the callers it accepts, rather than accepting whoever happens to be holding a grant.
+agy also places one real call to the back office as the leftover login and shows you what came back. That is your before. Step 4 repeats the same call after the lock, so you can compare the two. Making a call is not a change.
+
+This is not a retail problem. Swap the margin logic for whatever your own organization would least like consulted without oversight — the billing engine, the patient record system, the eligibility service. The rule is the same wherever you apply it: the sensitive back end should name the callers it accepts, rather than accepting whoever happens to be holding a grant.
 
 ### Call permission is not data permission
 
@@ -105,7 +107,7 @@ The transferable habit: whenever you tighten a path, ask who was already using a
 
 The back-office agent keeps its own list of who may call it. Today the only name on it is the leftover test login, and the front desk is not on it at all. The change rewrites the list so it names exactly one caller: the Price Match Agent's own Agent Identity.
 
-Nothing else is touched at this point. No agent is stopped, no data access is altered, no network is reconfigured. This is not a firewall. The control lives on the agent itself, which is what makes it precise: it states who this one sensitive agent will accept a call from, and it says nothing about anything else in the project, including anything the agent itself goes on to do.
+Nothing else is touched at this point. No agent is stopped, no data access is altered, no network is reconfigured; the outbound side waits for Step 5. This is not a firewall. The control lives on the agent itself, which is what makes it precise: it states who this one sensitive agent will accept a call from, and it says nothing about anything else in the project, including anything the agent itself goes on to do.
 
 ### Name who is in, rather than chasing who is out
 
@@ -117,7 +119,7 @@ Or you can name the callers you do want and let everything else fall outside by 
 
 ### It takes a minute or two to settle
 
-Access changes propagate. For a short period after the change is saved, the old behaviour can still be observed — which means a test run immediately afterwards can show a rogue call succeeding and cause an entirely unnecessary panic. agy waits before it tests. The lesson generalises beyond this lab: with access control, "it did not work" and "it has not landed yet" look identical for the first couple of minutes.
+Access changes propagate, usually within a few minutes. For a short period after the change is saved, the old behavior can still be observed — which means a test run immediately afterwards can show a rogue call succeeding and cause an entirely unnecessary panic. agy waits before it tests. The lesson generalizes beyond this lab: with access control, "it did not work" and "it has not landed yet" look identical for the first few minutes.
 
 ### What this locks, and what it does not
 
@@ -128,6 +130,8 @@ What is true: the back-office agent now names exactly one permitted caller, and 
 What is not true is the tidier sentence you would like to write — that the front desk is now the only thing in the entire project capable of calling the back office. Cloud permissions are additive. Access can be granted in more than one place, and the widest grant wins. Several broad, project-wide roles — the kind given to administrators, to platform teams, and sometimes to service identities during a migration — carry the right to call any agent in the project as one item among the many things they allow. Nothing in this module removed those, because they do not sit on the back office's list. They sit above it.
 
 So the honest claim is narrower, and it is still worth making: the back office's own list now names one caller, the leftover grant is closed, and the rogue is denied.
+
+One more detail about the name on the list. The front desk is added with the standard role for one agent calling another. That role carries more than calling: it also lets the front desk update or delete the back office. A custom role that holds only the permission to call is the tighter choice, and it is worth asking for once the pattern is settled.
 
 The wider work is real and it belongs on your plan. Find every project-wide role that carries the ability to call an agent, work out who genuinely needs it, and cut the rest. That is a bigger and slower job than this module — it touches people and teams rather than one agent's settings — and it is exactly the sort of cleanup that never happens unless somebody writes it down. Write it down.
 
@@ -142,7 +146,7 @@ agy makes two real calls and shows you both results.
 | The call | Before the change | After the change |
 | :---- | :---- | :---- |
 | The rogue login `test-agent-caller` calls the back office directly | The call goes through | Refused, in the platform's own words, quoted back to you |
-| The front desk escalates a genuine price match above 10% | A margin decision comes back | A margin decision still comes back |
+| The front desk escalates a genuine price match above 10% | A margin decision comes back | The back office's margin decision still comes back |
 
 The first row is the security result. The second row is the business result, and it is not the lesser of the two. A control that stops the attack and also stops the work has traded one problem for a more expensive one, and it will be switched off by somebody who has had enough of the complaints.
 
@@ -168,9 +172,9 @@ The strongest by a distance is the call agy made itself. It sent the request as 
 
 The rewritten caller list is the second record, and it is a different kind of thing altogether. It shows what you intended — the back office now names one caller — but a settings page cannot tell you that anybody was actually stopped. It is evidence of the rule, not of the rule firing.
 
-Cloud Audit Logs can supply a third record, independent of both: this identity attempted this call at this time, and it was refused. Where it exists it is genuinely useful, because it is system-generated, timestamped, exportable to your compliance team, and it comes from somewhere other than the tool that made the call. But it may simply not be there. Detailed access logging is switched off unless an administrator turns it on, and not every operation on this surface is captured even then. A missing entry does not mean the call succeeded and it does not mean the control failed. It means that particular record was never written. The honest response is for agy to say which records it has and which it does not, rather than to paper over the gap or to keep hunting for an entry that was never going to exist.
+Cloud Audit Logs supply a third record, independent of both: this identity attempted this call at this time, and it was refused. The platform writes that entry by default for a call to an agent, refused or not, so agy should find it and show it to you. It is genuinely useful, because it is system-generated, timestamped, exportable to your compliance team, and it comes from somewhere other than the tool that made the call.
 
-Whatever made the call, meanwhile, simply receives an error, and in the store app that error looks like any other failure. An error could be a bug, a timeout, a bad address, or a service that happens to be down — and worse, the app fills a thin response with plausible-sounding text of its own. It is a symptom at best, and it is not proof in either direction.
+Whatever made the call, meanwhile, simply receives an error. In the store app a refused call can show up looking like a security block or a generic error, and some panels fill gaps with plausible-sounding text of their own. An error could be a bug, a timeout, a bad address, or a service that happens to be down. It is a symptom at best, and it is not proof in either direction.
 
 So look at what the platform said, not at what the app displayed. This is the same lesson as M1's denied log entry arriving from a different direction, and it is the one that matters when somebody asks you to demonstrate that a control works rather than assert it.
 
@@ -178,14 +182,16 @@ So look at what the platform said, not at what the app displayed. This is the sa
 
 A control nobody has exercised is a control nobody can vouch for. It might be working perfectly, or it might have been switched off last quarter, and from the outside those two look identical. Causing the refused call on purpose and reading the platform's answer to it is the difference between believing a control works and knowing it does.
 
-That holds whether or not an audit entry turns up beside it. Because you produced the event yourself, your evidence does not depend on a log somebody else had to have enabled first — which is exactly why it is the record to rely on.
+That holds without any other record beside it. Because you produced the event yourself, your evidence does not depend on a log somebody else wrote. The audit entry is welcome corroboration; your own call is the record to rely on.
 
 ### The checks worth making
 
 - The rogue login is refused where it previously got through, and agy quoted the platform's own refusal rather than inferring it from the settings.
-- A genuine price match above 10% still escalates to the back office and comes back with a decision.
-- Ordinary store traffic is unaffected: associates on the floor see no change in price matches under 10%.
-- An audit-log entry for the refusal is corroboration where it appears. If agy reports that no audit entry was recorded, that is an honest result and not a failed check.
+- A genuine price match above 10% still escalates to the back office, and the back office's decision comes back. A tool call alone, a capacity error or an empty reply is not an answer: agy tries once more, and otherwise marks the escalation not verified.
+- Price matches under 10% never reach the back office, so this change cannot affect them.
+- The refusal also appears in Cloud Audit Logs under the rogue login's name, as an independent record.
+
+agy writes the full check-by-check table to `m2_step4.txt` in the `novasmart-evidence` folder on your Desktop and tells you in one line how many of the checks it could prove.
 
 ## Step 5 · Lock down what the back office can reach and do
 
@@ -199,13 +205,13 @@ The other half is everything the back office does after it picks up. It holds th
 
 The natural instinct is to look for a single setting. There isn't one, and the reason is worth understanding because it comes up constantly.
 
-The gateway sits on the network path. It can see that the back office is trying to reach a particular service and it can allow or refuse that. What it cannot see is what the request says once it gets there, because the contents are sealed. So the gateway can answer where may this agent go, and it genuinely cannot answer what may it do when it arrives.
+The gateway sits on the network path. It can see that the back office is trying to reach a particular service and it can allow or refuse that. Agent Gateway can also see which tool an agent asks for, but not the SQL inside a general query tool, and in this lab it is not set up to tell a read from a change. So here the gateway answers where may this agent go, and the line between reading and changing is drawn somewhere else.
 
-The database can answer the second question, because by the time the request lands there it has been opened and read. So the two controls sit at different points on the same path and see different things. Together they cover the route and the action. Either alone leaves a real gap, and describing one as if it did the other's job is the kind of claim that falls apart the first time somebody tests it.
+The database answers the second question, because it sees the actual statement and checks it against the agent's own permissions. So the two controls sit at different points on the same path and see different things. Together they cover the route and the action. Either alone leaves a real gap, and describing one as if it did the other's job is the kind of claim that falls apart the first time somebody tests it.
 
 ### What agy actually changes
 
-It puts the back-office agent behind the gateway NovaSmart already owns, and gives that gateway a rule about which destinations are permitted. Then it narrows the agent's own database permissions from full control down to reading the two datasets it uses.
+It puts the back-office agent behind the outbound gateway NovaSmart already owns, and turns on an access check that consults NovaSmart's agent registry, so the back office goes out only to destinations it has been granted there. It does not add a rule that blocks BigQuery: the back office reads its pricing data through BigQuery, so blocking it would stop the agent doing its job. Then it narrows the agent's own database permissions from full control down to reading the two datasets it uses, plus the right to run queries.
 
 Both changes are reversible, and neither touches the front desk or the storefront.
 
@@ -215,7 +221,15 @@ This is the part to hold firm on, because the obvious evidence is the misleading
 
 When one of these controls refuses something, the agent does not return an error. It answers anyway, in confident prose, using what it already knows from its own instructions. A refused database read produces a plausible-looking list of tables that came from the agent's memory rather than the database. If you accept that as a successful read you will conclude the control is not working when it is, or that it is working when it is not.
 
-So the proof lives outside the conversation. The gateway keeps its own record of each decision, allowed or refused, against a named destination. The database can be asked directly what a value is. Ask for both. The useful pairing is a read that succeeds and a change that fails, in the same minute, with the failure confirmed by looking at the data rather than by asking the agent what happened.
+So the proof lives outside the conversation. To produce it, agy calls the back office directly, which it can do through a broad project-wide role, and it says so. It asks for one read of the pricing data and one change to it. Then it reads three records the agent cannot write:
+
+- the gateway's own log, which shows its verdict on the back office's traffic to BigQuery after the attach
+- the BigQuery audit log, which shows the attempted change refused under the back office's identity
+- the pricing table's last-modified time, which has not moved
+
+The useful pairing is a read that succeeds and a change that fails, in the same few minutes, with the failure confirmed from the platform's records rather than by asking the agent what happened.
+
+agy writes the full check-by-check table to `m2_step5.txt` in the `novasmart-evidence` folder on your Desktop and tells you in one line how many of the checks it could prove. It then updates your Governance Scorecard and gives you the link to open it. A FAIL names the check that did not hold and the step to go back to.
 
 ### What this locks, and what it does not
 
@@ -223,13 +237,17 @@ The back office can now reach only the destinations the gateway permits, and it 
 
 What is not true is that every agent in the estate is now constrained this way. Only the back office was put behind the gateway. The others are unchanged, and doing the same for them is a larger piece of work that belongs on the plan rather than in this module.
 
-It is also worth saying plainly that the gateway cannot distinguish one kind of database request from another. It permitted the route; the database permissions did the rest. If somebody later asks you whether the gateway stopped the write, the honest answer is no, and the reason is a useful thing to know.
+The pricing tables are not read-only for everyone, either. The front desk's own login still holds the same broad database role the back office just gave up, and the project's editors can still change the tables. Only the back office was narrowed. Narrowing the front desk is the same job, not done here.
+
+One setting on the gateway is worth knowing. If the access check behind it cannot answer within a second, the gateway lets the request through rather than refusing it. That keeps the agent working when the check is slow, at the cost of a gap while it is.
+
+It is also worth saying plainly that the gateway was not set up to tell reads from changes here. It governed the route; the database permissions did the rest. If somebody later asks you whether the gateway stopped the write, the honest answer is no, and the reason is a useful thing to know.
 
 ## What you just did
 
-You read the list of callers on the most sensitive agent in the estate, found an unowned leftover login sitting on it, checked what a lockdown would cost before you ordered one, rewrote the list so it names a single caller, and then proved both halves of the outcome — the rogue refused, the legitimate escalation still working.
+You read the list of callers on the most sensitive agent in the estate, found an unowned leftover login sitting on it, checked what a lockdown would cost before you ordered one, rewrote the list so it names a single caller, and then proved both halves of the outcome — the rogue refused, the legitimate escalation still working. Then you turned to the other direction: the back office now sits behind the outbound gateway, and it can read the pricing data but no longer change it.
 
-Set against M1, the estate has gained a third property. It was already visible, because everything running is catalogued and owned. It was already attributable and least-privileged, because every agent signs in as itself and holds only the data access its job needs. Now the connection between your two most important agents is governed as well: the back office names one permitted caller instead of accepting whoever happens to hold a grant on it.
+Set against M1, the estate has gained a third property. It was already visible, because everything running is catalogued and owned. It was already attributable and least-privileged, because every agent signs in as itself and customer data is limited to the agents that need it. Now the connection between your two most important agents is governed as well: the back office names one permitted caller instead of accepting whoever happens to hold a grant on it, and what it can reach and change on its way out is narrowed too.
 
 None of that was written in code. It was directed in plain English, and every change is on the record.
 

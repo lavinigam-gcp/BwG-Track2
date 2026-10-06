@@ -1,10 +1,10 @@
 # Show step — a module's recorded work, turned into a page people want to look at
 
 > Read this file **and the module's recipe file** — `showcase-m0.md` for **M0 Step 7 · Show what you
-> found**, `showcase-m1.md` for **M1 Step 7 · Show what you changed** — at every Show prompt, before you
-> build. `../SKILL.md` and the module's `mN.md` still apply; this file replaces the answer blocks with the
-> short shape in §7. Below, `N` is the module number and "the recorded steps" are M0 Steps 1–4 or M1 Steps
-> 1–5.
+> found**, `showcase-m1.md` for **M1 Step 7 · Show what you changed**, `showcase-m2.md` for **M2 Step 7 ·
+> Show what you controlled** — at every Show prompt, before you build. `../SKILL.md` and the module's
+> `mN.md` still apply; this file replaces the answer blocks with the short shape in §7. Below, `N` is the
+> module number and "the recorded steps" are M0 Steps 1–4, or M1 or M2 Steps 1–5.
 >
 > ⛔ **Nothing in the estate changes, and no estate command runs** — no `gcloud`, `curl` or `bq`. Every
 > page is built from what the recorded steps already wrote down.
@@ -36,7 +36,9 @@ picture is always an HTML page rendered to PNG** (§5, `--poster`); never `gener
 3. **Plan** against the recipe's *Must show* list. Find each item in the sheet. An item the sheet does not
    hold is left out, or drawn as *not run yet* (§3) — never filled in.
 4. **Write the page** with `write_to_file`, in one go: the data block first (§4), then the layout, then
-   the script. Never through `python3 -c` or a shell heredoc: quoting breaks on pages this size.
+   the script. Never through `python3 -c` or a shell heredoc: quoting breaks on pages this size. **Never
+   open, copy or edit a page already in the folder** (an earlier run's page is not a source): build from
+   this turn's fact sheet only.
 5. **Check and look** (§5): run `show_check.py`, fix every `FIX:` line, then open the screenshots and
    compare them with the recipe's *Done when* list. Fix what you see, run the check again, look again.
 6. **Record and answer:** the evidence entry (§6), then the short answer (§7).
@@ -64,8 +66,16 @@ picture is always an HTML page rendered to PNG** (§5, `--poster`); never `gener
   Engine", "Vertex AI" or "managed agent runtime" (the check flags them).
 - **No recommendation, plan, owner or deadline of your own.** The next module is described only as the
   Instructions tab already describes it at this module's What's next step.
-- **No verdict on the estate** — no "secure", "compliant", "healthy", "fully governed" — unless a
-  recorded check says exactly that, and then it is quoted as the check's.
+- **No verdict on the estate** — no "secure", "compliant", "healthy", "fully governed", "critical",
+  "violates", "in production" — unless a recorded check says exactly that, and then it is quoted as the
+  check's.
+- **Quoted wording stays word for word.** Where the recipe file quotes the module's own words (the
+  next-module sentence, the leader's decision questions), copy them exactly: no paraphrase, and no
+  "least privilege", "remediate" or owner of your own added to them.
+- **A quoted log line or error stays exactly as recorded.** Never reword one to get past the check: keep
+  it (API identifiers like `reasoningEngines.query` are allowed) or drop the quote.
+- **Every `from` cites what the fact sheet shows:** a step file and `L<n>` line numbers that appear in the
+  sheet. Never cite a file, step or line the sheet does not hold (the check tests the line numbers).
 
 ## 4. The build bar — every page
 
@@ -98,8 +108,8 @@ labels, rings, bars, timelines. Draw simple SVG icons; emoji are not icons.
 - **Motion with a purpose.** Transitions of 200–600 ms. Anything that plays a sequence has Play, Pause and
   Step buttons, and **the page loads showing the finished picture**, so a viewer who never presses Play,
   and a screenshot, still see everything. Honour `prefers-reduced-motion`.
-- **Accessible:** every control is a `<button>` with a text label and works from the keyboard; every SVG
-  has `role="img"` and a `<title>`.
+- **Accessible:** everything clickable is a `<button>` with a text label (never a clickable `<div>`), so
+  it works from the keyboard; every SVG has `role="img"` and a `<title>`.
 - **Depth:** a page that does the recipe justice is usually 25–80 KB. Under 15 KB is almost always too
   thin.
 
@@ -122,7 +132,8 @@ score and what they just practised. No timer pressure. The "Still open" line is 
 end screen. A **facilitator view** opens at `#answers` (and from a button): every round's answers with their
 evidence lines. The start button's label begins with *Start*.
 
-**Presentations** (briefings, updates): one idea and one diagram per slide, at most about 30 words on
+**Presentations** (briefings, updates): white around the slide as well as on it; one idea and one diagram
+per slide, at most about 30 words on
 screen; arrow keys, on-screen buttons and a progress bar; **speaker notes** per slide, toggled with `N`,
 built from the same facts; a **two-minute timer** toggled with `T`; `@media print` puts one slide on each
 page.
@@ -155,7 +166,8 @@ PLAYWRIGHT_BROWSERS_PATH=/ms-playwright /opt/venv/bin/python3 \
 One entry per Show prompt in `mN_step7.txt`, with the four-line write sequence (`../SKILL.md` §3g), slot
 `MN Step 7`. COMMANDS: the `show_facts.py` run, any `grep` of a step file, each `show_check.py` run, and
 `ls -l` of what you saved. `write_to_file` and `view_file` are tools, not commands: record each as a `#`
-comment. OUTPUTS: what each command printed, the check's report as printed. CHANGE RECORD: `(nothing
+comment. OUTPUTS: what each command printed, exactly — the fact-sheet run and every check run, failed
+ones included. CHANGE RECORD: `(nothing
 changed in the estate)`. **Never write into the evidence files of other steps, or the scorecard folder.**
 Write the page this turn even if one is already there; a repeat overwrites only its own file.
 

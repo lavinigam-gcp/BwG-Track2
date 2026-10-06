@@ -28,6 +28,9 @@ The hard stops. Each is spelled out in the section named.
 8. ⛔ **Verify turns mutate nothing** (§4).
 9. ⛔ **A FORBIDDEN picture is never drawn** (§3b).
 10. ⛔ **No skill markers in learner text** — no `§`, file names or rule ids (§3d).
+11. ⛔ **A command sent to the background has no output until its "finished with result" arrives** (or
+    `manage_task` shows it done with its log). Write no entry, picture or answer from it before then, and
+    never type a "Notice: A background task…" block yourself (§3g).
 
 ## 1. First moves — freshness & tools (every session, before anything else)
 - **Fetch today's date** (`date -u +%Y-%m-%d`). Never hardcode or assume one; use it in every doc search.
@@ -69,7 +72,7 @@ command, a full output, a change record) belongs in this step's evidence file (�
 **A question that is not a mission step** — what a word means, why you did that, an aside, a follow-up on
 something already shown — gets a direct, conversational answer in a few sentences, glossed, with no
 blocks. If a step is in flight, add one plain line saying where that leaves it. A module's **Show** step
-(M0 and M1 Step 7, work turned into a page) uses the short shape in `references/showcase.md` instead.
+(M0-M2 Step 7, work turned into a page) uses the short shape in `references/showcase.md` instead.
 
 | # | What the leader sees | When | What goes in it |
 |---|---|---|---|
@@ -181,7 +184,8 @@ the prompt, discard it and generate again.
 **Continuity.** Keep earlier pictures' layout, colours, shapes and names, so what this step changed is
 what visibly differs. Anything carried forward and not re-read this step is marked **unknown**.
 
-**Whether to draw.** The step-gate table marks each step **required**, **optional** or **forbidden**.
+**Whether to draw.** By default every prompted step draws one; the step-gate table marks each step
+**required**, **optional** or **forbidden** (promptless steps, optional prompts and the Show step are forbidden).
 - ⛔ **FORBIDDEN is absolute.** Never draw a forbidden picture, for any reason.
 - Required or optional: if nothing substantive can be drawn, **skip it and say so in one line** — *"No
   picture: the query returned no rows, so there is nothing read to draw."* Silence is not available.
@@ -214,11 +218,9 @@ one line beneath naming the command that would settle it.
 - **Plain-English labels:** no role names, API names or paths; draw what the role lets you do (`read` ·
   `change` · `DELETE`). Agent and login names stay verbatim.
 
-**`generate_image` sometimes returns HTTP 429 / `RESOURCE_EXHAUSTED` / "quota exceeded".** That is a
-transient quota condition on the image service, not a prompt, grounding, permission or estate problem.
-Wait a few seconds and **retry once, never a loop**. If the retry fails, skip the picture in one line —
-*"No picture: the image tool was rate limited this turn, so the diagram could not be generated."* — and
-finish the step as normal. Never substitute a text sketch or a table dressed as a diagram.
+**`generate_image` HTTP 429 / `RESOURCE_EXHAUSTED`** is a transient quota condition, not a problem with
+the prompt or the estate. Wait a few seconds and **retry once**. If that fails, say in one line *"No
+picture: the image tool was rate limited this turn."* and finish the step. Never substitute a text sketch.
 
 **Self-check:** is there an evidence line behind every arrow and number, no word I did not prompt, no
 state I did not re-read this turn, and no verdict?
@@ -565,7 +567,10 @@ Work out which mission the leader is on, then **read the matching reference and 
   ban; **Step 2 is read-only by design**) → `references/m1.md`; Steps 3 and 5 also read
   `references/m1-step3.md` / `references/m1-step5.md`, and Step 7 reads `references/showcase.md` and
   `references/showcase-m1.md`
-- **M2 — Control the Connections** (who may invoke a sensitive agent — resource IAM) → `references/m2.md`
+- **M2 — Control the Connections** (who may call the back-office agent, then what it may reach and change
+  — resource IAM, the egress gateway, BigQuery narrowing; **Step 2 is read-only**) → `references/m2.md`;
+  Steps 1 and 4 also read `references/m2-step1.md`, Step 4 `references/m2-step4.md`, Step 5
+  `references/m2-step5.md`, and Step 7 reads `references/showcase.md` and `references/showcase-m2.md`
 - **M3 — Protect the Content** (gateway-attached Model Armor screening in front of **one** agent, the Price
   Match Agent; **not** a project floor setting, which is out of scope and breaks the estate) →
   `references/m3.md`
