@@ -1,0 +1,9 @@
+install.log
+.venv/
+__pycache__/
+*.bak
+.DS_Store
+
+# local test harness — maintainer only, never publish (needs an ADC, cannot run in public CI)
+harness/
+runs/

@@ -1,0 +1,3 @@
+source: terraform/skills (CE428 lab)
+published: 2026-09-09
+portability: VM home path rewritten to $HOME at publish time
