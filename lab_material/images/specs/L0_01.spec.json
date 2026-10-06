@@ -1,0 +1,234 @@
+{
+  "figure_id": "L0_01",
+  "tab": "what_did_we_learn",
+  "module": "M0",
+  "intent": "For each of the three investigating prompts of Module 0, show the question asked, the Google Cloud product agy checked to answer it, and what it found: six agents, three of them ours; one agent runs without being listed; and, from the audit logs plus re-reading each workload's login setting, two agents share one login.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "each lane left to right, lanes top to bottom",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 14% of the frame, full width",
+        "contains": "the title, top-left, on one line"
+      },
+      {
+        "id": "lane_1",
+        "occupies": "from about 18% to about 40% of the frame height, full width inside the margins",
+        "contains": "question card, arrow, product card, arrow, finding card"
+      },
+      {
+        "id": "lane_2",
+        "occupies": "from about 44% to about 66% of the frame height, full width inside the margins",
+        "contains": "question card, arrow, product card, arrow, finding card"
+      },
+      {
+        "id": "lane_3",
+        "occupies": "from about 70% to about 92% of the frame height, full width inside the margins",
+        "contains": "question card, arrow, product card, arrow, finding card"
+      }
+    ],
+    "columns": "three columns of equal width in every lane: questions at left (x 4%-30%), products in the middle (x 37%-63%), findings at right (x 70%-96%); all cards in a column are the same size and aligned"
+  },
+  "elements": [
+    {
+      "id": "q1",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small outline magnifying-glass icon at its left",
+      "position": "lane 1, left column",
+      "colour_role": "neutral",
+      "label": "What do we have?"
+    },
+    {
+      "id": "p1",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 1, middle column",
+      "colour_role": "working_system",
+      "label": "Agent Registry"
+    },
+    {
+      "id": "f1",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 1, right column",
+      "colour_role": "neutral",
+      "label": "6 agents, 3 are ours"
+    },
+    {
+      "id": "q2",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small outline magnifying-glass icon at its left",
+      "position": "lane 2, left column",
+      "colour_role": "neutral",
+      "label": "What is running?"
+    },
+    {
+      "id": "p2",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 2, middle column",
+      "colour_role": "working_system",
+      "label": "Agent Runtime + Cloud Run"
+    },
+    {
+      "id": "f2",
+      "shape": "wide rounded rectangle card holding a text line on top and a wide single-line monospace pill below it",
+      "position": "lane 2, right column",
+      "colour_role": "problem",
+      "label": "Running, not listed",
+      "pill": "promo-agent-shadow"
+    },
+    {
+      "id": "q3",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small outline magnifying-glass icon at its left",
+      "position": "lane 3, left column",
+      "colour_role": "neutral",
+      "label": "Who read customer data?"
+    },
+    {
+      "id": "p3",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 3, middle column",
+      "colour_role": "working_system",
+      "label": "Audit logs + agent settings"
+    },
+    {
+      "id": "f3",
+      "shape": "wide rounded rectangle card holding a text line on top and a wide single-line monospace pill below it",
+      "position": "lane 3, right column",
+      "colour_role": "attention",
+      "label": "One login, two agents",
+      "pill": "novasmart-customer-sa"
+    }
+  ],
+  "connections": [
+    {
+      "from": "q1",
+      "to": "p1",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "p1",
+      "to": "f1",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "q2",
+      "to": "p2",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "p2",
+      "to": "f2",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "q3",
+      "to": "p3",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "p3",
+      "to": "f3",
+      "style": "solid arrow, neutral grey, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "What each prompt tested",
+      "position": "title, top-left, one line",
+      "face": "sans"
+    },
+    {
+      "text": "What do we have?",
+      "position": "lane 1 question card",
+      "face": "sans"
+    },
+    {
+      "text": "Agent Registry",
+      "position": "lane 1 product card",
+      "face": "sans"
+    },
+    {
+      "text": "6 agents, 3 are ours",
+      "position": "lane 1 finding card",
+      "face": "sans"
+    },
+    {
+      "text": "What is running?",
+      "position": "lane 2 question card",
+      "face": "sans"
+    },
+    {
+      "text": "Agent Runtime + Cloud Run",
+      "position": "lane 2 product card",
+      "face": "sans"
+    },
+    {
+      "text": "Running, not listed",
+      "position": "lane 2 finding card, top line",
+      "face": "sans"
+    },
+    {
+      "text": "promo-agent-shadow",
+      "position": "lane 2 finding card, pill below the text line",
+      "face": "mono"
+    },
+    {
+      "text": "Who read customer data?",
+      "position": "lane 3 question card",
+      "face": "sans"
+    },
+    {
+      "text": "Audit logs + agent settings",
+      "position": "lane 3 product card (may wrap only at the space after '+')",
+      "face": "sans"
+    },
+    {
+      "text": "One login, two agents",
+      "position": "lane 3 finding card, top line",
+      "face": "sans"
+    },
+    {
+      "text": "novasmart-customer-sa",
+      "position": "lane 3 finding card, pill below the text line",
+      "face": "mono"
+    }
+  ],
+  "counts": {
+    "lanes": 3,
+    "question_cards": 3,
+    "product_cards": 3,
+    "finding_cards": 3,
+    "pills": 2,
+    "arrows": 6,
+    "text_strings": 12
+  },
+  "mandatory": [
+    "Exactly three horizontal lanes, each with exactly three cards joined left to right by two arrows",
+    "The three product cards are soft blue; the lane 1 finding card is light grey; the lane 2 finding card is soft red; the lane 3 finding card is soft amber",
+    "'promo-agent-shadow' and 'novasmart-customer-sa' are each in a monospace face on ONE line inside a wide pill; each pill is wide enough that the identifier is never wrapped or hyphenated",
+    "Every card label is semibold near-black ink (#1F2328), never grey; a sans-serif label may wrap onto two lines only at a space; the two monospace identifiers never wrap",
+    "The title is bold, large, top-left and on one line",
+    "The cards fill their lanes: each card is at least 15% of the frame height tall, so there is no large empty area",
+    "All text is large enough to read when the image is 1000px wide",
+    "'Audit logs + agent settings' is one string in one weight inside the lane 3 product card; it may wrap onto two lines only after the '+' ('Audit logs +' / 'agent settings')"
+  ],
+  "prohibitions": [
+    "NO third-party logos and NO Google logo",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines' anywhere",
+    "NO project IDs, NO email addresses, NO 'projects/' paths, NO '@' characters",
+    "NO people, faces, hands or characters",
+    "NO step numbers, lane numbers or column headings",
+    "NO green anywhere in the image",
+    "NO check marks, ticks or crosses",
+    "NO fourth lane and NO fourth card in any lane",
+    "NO text that is not listed in text_exact",
+    "NO identifier broken across two lines (never 'promo-agent-' on one line and 'shadow' on the next, never 'novasmart-' on one line and 'customer-sa' on the next)",
+    "NO alteration of 'novasmart-customer-sa' or 'promo-agent-shadow' such as underscores, spaces or capital letters"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-instructions.md:33-37",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-instructions.md:47-51",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-instructions.md:61-65",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:136-143",
+    ".lavi-working/labbench/review/guides/m0/v2-plan/A-learned-plan.md §3 L0_01"
+  ],
+  "alt_text": "The title reads: What each prompt tested. Three rows, each read left to right with arrows: question, product, finding. What do we have? leads to Agent Registry, which found 6 agents, 3 are ours. What is running? leads to Agent Runtime + Cloud Run, which found Running, not listed, with promo-agent-shadow in a red box. Who read customer data? leads to Audit logs + agent settings, which found One login, two agents, with novasmart-customer-sa in an amber box."
+}

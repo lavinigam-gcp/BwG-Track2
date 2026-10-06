@@ -1,0 +1,226 @@
+{
+  "figure_id": "L0_04",
+  "tab": "what_did_we_learn",
+  "module": "M0",
+  "intent": "An analogy for the shared login: two workers use one shared badge to enter two different buildings (Cloud Run and Agent Runtime). The door log records the badge, the building and the time, but no name, so telling the two workers apart is a guess by building, not proof.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left to right, then down to the door log and the bottom bar",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 14% of the frame, full width",
+        "contains": "the title top-left, and the 'Analogy' tag at the top-right corner"
+      },
+      {
+        "id": "scene",
+        "occupies": "from about 18% to about 62% of the frame height, full width inside the margins",
+        "contains": "two worker cards at left, one badge pill in the centre, two building cards at right"
+      },
+      {
+        "id": "log_band",
+        "occupies": "from about 64% to about 84% of the frame height, centred",
+        "contains": "the door log document with its red 'No name' tag"
+      },
+      {
+        "id": "bottom_bar",
+        "occupies": "from about 87% to about 96% of the frame height, full width inside the margins",
+        "contains": "one takeaway line"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "tag",
+      "shape": "small rounded tag",
+      "position": "top-right corner, level with the title",
+      "colour_role": "neutral",
+      "label": "Analogy"
+    },
+    {
+      "id": "worker_a",
+      "shape": "rounded square card with a simple flat outline gear icon above the label",
+      "position": "scene, left column, upper",
+      "colour_role": "neutral",
+      "label": "Worker A"
+    },
+    {
+      "id": "worker_b",
+      "shape": "rounded square card with a simple flat outline gear icon above the label, same size as Worker A",
+      "position": "scene, left column, lower",
+      "colour_role": "neutral",
+      "label": "Worker B"
+    },
+    {
+      "id": "badge",
+      "shape": "wide rounded pill with a simple flat outline key card icon: a plain rounded rectangle with one thick horizontal stripe across it and nothing else (no portrait, no figure, no lines of text) at its left",
+      "position": "scene, centre, vertically between the two worker cards",
+      "colour_role": "attention",
+      "label": "One shared badge"
+    },
+    {
+      "id": "building_a",
+      "shape": "wide rounded rectangle card, at least 30% of the frame width, with a simple flat outline building icon centred ABOVE the label",
+      "position": "scene, right column, upper, level with Worker A",
+      "colour_role": "working_system",
+      "label": "Building A: Cloud Run",
+      "label_lines": "two lines: 'Building A:' on line 1, 'Cloud Run' on line 2"
+    },
+    {
+      "id": "building_b",
+      "shape": "wide rounded rectangle card, at least 30% of the frame width, with a simple flat outline building icon centred ABOVE the label",
+      "position": "scene, right column, lower, level with Worker B",
+      "colour_role": "working_system",
+      "label": "Building B: Agent Runtime",
+      "label_lines": "two lines: 'Building B:' on line 1, 'Agent Runtime' on line 2"
+    },
+    {
+      "id": "door_log",
+      "shape": "document with a folded top-right corner, wide",
+      "position": "log band, centred under the badge, its bottom edge well above the bottom bar with a clear gap",
+      "colour_role": "neutral",
+      "label": "Door log",
+      "sublabel": "Badge, building, time",
+      "sublabel_style": "semibold near-black ink (#1F2328), never faint grey"
+    },
+    {
+      "id": "no_name",
+      "shape": "small rounded tag",
+      "position": "attached to the right edge of the door log, level with its sublabel",
+      "colour_role": "problem",
+      "label": "No name"
+    },
+    {
+      "id": "bottom_bar",
+      "shape": "full-width rounded rectangle bar",
+      "position": "bottom band",
+      "colour_role": "neutral",
+      "label": "Guess by building, not proof",
+      "label_style": "semibold near-black ink, centred"
+    }
+  ],
+  "connections": [
+    {
+      "from": "worker_a",
+      "to": "badge",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "worker_b",
+      "to": "badge",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "badge",
+      "to": "building_a",
+      "style": "solid arrow, medium amber, no label"
+    },
+    {
+      "from": "badge",
+      "to": "building_b",
+      "style": "solid arrow, medium amber, no label"
+    },
+    {
+      "from": "badge",
+      "to": "door_log",
+      "style": "short dashed grey arrow pointing down, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "Two workers, one badge",
+      "position": "title, top-left, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Analogy",
+      "position": "tag at the top-right corner",
+      "face": "sans"
+    },
+    {
+      "text": "Worker A",
+      "position": "upper worker card",
+      "face": "sans"
+    },
+    {
+      "text": "Worker B",
+      "position": "lower worker card",
+      "face": "sans"
+    },
+    {
+      "text": "One shared badge",
+      "position": "amber badge pill in the centre",
+      "face": "sans"
+    },
+    {
+      "text": "Building A: Cloud Run",
+      "position": "upper building card, set on two lines: 'Building A:' then 'Cloud Run'",
+      "face": "sans"
+    },
+    {
+      "text": "Building B: Agent Runtime",
+      "position": "lower building card, set on two lines: 'Building B:' then 'Agent Runtime'",
+      "face": "sans"
+    },
+    {
+      "text": "Door log",
+      "position": "label of the document",
+      "face": "sans"
+    },
+    {
+      "text": "Badge, building, time",
+      "position": "sublabel of the document",
+      "face": "sans"
+    },
+    {
+      "text": "No name",
+      "position": "red tag on the document",
+      "face": "sans"
+    },
+    {
+      "text": "Guess by building, not proof",
+      "position": "centred in the bottom bar",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "worker_cards": 2,
+    "badge_pills": 1,
+    "building_cards": 2,
+    "documents": 1,
+    "tags": 2,
+    "bottom_bars": 1,
+    "arrows": 5,
+    "text_strings": 11
+  },
+  "mandatory": [
+    "Workers are shown ONLY as rounded cards with a gear icon; no human shapes of any kind",
+    "Both worker cards have one arrow into the single amber badge pill; two amber arrows leave the badge, one to each building card",
+    "The 'Analogy' tag is clearly visible at the top-right corner",
+    "'Badge, building, time' and the bottom bar text are semibold near-black, not light grey",
+    "The title is bold, large, top-left and on one line",
+    "All text is large enough to read when the image is 1000px wide",
+    "The door log never overlaps or touches the bottom bar",
+    "Both building labels are set the same way on two lines, breaking only right after the colon: 'Building A:' / 'Cloud Run' and 'Building B:' / 'Agent Runtime'; no other word breaks",
+    "Every card, pill, tag and the bar has a visible 2px outline in its colour role's stroke colour"
+  ],
+  "prohibitions": [
+    "NO human figures, silhouettes, heads, faces, hands or characters; workers are shown only as gear-icon cards",
+    "NO third-party logos and NO Google logo",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines' anywhere",
+    "NO project IDs, NO email addresses, NO '@' characters",
+    "NO names written inside the door log",
+    "NO green anywhere in the image",
+    "NO check marks, ticks or crosses",
+    "NO text that is not listed in text_exact",
+    "NO third worker and NO third building",
+    "NO portrait, face, head or person silhouette inside any icon, including the badge icon"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:221 (guess by where each is hosted)",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:217",
+    ".lavi-working/labbench/runs/m0-full-v4-artifacts/lab-copy/novasmart-evidence/m0/m0_step4.txt:1567-1636 (same login via Agent Runtime and Cloud Run service agents)",
+    ".lavi-working/labbench/review/guides/m0/v2-plan/A-learned-plan.md §3 L0_04"
+  ],
+  "alt_text": "The title reads: Two workers, one badge, with a tag reading Analogy. Worker A and Worker B, shown as gear icons, both point to one amber card, One shared badge. From the badge, arrows lead to two blue buildings: Building A: Cloud Run and Building B: Agent Runtime. A dashed arrow leads down to a Door log that records Badge, building, time, with a red tag reading No name. A bar across the bottom reads: Guess by building, not proof."
+}

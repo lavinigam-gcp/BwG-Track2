@@ -1,0 +1,242 @@
+{
+  "figure_id": "S1_03",
+  "file": "images/S1_03_prompts_to_skill_map.webp",
+  "tab": "skill_mapping",
+  "module": "M1",
+  "intent": "One column per prompted step: which Google Cloud service it touched, which skill files it read, and that every step saved m1_stepN.txt, with the scorecard at Step 5.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "top to bottom inside six equal columns",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 12%, full width",
+        "contains": "the title only, top-left, one line"
+      },
+      {
+        "id": "headers",
+        "occupies": "from 15% to 43% of the height",
+        "contains": "six equal-width soft blue rounded cards in one row; in each card line 1 is 'Step N' alone in bold and the product name sits below it on one or two lines"
+      },
+      {
+        "id": "skill_bar",
+        "occupies": "from 47% to 57% of the height, full width across all six columns",
+        "contains": "one wide light-grey pill with one line of monospace text"
+      },
+      {
+        "id": "file_pills",
+        "occupies": "from 61% to 70% of the height",
+        "contains": "three light-grey monospace pills, one under column 3, one under column 5, one under column 6; columns 1, 2 and 4 are empty in this row"
+      },
+      {
+        "id": "saved_bar",
+        "occupies": "from 74% to 83% of the height, full width across all six columns",
+        "contains": "one wide light-grey pill with one line of text"
+      },
+      {
+        "id": "scorecard",
+        "occupies": "from 85% to 94% of the height, under column 5 only",
+        "contains": "one light-grey pill as wide as column 5"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "col1",
+      "shape": "tall soft blue rounded card: line 1 'Step 1' alone in bold, then the product name on one or two lines below",
+      "position": "column 1, header row",
+      "colour_role": "working_system",
+      "label": "Step 1 Agent Registry"
+    },
+    {
+      "id": "col2",
+      "shape": "tall soft blue rounded card: line 1 'Step 2' alone in bold, then the product name on one or two lines below",
+      "position": "column 2, header row",
+      "colour_role": "working_system",
+      "label": "Step 2 IAM + BigQuery"
+    },
+    {
+      "id": "col3",
+      "shape": "tall soft blue rounded card: line 1 'Step 3' alone in bold, then the product name on one or two lines below",
+      "position": "column 3, header row",
+      "colour_role": "working_system",
+      "label": "Step 3 Agent Runtime + Cloud Run"
+    },
+    {
+      "id": "col4",
+      "shape": "tall soft blue rounded card: line 1 'Step 4' alone in bold, then the product name on one or two lines below",
+      "position": "column 4, header row",
+      "colour_role": "working_system",
+      "label": "Step 4 BigQuery access list"
+    },
+    {
+      "id": "col5",
+      "shape": "tall soft blue rounded card: line 1 'Step 5' alone in bold, then the product name on one or two lines below",
+      "position": "column 5, header row",
+      "colour_role": "working_system",
+      "label": "Step 5 Cloud Audit Logs"
+    },
+    {
+      "id": "col6",
+      "shape": "tall soft blue rounded card: line 1 'Step 7' alone in bold, then the product name on one or two lines below",
+      "position": "column 6, header row",
+      "colour_role": "working_system",
+      "label": "Step 7 Evidence files only"
+    },
+    {
+      "id": "skill",
+      "shape": "full-width light-grey pill, single line of monospace text",
+      "position": "skill_bar region",
+      "colour_role": "neutral",
+      "label": "SKILL.md + references/m1.md"
+    },
+    {
+      "id": "f3",
+      "shape": "light-grey pill, single line of monospace text, centred under column 3, at least as wide as the column",
+      "position": "file_pills row, column 3",
+      "colour_role": "neutral",
+      "label": "m1-step3.md"
+    },
+    {
+      "id": "f5",
+      "shape": "light-grey pill, single line of monospace text, centred under column 5, at least as wide as the column",
+      "position": "file_pills row, column 5",
+      "colour_role": "neutral",
+      "label": "m1-step5.md"
+    },
+    {
+      "id": "f7",
+      "shape": "light-grey pill, single line of monospace text, centred under column 6, at least as wide as the column",
+      "position": "file_pills row, column 6",
+      "colour_role": "neutral",
+      "label": "showcase.md"
+    },
+    {
+      "id": "saved",
+      "shape": "full-width light-grey pill, single line",
+      "position": "saved_bar region",
+      "colour_role": "neutral",
+      "label": "Each step saves m1_stepN.txt"
+    },
+    {
+      "id": "score",
+      "shape": "small light-grey pill with a small checklist icon",
+      "position": "scorecard region, under column 5",
+      "colour_role": "neutral",
+      "label": "Scorecard"
+    }
+  ],
+  "connections": [],
+  "text_exact": [
+    {
+      "text": "Six prompted steps, one skill",
+      "position": "title, top-left, one line, bold",
+      "face": "sans"
+    },
+    {
+      "text": "Step 1 Agent Registry",
+      "position": "header card, column 1; line 1 is 'Step 1' alone in bold; 'Agent Registry' starts on line 2 and may wrap only between words; no middle dot",
+      "face": "sans"
+    },
+    {
+      "text": "Step 2 IAM + BigQuery",
+      "position": "header card, column 2; line 1 is 'Step 2' alone in bold; 'IAM + BigQuery' starts on line 2 and may wrap only between words; no middle dot",
+      "face": "sans"
+    },
+    {
+      "text": "Step 3 Agent Runtime + Cloud Run",
+      "position": "header card, column 3; line 1 is 'Step 3' alone in bold; 'Agent Runtime + Cloud Run' starts on line 2 and may wrap only between words; no middle dot",
+      "face": "sans"
+    },
+    {
+      "text": "Step 4 BigQuery access list",
+      "position": "header card, column 4; line 1 is 'Step 4' alone in bold; 'BigQuery access list' starts on line 2 and may wrap only between words; no middle dot",
+      "face": "sans"
+    },
+    {
+      "text": "Step 5 Cloud Audit Logs",
+      "position": "header card, column 5; line 1 is 'Step 5' alone in bold; 'Cloud Audit Logs' starts on line 2 and may wrap only between words; no middle dot",
+      "face": "sans"
+    },
+    {
+      "text": "Step 7 Evidence files only",
+      "position": "header card, column 6; line 1 is 'Step 7' alone in bold; 'Evidence files only' starts on line 2 and may wrap only between words; no middle dot",
+      "face": "sans"
+    },
+    {
+      "text": "SKILL.md + references/m1.md",
+      "position": "full-width grey bar, one line",
+      "face": "mono"
+    },
+    {
+      "text": "m1-step3.md",
+      "position": "pill under column 3, one line",
+      "face": "mono"
+    },
+    {
+      "text": "m1-step5.md",
+      "position": "pill under column 5, one line",
+      "face": "mono"
+    },
+    {
+      "text": "showcase.md",
+      "position": "pill under column 6, one line",
+      "face": "mono"
+    },
+    {
+      "text": "Each step saves m1_stepN.txt",
+      "position": "full-width grey bar, one line; 'm1_stepN.txt' in monospace",
+      "face": "sans"
+    },
+    {
+      "text": "Scorecard",
+      "position": "small pill under column 5",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "header_cards": 6,
+    "full_width_bars": 2,
+    "file_pills": 3,
+    "scorecard_pills": 1,
+    "arrows": 0,
+    "text_strings": 13
+  },
+  "mandatory": [
+    "Exactly six header cards of identical size in one row, all soft blue",
+    "The file pills sit exactly under columns 3, 5 and 6; nothing sits under columns 1, 2 and 4 in that row",
+    "'Scorecard' sits under column 5 only, below the saved bar",
+    "'SKILL.md + references/m1.md', 'm1-step3.md', 'm1-step5.md', 'showcase.md' and 'm1_stepN.txt' are monospace, each on one line, spelled exactly with lowercase letters, dots and hyphens kept; capital N in 'm1_stepN.txt'",
+    "The title reads exactly 'Six prompted steps, one skill', bold, top-left, one line",
+    "Every string in text_exact appears exactly once, spelled exactly as written",
+    "In every header card, 'Step N' is alone on line 1 in bold, and the product name starts on line 2; there is no middle dot anywhere in the image",
+    "The six header cards are tall (about 28% of the frame height) and the bars and pills are tall, so the rows fill the frame down to about 94% of its height",
+    "The title is bold near-black #1F2328, never grey"
+  ],
+  "prohibitions": [
+    "NO arrows or connector lines",
+    "NO green anywhere",
+    "NO red anywhere",
+    "NO column for Step 6",
+    "NO 'm1-step3.md' broken at its hyphen; NO 'm1_' at the end of one line with 'stepN.txt' on the next",
+    "NO row labels or headings other than the strings listed",
+    "NO command text, shell syntax, flags or flag values of any kind (no 'gcloud', 'curl', 'bq', 'agy -p', '--', '$', '|', 'stream-json')",
+    "NO URLs, hostnames or file paths other than the file names listed in text_exact",
+    "NO project IDs, project numbers, regions, or email addresses (nothing containing '@', 'projects/' or 'iam.gserviceaccount.com')",
+    "NO logos of any kind, including Google, Google Cloud, Gemini or Antigravity logos",
+    "NO people, faces, hands, silhouettes, robots, mascots or characters",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines'",
+    "NO text that is not listed in text_exact: no extra labels, numbers, step numbers, captions, legend, footnote or source note",
+    "NO identifier (file name or login name) broken across two lines",
+    "NO word broken at a hyphen",
+    "NO grey or faint text for any label; every label is semibold near-black #1F2328",
+    "NO middle dot character '·' anywhere",
+    "NO Step 6 column"
+  ],
+  "source_refs": [
+    "skills/novasmart-governance-lab/references/m1.md lines 8-11 (Step 3 reads m1-step3.md, Step 5 m1-step5.md, Step 7 showcase.md)",
+    ".lavi-working/labbench/runs/m1-v5/m1/trace.md lines 46, 118, 1531, 3388, 4879 (when each file was read)",
+    ".lavi-working/labbench/runs/m1-v5-artifacts/evidence_all.txt (one entry per step; scorecard command in Step 5)"
+  ],
+  "alt_text": "Six prompted steps, one skill: six blue cards: Step 1, Agent Registry; Step 2, IAM + BigQuery; Step 3, Agent Runtime + Cloud Run; Step 4, BigQuery access list; Step 5, Cloud Audit Logs; Step 7, evidence files only. A bar across all six reads SKILL.md + references/m1.md. Extra files sit under three steps: m1-step3.md under Step 3, m1-step5.md under Step 5, showcase.md under Step 7. A second bar reads: Each step saves m1_stepN.txt. A Scorecard pill sits under Step 5."
+}

@@ -1,0 +1,265 @@
+{
+  "figure_id": "S1_02",
+  "file": "images/S1_02_when_each_change_may_happen.webp",
+  "tab": "skill_mapping",
+  "module": "M1",
+  "intent": "The step gate for Module 1: each step looks at one product and may say and change only what that step allows; only Steps 1 and 3 change the project.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left to right across five equal columns, then the band beneath",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 12%, full width",
+        "contains": "the title only, top-left, one line"
+      },
+      {
+        "id": "columns",
+        "occupies": "from 15% to 80% of the frame height, full width inside the margins",
+        "contains": "five equal-width columns; each column has, top to bottom: a header on ONE line, a blue product chip, and a tall coloured card with a small open-padlock icon"
+      },
+      {
+        "id": "band",
+        "occupies": "from 85% to 93% of the frame height, full width inside the margins",
+        "contains": "one light-grey band with one short line"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "h1",
+      "shape": "column header text, bold, one line",
+      "position": "column 1, top",
+      "label": "Step 1 · Register"
+    },
+    {
+      "id": "c1",
+      "shape": "rounded rectangle chip, the same height in every column",
+      "position": "column 1, under header",
+      "colour_role": "working_system",
+      "label": "Agent Registry"
+    },
+    {
+      "id": "u1",
+      "shape": "tall rounded card with a small open-padlock icon at its left",
+      "position": "column 1, under its chip",
+      "colour_role": "good_outcome",
+      "label": "Owner on record; one entry added"
+    },
+    {
+      "id": "h2",
+      "shape": "column header text, bold, one line",
+      "position": "column 2, top",
+      "label": "Step 2 · Inspect"
+    },
+    {
+      "id": "c2",
+      "shape": "rounded rectangle chip, the same height in every column",
+      "position": "column 2, under header",
+      "colour_role": "working_system",
+      "label": "IAM + BigQuery"
+    },
+    {
+      "id": "u2",
+      "shape": "tall rounded card with a small open-padlock icon at its left",
+      "position": "column 2, under its chip",
+      "colour_role": "neutral",
+      "label": "Reports the power; changes nothing"
+    },
+    {
+      "id": "h3",
+      "shape": "column header text, bold, one line",
+      "position": "column 3, top",
+      "label": "Step 3 · Separate"
+    },
+    {
+      "id": "c3",
+      "shape": "rounded rectangle chip, the same height in every column",
+      "position": "column 3, under header",
+      "colour_role": "working_system",
+      "label": "Agent Runtime + Cloud Run"
+    },
+    {
+      "id": "u3",
+      "shape": "tall rounded card with a small open-padlock icon at its left",
+      "position": "column 3, under its chip",
+      "colour_role": "good_outcome",
+      "label": "Seven changes, fixed order"
+    },
+    {
+      "id": "h4",
+      "shape": "column header text, bold, one line",
+      "position": "column 4, top",
+      "label": "Step 4 · Cut off"
+    },
+    {
+      "id": "c4",
+      "shape": "rounded rectangle chip, the same height in every column",
+      "position": "column 4, under header",
+      "colour_role": "working_system",
+      "label": "BigQuery access list"
+    },
+    {
+      "id": "u4",
+      "shape": "tall rounded card with a small open-padlock icon at its left",
+      "position": "column 4, under its chip",
+      "colour_role": "neutral",
+      "label": "Removes only what remains"
+    },
+    {
+      "id": "h5",
+      "shape": "column header text, bold, one line",
+      "position": "column 5, top",
+      "label": "Step 5 · Prove"
+    },
+    {
+      "id": "c5",
+      "shape": "rounded rectangle chip, the same height in every column",
+      "position": "column 5, under header",
+      "colour_role": "working_system",
+      "label": "Cloud Audit Logs"
+    },
+    {
+      "id": "u5",
+      "shape": "tall rounded card with a small open-padlock icon at its left",
+      "position": "column 5, under its chip",
+      "colour_role": "neutral",
+      "label": "Proves it; changes nothing"
+    },
+    {
+      "id": "band",
+      "shape": "thin full-width rounded callout bar",
+      "position": "band region",
+      "colour_role": "neutral",
+      "label": "Says only what its own re-read showed"
+    }
+  ],
+  "connections": [],
+  "text_exact": [
+    {
+      "text": "When each change may happen",
+      "position": "title, top-left, one line, bold",
+      "face": "sans"
+    },
+    {
+      "text": "Step 1 · Register",
+      "position": "column 1 header, ONE line, never wrapped",
+      "face": "sans"
+    },
+    {
+      "text": "Step 2 · Inspect",
+      "position": "column 2 header, ONE line, never wrapped",
+      "face": "sans"
+    },
+    {
+      "text": "Step 3 · Separate",
+      "position": "column 3 header, ONE line, never wrapped",
+      "face": "sans"
+    },
+    {
+      "text": "Step 4 · Cut off",
+      "position": "column 4 header, ONE line, never wrapped",
+      "face": "sans"
+    },
+    {
+      "text": "Step 5 · Prove",
+      "position": "column 5 header, ONE line, never wrapped",
+      "face": "sans"
+    },
+    {
+      "text": "Agent Registry",
+      "position": "blue chip, column 1; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "IAM + BigQuery",
+      "position": "blue chip, column 2; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Agent Runtime + Cloud Run",
+      "position": "blue chip, column 3; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "BigQuery access list",
+      "position": "blue chip, column 4; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Cloud Audit Logs",
+      "position": "blue chip, column 5; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Owner on record; one entry added",
+      "position": "soft green card, column 1; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Reports the power; changes nothing",
+      "position": "light grey card, column 2; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Seven changes, fixed order",
+      "position": "soft green card, column 3; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Removes only what remains",
+      "position": "light grey card, column 4; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Proves it; changes nothing",
+      "position": "light grey card, column 5; may wrap only between words",
+      "face": "sans"
+    },
+    {
+      "text": "Says only what its own re-read showed",
+      "position": "inside the grey band, one line",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "columns": 5,
+    "product_chips": 5,
+    "cards": 5,
+    "bands": 1,
+    "arrows": 0,
+    "text_strings": 17
+  },
+  "mandatory": [
+    "Exactly five equal-width columns with even gaps",
+    "Every column header sits on ONE line; the text after the middle dot never moves to a second line; headers are bold near-black",
+    "Under each header, one soft blue product chip; all five chips have the same height",
+    "Under each chip, one tall card of the same height in every column, each with a small open-padlock icon: columns 1 and 3 soft green with a green border; columns 2, 4 and 5 light grey with a grey border",
+    "The cards fill the column down to about 80% of the frame height, so there is no empty area between the cards and the band",
+    "The title reads exactly 'When each change may happen', bold, top-left, one line, in the same large size as a slide title",
+    "Every string in text_exact appears exactly once, spelled exactly as written"
+  ],
+  "prohibitions": [
+    "NO arrows or connectors of any kind",
+    "NO amber or red anywhere",
+    "NO bar or callout other than the one grey band at the bottom",
+    "NO sixth column, no Step 6 or Step 7",
+    "NO numbers other than the step numbers 1 to 5 in the headers",
+    "NO command text, shell syntax, flags or flag values of any kind (no 'gcloud', 'curl', 'bq', 'agy -p', '--', '$', '|', 'stream-json')",
+    "NO URLs, hostnames or file paths other than the file names listed in text_exact",
+    "NO project IDs, project numbers, regions, or email addresses (nothing containing '@', 'projects/' or 'iam.gserviceaccount.com')",
+    "NO logos of any kind, including Google, Google Cloud, Gemini or Antigravity logos",
+    "NO people, faces, hands, silhouettes, robots, mascots or characters",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines'",
+    "NO text that is not listed in text_exact: no extra labels, numbers, step numbers, captions, legend, footnote or source note",
+    "NO identifier (file name or login name) broken across two lines",
+    "NO word broken at a hyphen",
+    "NO grey or faint text for any label; every label is semibold near-black #1F2328",
+    "NO quotation marks or apostrophes around the title or any label"
+  ],
+  "source_refs": [
+    "skills/novasmart-governance-lab/references/m1.md section 2 step table (what each step may report and change)",
+    ".lavi-working/labbench/runs/m1-v5-artifacts/evidence_all.txt :199-296 (Step 1 change), :670-713 (seven Step 3 change records), Steps 2, 4, 5 '(nothing changed in this step)'"
+  ],
+  "alt_text": "When each change may happen: five columns. Step 1, Register: Agent Registry; owner on record, one entry added (green card). Step 2, Inspect: IAM and BigQuery; reports the power, changes nothing (gray card). Step 3, Separate: Agent Runtime and Cloud Run; seven changes, fixed order (green card). Step 4, Cut off: BigQuery access list; removes only what remains (gray card). Step 5, Prove: Cloud Audit Logs; proves it, changes nothing (gray card). Each card has an open padlock. A band below reads: Says only what its own re-read showed."
+}

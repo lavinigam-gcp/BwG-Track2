@@ -1,0 +1,205 @@
+{
+  "figure_id": "S1_04",
+  "file": "images/S1_04_step3_flowchart.webp",
+  "tab": "skill_mapping",
+  "module": "M1",
+  "intent": "The order the skill requires in Step 3: flip the personalization agent to Agent Identity and grant its new badge query and read access, show a real read, create the promo login with one role and point the service at it, and only then remove the shared login's admin role. Six boxes hold seven changes; the read is a check.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left to right along one row of six tall boxes, then two bands beneath",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 12%, full width",
+        "contains": "the title only, top-left, one line"
+      },
+      {
+        "id": "flow",
+        "occupies": "from 17% to 66% of the frame height, full width inside the margins",
+        "contains": "six equal-width tall rounded rectangles in one row, as wide as possible, separated by short arrows in narrow gaps; each box has a simple outline icon in its upper third and its label in its lower two-thirds"
+      },
+      {
+        "id": "band_amber",
+        "occupies": "from 71% to 80% of the frame height, full width",
+        "contains": "one soft amber callout bar with one line of text"
+      },
+      {
+        "id": "band_red",
+        "occupies": "from 84% to 93% of the frame height, full width",
+        "contains": "one soft red callout bar with one line of text"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "b1",
+      "shape": "tall rounded rectangle, plain key-card icon: a blank rectangular card with one horizontal stripe, no face, no person, no avatar",
+      "position": "box 1 of six",
+      "colour_role": "working_system",
+      "label": "Flip to Agent Identity"
+    },
+    {
+      "id": "b2",
+      "shape": "tall rounded rectangle, key icon",
+      "position": "box 2 of six",
+      "colour_role": "working_system",
+      "label": "Grant query + read"
+    },
+    {
+      "id": "b3",
+      "shape": "tall rounded rectangle, magnifier icon",
+      "position": "box 3 of six",
+      "colour_role": "neutral",
+      "label": "Show one real read"
+    },
+    {
+      "id": "b4",
+      "shape": "tall rounded rectangle, plus sign in a circle icon",
+      "position": "box 4 of six",
+      "colour_role": "working_system",
+      "label": "New login, one role"
+    },
+    {
+      "id": "b5",
+      "shape": "tall rounded rectangle, arrow pointing right into a box icon",
+      "position": "box 5 of six",
+      "colour_role": "working_system",
+      "label": "Point promo at it"
+    },
+    {
+      "id": "b6",
+      "shape": "tall rounded rectangle, minus sign in a circle icon",
+      "position": "box 6 of six",
+      "colour_role": "working_system",
+      "label": "Remove admin last"
+    },
+    {
+      "id": "amber",
+      "shape": "thin full-width rounded callout bar",
+      "position": "band_amber",
+      "colour_role": "attention",
+      "label": "Each change: say, do, re-read, record undo"
+    },
+    {
+      "id": "red",
+      "shape": "thin full-width rounded callout bar",
+      "position": "band_red",
+      "colour_role": "problem",
+      "label": "No self-grant, even after a refusal"
+    }
+  ],
+  "connections": [
+    {
+      "from": "b1",
+      "to": "b2",
+      "style": "solid straight arrow, medium grey, no label"
+    },
+    {
+      "from": "b2",
+      "to": "b3",
+      "style": "solid straight arrow, medium grey, no label"
+    },
+    {
+      "from": "b3",
+      "to": "b4",
+      "style": "solid straight arrow, medium grey, no label"
+    },
+    {
+      "from": "b4",
+      "to": "b5",
+      "style": "solid straight arrow, medium grey, no label"
+    },
+    {
+      "from": "b5",
+      "to": "b6",
+      "style": "solid straight arrow, medium grey, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "Step 3: the order the skill requires",
+      "position": "title, top-left, one line, bold",
+      "face": "sans"
+    },
+    {
+      "text": "Flip to Agent Identity",
+      "position": "label in the lower half of box 1",
+      "face": "sans"
+    },
+    {
+      "text": "Grant query + read",
+      "position": "label in the lower half of box 2",
+      "face": "sans"
+    },
+    {
+      "text": "Show one real read",
+      "position": "label in the lower half of box 3",
+      "face": "sans"
+    },
+    {
+      "text": "New login, one role",
+      "position": "label in the lower half of box 4",
+      "face": "sans"
+    },
+    {
+      "text": "Point promo at it",
+      "position": "label in the lower half of box 5",
+      "face": "sans"
+    },
+    {
+      "text": "Remove admin last",
+      "position": "label in the lower half of box 6",
+      "face": "sans"
+    },
+    {
+      "text": "Each change: say, do, re-read, record undo",
+      "position": "amber band, one line",
+      "face": "sans"
+    },
+    {
+      "text": "No self-grant, even after a refusal",
+      "position": "red band, one line",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "stage_boxes": 6,
+    "arrows": 5,
+    "bands": 2,
+    "text_strings": 9
+  },
+  "mandatory": [
+    "Exactly six boxes in one row, left to right in the order listed; boxes 1, 2, 4, 5 and 6 soft blue; box 3 light grey with a grey border",
+    "Exactly five arrows, each joining one box to the next on its right",
+    "Labels are medium-size semibold text, wrap only between words and take at most three lines; the only text in each box is its label",
+    "The icon in box 1 is a plain blank card with one stripe; it shows no person, face or avatar",
+    "The amber band is above the red band; each holds one line",
+    "The title reads exactly 'Step 3: the order the skill requires', bold, top-left, one line, in the same size as a slide title (not oversized)",
+    "Every string in text_exact appears exactly once, spelled exactly as written",
+    "The gaps between boxes are narrow (just wide enough for a short arrow), so each box is about one sixth of the frame width"
+  ],
+  "prohibitions": [
+    "NO green anywhere",
+    "NO numbers, step badges or the word 'stage' or 'step' inside any box",
+    "NO branch or loop-back arrow",
+    "NO text at the top of the boxes; the upper half holds only the icon",
+    "NO 'self-' at the end of one line with 'grant' on the next",
+    "NO command text, shell syntax, flags or flag values of any kind (no 'gcloud', 'curl', 'bq', 'agy -p', '--', '$', '|', 'stream-json')",
+    "NO URLs, hostnames or file paths other than the file names listed in text_exact",
+    "NO project IDs, project numbers, regions, or email addresses (nothing containing '@', 'projects/' or 'iam.gserviceaccount.com')",
+    "NO logos of any kind, including Google, Google Cloud, Gemini or Antigravity logos",
+    "NO people, faces, hands, silhouettes, robots, mascots or characters",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines'",
+    "NO text that is not listed in text_exact: no extra labels, numbers, step numbers, captions, legend, footnote or source note",
+    "NO identifier (file name or login name) broken across two lines",
+    "NO word broken at a hyphen",
+    "NO grey or faint text for any label; every label is semibold near-black #1F2328",
+    "NO person, face, head-and-shoulders avatar or ID photo inside any icon",
+    "NO quotation marks or apostrophes around the title or any label"
+  ],
+  "source_refs": [
+    "skills/novasmart-governance-lab/references/m1.md lines 261-269 and m1-step3.md (the required order)",
+    ".lavi-working/labbench/runs/m1-v5-artifacts/evidence_all.txt :670-713 (seven change records; in the run promo-agent-sa was created 19:15:38 and granted 19:16:02, before the real read)"
+  ],
+  "alt_text": "Step 3: the order the skill requires. Six boxes joined by arrows: flip to Agent Identity; grant query + read; show one real read (a gray box, a check rather than a change); new login, one role; point promo at it; remove admin last. An amber band reads: Each change: say, do, re-read, record undo. A red band reads: No self-grant, even after a refusal."
+}

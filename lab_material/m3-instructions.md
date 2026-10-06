@@ -108,7 +108,7 @@ More background: Reference Guide tab, What you just did
 
 Which raises the question you should be nervous about. You have made this system harder to abuse. Have you also made it worse at its job? A price match agent that refuses a legitimate customer is broken just as surely as one that green-lights a fraud, and you would not find that out from four hand-run tests.
 
-M5 · Evaluate and Decide is where you stop spot-checking and start measuring: run the agent against a full scenario set — the deals it should settle, the ones it should escalate, the ones it should refuse, and the traps it should catch — and read the score before you roll it out to every store.
+M4 · Evaluate and Decide (Optional Module) is where you stop spot-checking and start measuring: run the agent against a full scenario set — the deals it should settle, the ones it should escalate, the ones it should refuse, and the traps it should catch — and read the score before you roll it out to every store.
 
 ## Try this too — optional
 

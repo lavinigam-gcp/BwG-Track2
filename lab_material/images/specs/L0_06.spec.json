@@ -1,0 +1,191 @@
+{
+  "figure_id": "L0_06",
+  "tab": "what_did_we_learn",
+  "module": "M0",
+  "intent": "Show the leadership decision without giving a verdict: the unowned promo agent reads customer records; first ask what its job needs and what it can reach if misused (today, at least the whole customer table); then you can kill it or own it, each with a cost.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "top to bottom",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 14% of the frame, full width",
+        "contains": "the title, top-left, one line"
+      },
+      {
+        "id": "start",
+        "occupies": "from about 16% to about 30% of the frame height, centred",
+        "contains": "the start node"
+      },
+      {
+        "id": "ask",
+        "occupies": "from about 36% to about 62% of the frame height, centred, about 70% of the frame width",
+        "contains": "one wide box holding a heading and two question rows"
+      },
+      {
+        "id": "branches",
+        "occupies": "from about 70% to about 94% of the frame height, full width inside the margins",
+        "contains": "two equal amber boxes, one left of centre and one right of centre"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "start",
+      "shape": "wide rounded card holding a wide single-line monospace red pill on top and a text line under it",
+      "position": "start region, centred",
+      "colour_role": "neutral",
+      "pill": "promo-agent-shadow",
+      "pill_colour_role": "problem",
+      "label": "reads customer records",
+      "label_style": "semibold near-black ink (#1F2328)"
+    },
+    {
+      "id": "ask",
+      "shape": "wide rounded rectangle box with a bold heading at top-left and two question rows below, each with a small outline magnifying-glass icon at its left; the second row has a wide red pill at its right end",
+      "position": "ask region, centred",
+      "colour_role": "neutral",
+      "label": "First, ask",
+      "rows": [
+        "What does its job need?",
+        "What can it reach if misused?"
+      ],
+      "answer_pill": "Today: at least the whole customer table",
+      "answer_pill_colour_role": "problem",
+      "answer_pill_face": "sans-serif semibold near-black on ONE line, NOT monospace",
+      "rows_style": "each question row is semibold near-black ink (#1F2328), the same size as the branch text, never grey or light"
+    },
+    {
+      "id": "kill",
+      "shape": "wide rounded rectangle box with a bold heading and one line of text under it",
+      "position": "branches, left of centre",
+      "colour_role": "attention",
+      "label": "Kill it",
+      "sublabel": "Fast, hides the problem, breaks a team",
+      "sublabel_style": "semibold near-black ink (#1F2328)"
+    },
+    {
+      "id": "own",
+      "shape": "wide rounded rectangle box, same size as the Kill it box, with a bold heading and one line of text under it",
+      "position": "branches, right of centre",
+      "colour_role": "attention",
+      "label": "Own it",
+      "sublabel": "Named owner, access cut to the job",
+      "sublabel_style": "semibold near-black ink (#1F2328)"
+    }
+  ],
+  "connections": [
+    {
+      "from": "start",
+      "to": "ask",
+      "style": "short thin 2px straight vertical arrow, neutral grey, from the bottom centre of the start node straight down to the top centre of the 'First, ask' box, no bends, no label"
+    },
+    {
+      "from": "ask",
+      "to": "kill",
+      "style": "thin 2px solid elbow arrow (straight lines, right angles, small arrowhead), medium amber, no label"
+    },
+    {
+      "from": "ask",
+      "to": "own",
+      "style": "thin 2px solid elbow arrow (straight lines, right angles, small arrowhead), medium amber, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "Own it or kill it",
+      "position": "title, top-left, one line",
+      "face": "sans"
+    },
+    {
+      "text": "promo-agent-shadow",
+      "position": "red pill in the start node",
+      "face": "mono"
+    },
+    {
+      "text": "reads customer records",
+      "position": "text line under the red pill",
+      "face": "sans"
+    },
+    {
+      "text": "First, ask",
+      "position": "heading of the middle box",
+      "face": "sans"
+    },
+    {
+      "text": "What does its job need?",
+      "position": "first question row in the middle box",
+      "face": "sans"
+    },
+    {
+      "text": "What can it reach if misused?",
+      "position": "second question row in the middle box",
+      "face": "sans"
+    },
+    {
+      "text": "Today: at least the whole customer table",
+      "position": "red pill at the right end of the second question row",
+      "face": "sans"
+    },
+    {
+      "text": "Kill it",
+      "position": "heading of the left branch box",
+      "face": "sans"
+    },
+    {
+      "text": "Fast, hides the problem, breaks a team",
+      "position": "text under 'Kill it'",
+      "face": "sans"
+    },
+    {
+      "text": "Own it",
+      "position": "heading of the right branch box",
+      "face": "sans"
+    },
+    {
+      "text": "Named owner, access cut to the job",
+      "position": "text under 'Own it'",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "start_nodes": 1,
+    "ask_boxes": 1,
+    "branch_boxes": 2,
+    "pills": 2,
+    "arrows": 3,
+    "text_strings": 11
+  },
+  "mandatory": [
+    "The reading order is top to bottom: start node, then the 'First, ask' box, then the two branch boxes side by side at the bottom",
+    "Both branch boxes are soft amber and identical in size and style; neither is highlighted, larger or marked as preferred",
+    "'promo-agent-shadow' is in a monospace face on ONE line inside a wide red pill",
+    "Each branch text line is on one line in semibold near-black (#1F2328), not grey",
+    "Exactly one arrow runs from the start node down into the 'First, ask' box, and exactly two amber arrows leave the 'First, ask' box, one to each branch box; nothing leaves the branch boxes",
+    "'Today: at least the whole customer table' is on ONE line inside a wide red pill, set in sans-serif, not monospace; only 'promo-agent-shadow' is monospace",
+    "The title is bold, large, top-left and on one line",
+    "All text is large enough to read when the image is 1000px wide",
+    "'What does its job need?' and 'What can it reach if misused?' are semibold near-black (#1F2328), as dark as the heading; they are the point of the figure and are never grey, faint or light"
+  ],
+  "prohibitions": [
+    "NO green anywhere in the image",
+    "NO check marks, ticks, crosses, stars, 'recommended' badges or any mark that favours one branch",
+    "NO verdict, result or outcome box below the branches",
+    "NO third branch",
+    "NO third-party logos and NO Google logo",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines' anywhere",
+    "NO project IDs, NO email addresses, NO '@' characters",
+    "NO people, faces, hands or characters",
+    "NO text that is not listed in text_exact",
+    "NO identifier broken across two lines (never 'promo-agent-' on one line and 'shadow' on the next)",
+    "NO grey or faint text anywhere; every label is near-black (#1F2328)",
+    "NO thick, block or 3D arrows; every arrow is a thin 2px line"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:251",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:263",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:267",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-instructions.md:73-75"
+  ],
+  "alt_text": "The title reads: Own it or kill it. At the top, promo-agent-shadow in red, which reads customer records. An arrow leads down to a box, First, ask, with two questions: What does its job need? and What can it reach if misused? The second question carries a red answer: Today: at least the whole customer table. From that box, two amber arrows lead to two equal amber boxes: Kill it (Fast, hides the problem, breaks a team) and Own it (Named owner, access cut to the job)."
+}

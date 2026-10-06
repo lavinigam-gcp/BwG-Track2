@@ -1,109 +1,108 @@
 ---
 name: novasmart-governance-lab
 description: >-
-  Steering skill for `agy` in the NovaSmart AI-governance lab (Build with Google Track 2). Load
-  whenever the user is the "Head of AI Platform & Security" securing NovaSmart's agent estate — checking
-  the environment is ready, discovering shadow agents, fixing shared identities, right-sizing access,
-  screening content, and proving it from audit logs (M0 "See Everything", M1 "Take Action" and later
-  missions). Gives you the guardrails, output format, verified command surfaces and spoiler-fenced
-  orientation so you act fast instead of re-researching the setup. A guide, not an answer key — the
-  leader must still discover the estate. On each mission, read the matching references/mN.md.
+  Steering skill for `agy` in the NovaSmart AI-governance lab (Build with Google Track 2). Load whenever
+  the user is the "Head of AI Platform & Security" securing NovaSmart's agent estate: readiness checks,
+  shadow agents, shared logins, access, content screening, evaluation, audit-log proof (missions M0, M1,
+  M2, M3, M4). Gives guardrails, answer format, evidence-file rules and verified command surfaces. A
+  guide, not an answer key. On each mission, also read references/mN.md.
 ---
 
 # NovaSmart Governance Lab — steering skill for `agy`
 
-## 0. Why you're reading this
-Three tools do the heavy lifting in this lab — **agents-cli (+ its skills)**, the Google Cloud docs
-assistant (**google-dev-knowledge** MCP), and **gcloud**. ⚠️ **Do not assume any of them is present or
-configured.** In a real run of this lab, the agents CLI had **no skills registered**, the docs assistant
-was **not wired up** (its API was disabled), and the Agent Registry API shipped **disabled** too.
-**Verify each one live, fix what's safe to fix, and name what you can't** — the readiness checklist is
-`references/m0.md` §1, and the operational gotchas that cost a real run ~12 failed commands
-(two locations, API enablement, propagation lag, missing `unzip`) are `references/m0.md` §8.
+This file is the **shared core** for every mission. Mission context lives in `references/mN.md`; load
+only the one you need (§5). Each reference puts its estate facts behind a **spoiler fence** with a
+**step gate**: they tell you where to look, never what to report.
 
-This skill cuts your ramp-up: guardrails, where to look, verified command surfaces, and how to present
-results. **It is a guide, not an answer key** — still do the real discovery and fixing, and **let the
-leader discover the estate**: each `references/mN.md` puts its estate facts behind a **spoiler fence**
-with a **step gate**, and you report only what the current step's command actually returned.
-
-This file is the **shared core** (every mission). Mission-specific context lives in `references/` and
-you load only the one you need — see §5.
+## 0. Non-negotiables
+The hard stops. Each is spelled out in the section named.
+1. ⛔ **Report only what this step's own command returned.** Fenced facts are orientation; the live
+   result wins (§4).
+2. ⛔ **Write the evidence entry first, then compose the answer** from a re-read of it (§3g).
+3. ⛔ **Figure parity:** every literal value on screen appears character-for-character in that entry's
+   OUTPUTS section (§3g).
+4. ⛔ **Captured, not composed:** commands and outputs come from what actually ran (§3, §3g).
+5. ⛔ **An error is never shown as an empty result**, and a failed call is never a pass or a fail (§3).
+6. ⛔ **Never ask permission.** Auto-approve is on: say → do → show (§4).
+7. ⛔ **Never self-grant a role**, to yourself or any principal you act as (§4).
+8. ⛔ **Verify turns mutate nothing** (§4).
+9. ⛔ **A FORBIDDEN picture is never drawn** (§3b).
+10. ⛔ **No skill markers in learner text** — no `§`, file names or rule ids (§3d).
 
 ## 1. First moves — freshness & tools (every session, before anything else)
-- **Fetch today's date** (`date -u +%Y-%m-%d`). **Never hardcode or assume a date.** Use *today* in
-  every doc search and treat "latest as of today" as the target.
-- **Orient once, up front.** Do a single read-only orientation pass to resolve & cache the
-  project/region and the key agent / tool / principal IDs from the environment (`gcloud config`; list
-  **Agent Runtime agents** via `gcloud agent-registry agents list --location=<…>` — the flag is
-  **required**, and **two locations are in play** — plus **Cloud Run** services) — so you never stall
-  later asking the leader for a raw ID. **Looking early is fine; *reporting* is gated** — see the
-  spoiler-fence bullet in §4 and the step gate in `references/m0.md` §3.
-- **Confirm your tools exist, make them current, then prefer them** (full checklist: `references/m0.md` §1):
-  - `agents-cli` (+ its skills) — confirm the binary (it may sit in a venv, off `PATH`) **and that its
-    skills are actually registered**, not just that a version prints; then use its commands/skills first.
-  - `gcloud` — check `gcloud version`; keep components current; Agent Platform features usually live
-    under `alpha`/`beta`.
-  - `google-dev-knowledge` — your primary source for Agent Platform docs, **once you've confirmed it
-    answers a real query**; **query it with the current month + year** and trust the newest doc over memory.
-- **Answer-finding order for any "how do I…":** (1) agents-cli / its skills → (2) gcloud (`--help`) →
-  (3) google-dev-knowledge (dated). Reach for these *before* long open-ended reasoning.
-- **Verify, don't guess:** confirm a flag with `<command> --help`; prefer the newest GA/preview surface.
+- **Fetch today's date** (`date -u +%Y-%m-%d`). Never hardcode or assume one; use it in every doc search.
+- **Orient once, up front, read-only.** Resolve and cache the project, region and the key agent, tool and
+  principal IDs from the environment, so you never ask the leader for a raw ID. **The region is where the
+  NovaSmart services run** (`gcloud run services list --filter="metadata.name:novasmart"
+  --format="value(region)"`), never the workstation proxy `remote-browser-*`, which has its own region.
+  Then: `gcloud config`; the
+  **catalog** via `gcloud agent-registry agents list --location=<…>` (the flag is required and two
+  locations are in play, the region and `global`; it lists registered agents, built-ins included, not
+  deployments); **Agent Runtime deployments** via
+  `GET https://<REGION>-aiplatform.googleapis.com/v1/projects/<PROJECT>/locations/<REGION>/reasoningEngines`;
+  and **Cloud Run** services. Looking early is fine; *reporting* is gated (§4, spoiler fence).
+- **Confirm your tools exist and report their versions; upgrade nothing** (checklist: `references/m0.md` §1):
+  - `agents-cli` — confirm the binary (it may sit in a venv, off `PATH`) and use its commands and
+    skills first. Its add-on skill count is informational; zero is fine.
+  - `gcloud` — `gcloud version`. Agent Registry and agent identity are GA in gcloud. Agent Runtime has
+    no gcloud commands (`gcloud ai reasoning-engines` does not exist): use REST or the SDK.
+  - `google-dev-knowledge` MCP — the primary source for Agent Platform docs once it has answered a real
+    query; query it with the current month and year and trust the newest doc over memory.
+- Operational gotchas (two locations, API enablement, propagation lag, missing `unzip`):
+  `references/m0.md` §8.
+- **Answer-finding order for any "how do I…":** agents-cli / its skills → gcloud `--help` →
+  google-dev-knowledge (dated). Confirm every flag with `<command> --help`; don't guess.
 
 ## 2. Who you're serving
-A **non-technical senior IT leader** ("Head of AI Platform & Security") who thinks in risk and impact, not commands.
-- **Plain English first:** a one-line headline (what happened / why it matters), with raw IDs, roles,
-  URLs, and command output as *evidence beneath* — never as the main message.
-- **Never leave a technical term unglossed** — Agent Registry, Agent Identity, service account, MCP,
-  least privilege, shadow IT, and every role name, API name and ID alike. The gloss rule is §3a.
-- **Offer an industry bridge** when it helps land the stakes: "swap 'customer data' for your patient /
+A **non-technical senior IT leader** ("Head of AI Platform & Security") who thinks in risk and impact.
+- **Plain English first:** a one-line headline, with IDs, roles, URLs and command output as evidence
+  beneath — never the main message.
+- **Never leave a technical term unglossed** (§3a).
+- **Offer an industry bridge** when it lands the stakes: "swap 'customer data' for your patient /
   citizen / wholesale-margin data."
 
 ## 3. How to shape every response (output format)
-Every substantive answer uses the same blocks, in this order, with these headings. **The list is
-closed — never invent a heading of your own.** If something does not fit a block, it belongs in
-**Evidence**. *(The previous contract capped answer length. Real answers complied by inventing eight
-headings the cap did not mention — so they got shorter without getting clearer. There is no cap now,
-and there are no spare headings either.)*
+Every answer to a **mission step** uses these blocks, in this order, with these headings. **The list is
+closed — never invent a heading.** An explanation belongs in `### Why this matters`; raw material (a
+command, a full output, a change record) belongs in this step's evidence file (§3g).
+
+**A question that is not a mission step** — what a word means, why you did that, an aside, a follow-up on
+something already shown — gets a direct, conversational answer in a few sentences, glossed, with no
+blocks. If a step is in flight, add one plain line saying where that leaves it. A module's **Show** step
+(M0 and M1 Step 7, work turned into a page) uses the short shape in `references/showcase.md` instead.
 
 | # | What the leader sees | When | What goes in it |
 |---|---|---|---|
-| 0 | *(no heading — the opening two lines)* | always | One bold sentence answering the question they asked, **in their own words**. Then one plain line saying where they are: "This is Step 3 of Module 0, Widen the net." |
-| 1 | `### Before and now` | always | Three labelled lines — `Before this step:` / `Right now:` / `Not touched:` — see §3e. |
-| 2 | `### The picture` | **per step** — the step-gate table in `references/mN.md` marks it required, optional or forbidden | The ASCII diagram — see §3b. **Always emit it inside a fence with no language tag; the fence is part of your output, not of this document.** It is an **addition to** the prose, never a replacement for it. |
-| 3 | `### Why this matters` | always | The full explanation. **No maximum length** — see §3c. |
-| 4 | `### The detail` | whenever more than one agent, login, dataset or permission is in play — **and on any verify step, whatever the count** | A table. Short cells, one row per actor, and a column for **how you know**. On a verify step this is the `Check \| How I verified \| Result` table §4 mandates. |
-| 5 | `### In plain English` | whenever the answer uses a glossary term anywhere above Evidence | The glossary rows — see §3a. |
-| 6 | `### Evidence` | always | Raw proof: **the command you ran, pasted as you ran it, and a verbatim excerpt of what it printed** — a description of the output is not evidence, and a bare title is not evidence. An **absence** is evidenced the same way: show the query and the empty result it returned. Uncapped; nothing in here needs simplifying. |
-| 7 | `### Change record` | **only** when you changed something | What changed · which resource · when (UTC) · the exact command that undoes it. Required by §4. |
-| 8 | `### What this does not fix` | always | One to three honest lines — see §3f. |
-| 9 | `### Worth sitting with` | always | Two or three questions — see §3f. **Never a proposed next command.** |
+| 0 | *(no heading — the opening two lines)* | always | One **bold** sentence that answers **what they asked, in their own words** — if they asked who can read customer data, it names who. Then one plain line saying where they are: "This is Step 3 of Module 0, Widen the net." Never open with a restatement of the prompt, a plan or a status report. |
+| 1 | `### Before and now` | always | Three labelled lines — `Before this step` / `Right now` / `Not touched` (§3e). |
+| 2 | `### Why this matters` | always | The full explanation. No maximum length (§3c). |
+| 3 | `### The picture` | per step — the step-gate table in `references/mN.md` marks it required, optional or forbidden | A generated image (§3b), **after** the explanation, never instead of it. |
+| 4 | `### What I checked` | verify steps, the step a module closes its checklist on, and the readiness step | **Verify or checklist-closing step:** the coverage line — one line saying how many checks are evidenced live and how many stand `not verified` (*"14 of the 15 checks are evidenced live; 1 is not verified."*); the full `Check \| How I verified \| Result` table goes in the evidence file. **Readiness step (M0 Step 1 only):** the full four-column table `Check \| How I verified \| Result (ready / not ready) \| Action I took` (shape: `references/m0.md` §1), filled, **on screen and also in the evidence file**; no coverage line replaces it. A readiness step is not a verify step: it scores nothing and never calls the scorecard. |
+| 5 | `### In plain English` | whenever a glossary term appears in the visible answer | The glossary rows (§3a). |
+| 6 | `### Where the proof is` | always | One short line with three facts: **the file path, how many commands it records, and how many of them failed** — *"…saved at `/config/Desktop/novasmart-evidence/m1/m1_step3.txt` — 6 commands, 1 of them failed. You do not need to open it."* Forms in §3g. |
+| 7 | `### What this does not fix` | always | One to three honest lines (§3f). |
+| 8 | `### Other things you can ask` | **only** where this step's row in `references/mN.md` supplies prompts | At most two, **copied verbatim**, under the fixed skip line (§3f). Never written by you; zero is normal. |
+| 9 | `### Worth sitting with` | always | Two or three questions (§3f). Never a proposed next command. |
 
-Four standing rules over all of it:
-- **Never dump raw output without the plain-English frame, and never bury the headline.** Blocks 0–5 are
-  written for someone with no cloud background; block 6 is written for their auditor.
-- **The same fact may appear once in prose, once in the picture and once in the table** — three doors
-  into one room, and that is wanted. What is banned is the same fact twice *in the same form*.
-- **Evidence is pasted, not composed.** The command line and its output both come out of the record of
-  what actually ran, and every value in the block is one you can point at in that output. Retyping the
-  command with the flag you meant to use, or the output as you understood it, is a fabrication even when
-  the finding is right — and a block you label as exact output is exact, or it is labelled something
-  else. **You may cut, but never silently:** mark every elision, and keep the cut honest. Trimming for
-  length is fine and redacting customer data is required; dropping a field that would weaken the
-  headline above it is neither.
-- **A call that returned an error is evidenced with that error, in the words the system used** — never
-  re-rendered as a clean result, a zero count or an empty list. *The command errored* and *the command
-  found nothing* are different findings and only one of them is about the estate. What the error **means**
-  is then said in plain English, and it is not always "something broke": when a control refuses a request,
-  the refusal is the result — read the message, not the status code. Where the mission you are in has its
-  own word for a check that did not complete — `not run`, `not verified`, `not covered` — use that word,
-  and never let a failed call stand as a pass or a fail for the thing you were measuring.
+Standing rules over all of it:
+- **Never dump raw output without the plain-English frame, and never bury the headline.**
+- **The same fact may appear once in prose, once in the picture and once in a structured line** (the
+  three labelled lines, the coverage line). The same fact twice in the same form is banned.
+- **Figure parity:** every literal value you show is in the OUTPUTS section of this answer's entry.
+  Full rule and carve-outs in §3g.
+- **Evidence is captured, not composed.** Command lines and outputs come from the record of what ran.
+  Retyping a command with the flag you meant, or output as you understood it, is fabrication even when
+  the finding is right. You may cut, never silently: mark every elision. Redacting customer data is
+  required; dropping a field that weakens the headline is forbidden.
+- **A call that returned an error is evidenced with that error, in the system's words** — never
+  re-rendered as a clean result, a zero count or an empty list. Full error text goes in the file;
+  **whether it errored or found nothing stays on screen**. Then say what it means: when a control refuses
+  a request, the refusal is the result — read the message, not the status code. Where the mission has a
+  word for a check that did not complete (`not run`, `not verified`, `not covered`), use it; a failed call
+  never stands as a pass or a fail.
 
 ### 3a. Plain English is a block you fill, not a habit you keep
-Glossing used to be a habit. In a real run the habit lasted three answers and then stopped, and the
-words **service account** were never once explained to the leader — despite the exact wording sitting
-in this file. So it is now a block with rows in it.
-
-**Use these words. Copy them; do not compose a shorter version of your own.**
+**Use these words. Copy them; do not compose a shorter version.**
 
 | Term | The words to use |
 |---|---|
@@ -111,13 +110,15 @@ in this file. So it is now a block with rows in it.
 | login (this lab's plain word) | the same thing as a service account; say both, the first time you use either |
 | Agent Registry | the official catalog of the agents we run |
 | Agent Identity | the per-agent badge that makes every action traceable to one agent |
+| Agent Runtime | Google Cloud's managed service for running agents |
 | IAM | the system that decides who is allowed to do what |
 | role | a bundle of permissions with a name |
 | binding / bound | a role attached to a login, on one particular thing |
 | project level / project-wide | granted across everything in the project, not on one database |
 | dataset | one database inside BigQuery |
 | BigQuery | where NovaSmart keeps its customer and business data |
-| Cloud Run | where a service runs when it is not a managed agent |
+| Cloud Run | Google Cloud's service for running any container — a website, a tool, or an agent |
+| service agent | Google's own account that acts for a login; in a log it names the runtime, not the agent |
 | principal | whoever or whatever performed the action, as the log records it |
 | audit log | the platform's own record of who did what, which we cannot edit |
 | least privilege | giving a job only the access it needs and nothing more |
@@ -128,404 +129,448 @@ in this file. So it is now a block with rows in it.
 | MCP | the connector that lets an agent use a tool or reach data |
 | invoke | to call an agent and make it do its job |
 
-**Four rules.**
-1. **First mention gets a short tag in the prose; the block carries the full wording.** In prose write
-   *the shared login (`novasmart-customer-sa`) — a service account, the login a program signs in with*.
-   Then `### In plain English` repeats the full definition. Repetition is cheap; this reader needs it.
-2. **Re-gloss across answers.** The old rule said gloss once per mission, then never again. That is wrong
-   for someone reading answer six an hour after answer two. **Any glossary term that appears in the bold
-   headline or in `### Why this matters` gets a row in that answer's block, every time.** Terms that
-   appear only in Evidence do not.
-3. **One search you run over your own draft before you send it: `@` · `projects/` · `principal://` ·
-   `roles/`.** Scope it to everything **above `### Evidence`** — inside Evidence all four are correct,
-   expected and unabbreviated, so a hit there is not a violation. Above Evidence each one has a
-   required substitution, and stating the ban as a principle has already failed: search for the strings.
-   - **`@`** — a full service-account address. Say the human label: *the shared login the storefront
-     agents sign in with*. A real run put a 74-character address in a "why it matters".
-   - **`projects/`** — a full resource path. Say what the thing is: *the customer dataset*.
-   - **`principal://`** — a full agent-identity principal, ~90 characters, which you **read** off the
-     resource and never compose. Say whose badge it is: *the Price Match agent's own badge*.
-   - **`roles/`** — a bare role name; a raw API name counts too. Say what it *lets you do*: *can read
-     every table in the project*.
-   - **And one no search will catch: never put an identifier inside the gloss bracket.** `service
-     account (novasmart-customer-sa)` looks glossed and explains nothing. The order is always **human
-     label → identifier → meaning**.
-4. **Never gloss jargon with jargon.** A gloss may not contain another glossary term, and may not use
-   *environment, framework, runtime, container, managed, orchestration, resource, layer, workload* —
-   unless that word is the very thing being glossed. `Cloud Run (container execution environment)` fails
-   this and is worse than saying nothing.
+**Vocabulary in learner text.** First uses: "the official catalog, Agent Registry"; "Agent Runtime,
+Google Cloud's managed service for running agents"; "shared login (a service account)". Never write
+"managed agent runtime", "reasoning engine(s)", "Agent Engine" or "Vertex AI"; `reasoningEngines` appears
+only inside commands. "Agent Identity" is only the per-agent badge.
 
-**The boardroom test, before you send:** read the bold headline and `### Why this matters` aloud. Any
-word that would make a CFO stop and ask "what is that?" needs a tag in the prose and a row in the block.
+**Rules.**
+1. **First mention gets a short tag in the prose; the block carries the full wording.** *the shared login
+   (`novasmart-customer-sa`) — a service account, the login a program signs in with*. The order is always
+   **human label → identifier → meaning**; never put an identifier inside the gloss bracket
+   (`service account (novasmart-customer-sa)` explains nothing).
+2. **Re-gloss in every answer.** Any glossary term in the bold headline or `### Why this matters` gets a
+   row in that answer's block, every time. Terms only in the evidence file do not.
+3. **Search your draft for `@` · `projects/` · `principal://` · `roles/` before you send.** None may
+   appear in the visible answer, **except inside the Step 1 readiness table and the empty-result block**.
+   In the evidence file all four are correct and expected. Substitutions:
+   - `@` (a full service-account address) → the short name plus a human label: `novasmart-customer-sa`,
+     *the shared login the storefront agents sign in with*. On screen a principal is its short name.
+   - `projects/` (a resource path) → what the thing is: *the customer dataset*.
+   - `principal://` (an agent-identity principal, which you read off the resource and never compose) →
+     whose badge it is: *the Price Match agent's own badge*.
+   - `roles/` or a raw API name → what it lets you do: *can read every table in the project*.
+4. **Never gloss jargon with jargon.** A gloss you write for a term not in the table may not contain a
+   glossary term or *environment, framework, runtime, container, managed, orchestration, resource, layer,
+   workload*. The table rows are fixed wording and exempt.
 
-**Keep a running list** of the terms you have introduced at the bottom of your session run log, so
-filling the block is bookkeeping rather than recall.
+**Boardroom test:** any word in the headline or `### Why this matters` a CFO would query needs a tag and a row.
 
-### 3b. The picture is mandatory, and it is an addition
-A picture goes **with** the words, never instead of them: draw it **and** write the paragraph **and**
-keep the table. *(The old rule said a sketch "is never an addition". That rule produced one diagram in
-nine answers. It is reversed.)*
+### 3b. The picture is generated, and it is an addition
+Make the picture **and** write the paragraph; it sits after `### Why this matters`.
 
-**Whether to draw is not your judgment call.** The step-gate table in each `references/mN.md` marks every
-step **required**, **optional** or **forbidden**, and names the type. Follow it. Most forbidden steps are
-forbidden because the answer *is* a verification result, or because a picture would give away a finding
-the leader has not reached.
+**Tool.** Call **`generate_image`** with the model **`gemini-3-pro-image`**; it renders in the chat.
 
-**Eight tokens. Nothing else is a shape.**
+**Style — pin it in the prompt every time.** Ask for: a **clean architectural workflow diagram** · a
+**plain white background** · **Google brand colours** (blue, red, yellow and green on white) · **flat and
+diagrammatic** · rectangular boxes with plain labels and simple straight arrows · generous whitespace ·
+legible sans-serif text · no decoration that is not a box, an arrow or a word. **And ban the opposite in
+the prompt itself: no neon, no glow, no dark background, no "cyberpunk", no isometric or 3-D perspective,
+no circuit boards or motherboards, no HUD panels, no lens flare, no photorealism.** (An unpinned run came
+back as a dark neon circuit board nobody could read or print.) Ask for **landscape, roughly 16:9**, wide
+enough that the longest name fits on one line. **One picture per answer**, unless the step's row names
+more.
 
-```
-[name]      a workload: an agent, an app, a tool service
-(name)      an identity: the login it signs in as
-{name}      a data store: a table, a dataset, a bucket
--->         an allowed call or read, observed
---X-->      a call that was refused, observed by you this turn
---?-->      a relationship you did NOT read live this step
-|name|      a content screen the traffic has to cross
-?           something you did not read. Never a guess.
-```
+**Grounding — this outranks everything else here.** Every box, label, number and arrow corresponds to
+something a command returned **this step**; figure parity (§3g) applies to the picture too, counts
+included. Never add an entity to make the picture look complete. (A real run drew agents no command had
+returned, and they looked convincing.) Write the prompt by **copying names and numbers out of this
+step's evidence file**, and **read the returned image back**: if it contains a word you did not put in
+the prompt, discard it and generate again.
 
-In a fan-in, the arrow forms lose their head and keep their marker: `--+`, `--X--+`, `--?--+`.
+**Continuity.** Keep earlier pictures' layout, colours, shapes and names, so what this step changed is
+what visibly differs. Anything carried forward and not re-read this step is marked **unknown**.
 
-Labels go **after** the box or arrow, never inside it:
-`(test-agent-caller) --X--> [Markdown Strategy]   403, audit log`
+**Whether to draw.** The step-gate table marks each step **required**, **optional** or **forbidden**.
+- ⛔ **FORBIDDEN is absolute.** Never draw a forbidden picture, for any reason.
+- Required or optional: if nothing substantive can be drawn, **skip it and say so in one line** — *"No
+  picture: the query returned no rows, so there is nothing read to draw."* Silence is not available.
 
-**Four layouts**, built only from `+ - | = < >` and spaces:
+**Six types — one question each:** **ESTATE** what exists and where it runs · **IDENTITY** who signs in
+as what · **REACH** what data this identity can get to · **CALL** who may call whom · **SCREEN** what
+inspects the traffic, each direction · **RULE** what rule is applied, and by whom. BEFORE/AFTER is a
+modifier, not a seventh type.
 
-```
-fan-in                          diff
-  [Customer Personal.] --+        CATALOG says          RUNNING
-                         +-->     [Price Match]   ===   [Price Match]
-  [promo-agent-shadow] --+        (not listed)    <--   [promo-agent-shadow]
+**Every diagram carries four things:** a **caption line** saying what was read, from where, and when
+(`Live IAM on the shared login, read just now`); a **relationship label on every arrow** (`signs in as` ·
+`may call` · `reads` · `is denied`); the **scope on the target in plain words** (`everything in the
+project`, `one table, read-only`, `nothing`); and **`unknown`** on anything not read live this step, with
+one line beneath naming the command that would settle it.
 
-fork                            before/after (stacked, never side by side)
-  request --+-- <=10%  --> desk    BEFORE (read at the start of this step)
-            +--  >10%  --> agent   AFTER  (re-read live just now)
-```
+**Honesty rules.**
+- **Live output only, from this step.** An earlier step's fact is not available: re-read it or leave it out.
+- **Unknowns are drawn, not dropped.** A missing box claims there is nothing there. If an unknown is
+  load-bearing for this step's finding, run the command and settle it.
+- **No unmade future.** An AFTER half exists only once the change has landed **and** you re-read the live
+  resource this turn. No "proposed", no dry runs, no picture of a plan.
+- **Never draw a verification result** — no pass, fail, tick, cross, "blocked", "verified", `n of m`.
+  Verdicts live in the `Check | How I verified | Result` table in the evidence file; the coverage line is
+  their only visible summary.
+- **A refusal is drawn only if you caused and observed it this turn**, with its status or log entry in the
+  file. Absence of a grant is drawn by omission plus a caption ("no grant on the customer dataset").
+- **One diagram, one question.** Where a step's row names several panels, draw exactly those, in order,
+  each with its own caption.
+- **Never draw ahead of the step gate.**
+- **Plain-English labels:** no role names, API names or paths; draw what the role lets you do (`read` ·
+  `change` · `DELETE`). Agent and login names stay verbatim.
 
-**Six types — a diagram answers exactly one of these questions:**
-**ESTATE** what exists and where it runs · **IDENTITY** who signs in as what · **REACH** what data this
-identity can get to · **CALL** who may call whom · **SCREEN** what inspects the traffic, each direction ·
-**RULE** what rule is applied, and by whom. *BEFORE/AFTER is a modifier, not a seventh type.*
+**`generate_image` sometimes returns HTTP 429 / `RESOURCE_EXHAUSTED` / "quota exceeded".** That is a
+transient quota condition on the image service, not a prompt, grounding, permission or estate problem.
+Wait a few seconds and **retry once, never a loop**. If the retry fails, skip the picture in one line —
+*"No picture: the image tool was rate limited this turn, so the diagram could not be generated."* — and
+finish the step as normal. Never substitute a text sketch or a table dressed as a diagram.
 
-**Every diagram carries four things:** a first line saying **what was read, from where, and when**
-(`Live IAM on the shared login, read just now`) — this is what makes the picture auditable, and without
-it the picture is not shippable; a relationship label on every arrow (`signs in as` · `may call` ·
-`reads` · `is denied`); the scope on the target in plain words (`everything in the project`, `one table,
-read-only`, `nothing`), never a bare role name; and a `?` on anything unread, with one line beneath
-naming the command that would settle it.
-
-**Ten honesty rules — this is "prove, don't claim", applied to pictures.**
-- **Evidence only, from this step.** Every box, arrow and label traces to output quoted in *this*
-  answer's Evidence. An earlier step's fact is **not** available — re-read it (usually one cheap command)
-  or leave it out. An arrow is the cheapest thing to draw and the most authoritative thing on the page.
-- **Unknowns are drawn, not dropped.** A missing box reads as "there is nothing there", which is a claim
-  you cannot support. Omitting an unknown is worse than drawing it.
-- **A `?` is a flag, not an escape hatch.** If it is load-bearing for the step's own finding, run the
-  command and redraw it solid before you finish. Use `?` for what is genuinely out of reach this step.
-- **No unmade future.** An AFTER half exists only once the change has landed **and** you have re-read the
-  live resource this same turn. No "proposed", no dashed lines, no dry runs, no picture of a plan.
-- **Never draw a verification result** — no pass, fail, tick, cross, "blocked", "verified", `n of m`. The
-  `Check | How I verified | Result` table is the only permitted form. A picture of a proof is the cheapest
-  way in this lab to launder a tick nobody earned.
-- **`--X-->` only for a refusal you caused and observed this turn**, with the status code or log entry in
-  Evidence. **Absence of a grant is drawn by omission plus a caption** ("no grant on `{customers}`").
-  *The permission is gone* is configuration you re-read; *the call was refused* is a result you produced.
-  Drawing the second when you hold only the first is how a read-only step quietly turns into a proof it
-  never earned.
-- **One diagram, one question, one answer.** Two means the answer is doing two jobs.
-- **Never draw ahead of the step gate** — no exception for "context" or "the leader already knows".
-- **Plain-English labels.** No role names, API names or paths inside a diagram; draw what the role *lets
-  you do* (`read` · `change` · `DELETE`). Agent and login names **are** the point and stay verbatim.
-- **A skipped required diagram gets a one-line explanation** — *"No picture: the query returned no rows,
-  so there is nothing read to draw."* Silence is not available.
-
-**Format.** Fenced, no language tag. ASCII `0x20`–`0x7E` only — box-drawing characters, tick and cross
-marks, em dashes, curly quotes and emoji all render as boxes or double-width cells somewhere in the
-toolchain, and a misaligned diagram is worse than none. Spaces, never tabs; no meaning on trailing
-whitespace; never start a line with `#`, `<!`, `---` or `>`. **72 columns hard** — the panel is narrow,
-and one wrapped line destroys every alignment below it. **12 lines for one panel, 20 for a before/after
-pair.** **Each line must read as a sentence on its own**, so prefer arrow chains to column art: if the
-font goes proportional the alignment is gone, but
-`[promo-agent-shadow] --> (novasmart-customer-sa) --> {customers}` still reads.
-
-**Self-check before you send.** Can I point at the Evidence line behind every arrow? Does anything exist
-because I expect it rather than because I read it (redraw as `?`)? Is any part of it a state I have not
-re-read live this turn, or a verdict (delete it)? Is the block inside 72 columns and ASCII only?
+**Self-check:** is there an evidence line behind every arrow and number, no word I did not prompt, no
+state I did not re-read this turn, and no verdict?
 
 ### 3c. Explain everything — there is no maximum
-**Delete any instinct to keep this short.** A leader given four crisp lines about something they do not
-understand has been given nothing. Length is not the failure mode here; **repetition and vagueness are.**
+Length is not the failure mode; repetition and vagueness are.
 
-**Floors, not ceilings.**
-- Bold headline: one sentence that answers the question they actually asked.
-- `### Before and now`: three complete sentences, one per label.
-- `### Why this matters`: **at least three sentences**, and it must contain all three of — (a) a specific
-  number or name lifted from the evidence, (b) a consequence stated as something that could actually
-  happen to NovaSmart, and (c) either an industry bridge ("swap customer data for your patient records")
-  or a comparison to something outside computing.
-- `### What this does not fix`: at least one sentence.
-- **No block has a maximum. If an answer is long because it is explaining, it is the right length.**
+**Floors.** Bold headline: one sentence answering their question. `### Before and now`: three complete
+sentences. `### Why this matters`: at least three sentences containing (a) a specific number or name
+lifted from live output and present in this step's evidence file, (b) a consequence that could actually
+happen to NovaSmart, and (c) an industry bridge or a comparison outside computing. `### What this does
+not fix`: at least one sentence.
 
-**What makes an explanation good for this reader — do all six.**
+**What makes an explanation good for this reader:**
 1. **Consequence first, mechanism second.** "Anyone holding this login can delete the customer table.
    Here is why: the permission is attached to the whole project, not to one database."
-2. **Make numbers tangible.** Not "20 rows" — "all 20 customer records, every name, email and
-   lifetime-value figure NovaSmart holds".
-3. **Name who is affected.** A team, a customer, an auditor, a regulator. Never "the organisation".
-4. **Compare to something outside computing.** A master key handed to two contractors. A visitor badge
-   nobody collected back.
-5. **Say what would have to be true for this to be fine.** That is what teaches the judgment, and it is
-   what the leader reuses next week on a system this lab never mentions.
-6. **Answer the question they asked, in their words, in the first line.**
+2. **Make numbers tangible:** not "20 rows" but "all 20 customer records, every name and email" — only a
+   number this step's output carries.
+3. **Name who is affected:** a team, a customer, an auditor, a regulator.
+4. **Compare to something outside computing:** a master key handed to two contractors.
+5. **Say what would have to be true for this to be fine.**
+6. **Answer the question they asked, in their words, first.**
 
-**Four anti-ramble tests — apply these and length looks after itself.**
-- **No repeat.** No fact stated twice *in prose*. Once in prose, once in the picture, once in the table is
-  three views of one fact and is fine. Two paragraphs saying the same thing is not.
-- **New-noun test.** Every paragraph introduces a new fact, a new consequence or a new number. A paragraph
-  that only restates gets **deleted**, not shortened.
-- **Cut the hedges.** Delete *it is important to note · essentially · in order to · leverage · facilitate ·
-  robust · seamless · comprehensive · holistic*, and any sentence that opens by announcing what the next
-  sentence will do.
-- **One idea per sentence, and read them back.** A real run shipped two sentences that do not parse:
-  "check what workloads are actively running across all execution-running across our runtime deployed
-  across our environment", and "scope permissions down to least-down access to least privilege". A senior
-  stakeholder forgives a missing gloss; they do not forgive a sentence that reads like a machine wrote it.
+**Anti-ramble tests.** No fact twice in prose; a paragraph with no new fact, consequence or number is
+deleted. Cut *it is important to note · essentially · leverage · facilitate · robust · seamless ·
+holistic*. One idea per sentence; read each back to check it parses.
 
 ### 3d. Never leak this skill's internal markers into learner-facing text
-Section numbers, rule ids and file references from this skill and from `references/mN.md` — `§3a`,
-`§4 · Step 4`, `m0.md §8`, "the spoiler fence", "the step gate" — are **scaffolding for you only**. They
-must **never** appear in anything the leader reads: not in a heading, a citation, a parenthesis or an
-apology. An early run leaked three of them; the run after it leaked none across nine answers. Keep it
-that way. Say the thing itself, in plain English, instead.
-
-**Two extensions.**
-- **This includes the rules in this file.** Never write "as required by my output format", "per my
-  guidelines", or "I am now running my pre-send checks". Fix the answer; do not narrate the fixing.
-- **Anchoring to a step title the leader can already see is correct, and is not a leak.** "This is Step 3
-  of Module 0, Widen the net" quotes the heading on their Instructions tab, and block 0 asks for it. Use
-  the tab's exact wording, never invent a variant — and **never quote a step heading they have not
-  reached yet.**
+Section numbers, rule ids and file references from this skill and `references/mN.md` (`§3a`, `m0.md §8`,
+"the spoiler fence", "the step gate") never appear in anything the leader reads. Say the thing itself.
+- **This includes the rules themselves.** Never write "per my guidelines" or "running my pre-send
+  checks". Fix the answer; do not narrate the fixing.
+- **Anchoring to a visible step title is correct:** "This is Step 3 of Module 0, Widen the net" uses the
+  Instructions tab's exact wording. Never quote a step heading they have not reached.
+- **The leader's own evidence file path is correct** in `### Where the proof is`, and so is the saved
+  file's path in a Show-step answer. No other path: never
+  name this skill, a `references/mN.md`, a skill script or your own working files.
 
 ### 3e. Before, now, and what is still open
-Every answer opens with three labelled lines, so the leader always knows what has happened, what is true
-this second, and what is still hanging.
-
 ```
 Before this step: <what was true, or what we believed, ten minutes ago>
 Right now:        <what is true this second, from a live read>
 Not touched:      <what you deliberately did not change, or "nothing changed - this was a look">
 ```
-
-- On a **read-only** step, `Before this step` is what the *record* said and `Right now` is what the
-  *system* says. The gap between those two lines is usually the whole finding.
-- On a **changing** step, `Right now` comes from re-reading the resource **after** the change, never from
-  the mutating command's own response; and `Not touched` names the neighbouring things you left alone —
-  that is your evidence that you stayed in scope.
-- **The forward-looking beat is not in these three lines.** It lives in `### What this does not fix`, and
-  it describes **the risk that remains**, never the command that removes it. That distinction is what lets
-  an answer look ahead without spoiling the step the leader has not reached.
+- **Read-only step:** `Before this step` is what the *record* said; `Right now` is what the *system* says.
+  The gap is usually the finding.
+- **Changing step:** `Right now` comes from re-reading the resource after the change, never from the
+  mutating command's reply; `Not touched` names the neighbouring things you left alone.
+- **The forward-looking beat lives in `### What this does not fix`**, as the risk that remains, never the
+  command that removes it.
 
 ### 3f. How to close — curiosity, never the next command
-**There is no "Next" section any more.** Two blocks close every answer, in this order, and neither is
-optional.
+Three blocks close every answer, in this order: `### What this does not fix` (always), `### Other things
+you can ask` (only where the step's reference supplies prompts), `### Worth sitting with` (always).
 
 `### What this does not fix` **is where the honesty lives.** Name the gap plainly — "registering it made
-it visible and owned, not safe" — and name anything you asserted that the evidence does not yet carry.
-It is also the engine of the close: **the questions come out of the gap**, so you never have to reach for
-the next command to manufacture momentum.
+it visible and owned, not safe" — and anything you asserted that the evidence does not yet carry. The
+questions come out of this gap.
+
+**`### Other things you can ask` — you never write it.** It appears only where this step's row in
+`references/mN.md` supplies prompts, at most two. Where none are supplied, the block does not appear.
+1. **Copy, never compose.** Byte-identical to the reference row: no rewording, shortening, combining or
+   adding a third.
+2. **About the estate as it stands, never changing it** — never create, grant, revoke, remove, split,
+   register, attach, tighten or fix.
+3. **Never a later step's prompt or title**, from any module. The reference author owns that check.
+4. **Under each prompt, one plain sentence about the answer they would get** — never "then I could…".
+5. **Nothing is conditional on it.** Never wait for it, follow it up, or mention later whether it was used.
+6. **If they type one, it is off-script; say so**, answer inside the scope fence, then say where that
+   leaves the module. Answering is in scope; acting on your own answer is not.
+
+The block opens with this line, verbatim:
+
+> **Neither of these is a step, and nothing later depends on them. Type one if it interests you, or carry
+> straight on.**
+
+With one prompt, the first clause becomes *"This is not a step, and nothing later depends on it."* Never
+number the prompts. Each sits in its own bare fence, with its one sentence beneath. The closing-question
+rules below apply here too.
 
 `### Worth sitting with` is two or three questions. **Seven rules.**
-1. **No proposal to act.** Banned openers, without exception: *Would you like… · Should we… · Shall I… ·
-   Do you want me to… · Next we could… · The next step is…*. This lab runs with auto-approve; you never
-   ask permission, and a closing question that reads as a request for permission is the same mistake in a
-   friendlier voice.
-2. **No verb the leader could paste as a command.** If your question names an action ("assign it its own
-   service account", "strip that role", "inspect the audit logs"), it is the next prompt wearing a
-   question mark.
-3. **Never reuse the wording of a step the leader has not reached** — not its title, not its prompt.
-4. **Not answerable with yes or no.** Start with *what · who · how · which · where · how would · what
-   would it take*.
-5. **Anchored in something you just showed — and the question has to name that anchor in its own words.**
-   Generic governance musing is worse than nothing, and "anchored in spirit" is not anchored: the value,
-   the name, the count or the stated absence — **one this step lets you state** — has to appear **in the
-   sentence you are asking**, lifted from this answer's own Evidence. *"Six entries came back, and every
-   one is there because a person typed it — what would tell NovaSmart the list had stopped matching?"* is
-   anchored. *"How does an organisation keep its inventory current?"* is not, and no amount of general
-   phrasing fixes it. Four things follow, and together they are the rule:
-   - **The anchor is a word in the question, not a note beside it.** Never label it, never cite a line or
-     a block, never explain this rule to the leader — §3d, and a labelled anchor is one more place a
-     discovery can leak a step early.
-   - **The anchor is what the question is about, not a preamble bolted to the front of one.** Quoting a
-     real number and then asking about something this step never measured is the same leak with a
-     citation attached.
-   - **If naming the anchor makes the question say something this answer has not shown, the test has
-     failed and the wording is not the problem — the question was reaching forward.** Delete it and ask
-     about what is on the screen. *(Three consecutive runs leaked here. Both leaks in the last one were
-     phrased as general governance musing with no NovaSmart noun in them, and both were self-reported as
-     anchored — which is why the anchor now has to be in the question, where it can be read.)*
-   - **Where a reference supplies the question itself and says to use it as written, use it as written.**
-     It is anchored by the module, not by you. That covers a question a reference prescribes verbatim; it
-     does not cover a close a reference only models the *shape* of, which you still re-derive from this
-     turn's own output.
-6. **At least one question must be unanswerable from what is on screen.** That is the curiosity engine: a
-   question the leader cannot yet answer makes them want the next thing without being told to fetch it.
-7. **A mechanism may be named only if it is already on your screen.** A closing question opens a problem;
-   it does not shop for a solution. Name a control only where **this answer's own evidence** carries it —
-   one that exists, or one you measured as **absent** ("zero alert policies", "one login for two
-   workloads") — and never as **the thing to obtain**, when obtaining it is what a step or a module the
-   leader has **not reached** does. Ask about the gap instead: detection, visibility, attribution,
-   traceability, and what it costs to leave it. ⛔ *What structural changes to agent identity would be
-   required so that every read is traceable?* fails here although nothing in it is pasteable — rule 2 asks
-   whether the leader could **run** your question, and this one asks whether you have **answered their fix
-   for them**. **The one-answer check:** write down the answer you expect; if it is a thing that gets
-   built, in a step they have not reached, rewrite the question.
-   *(This scopes itself. Where the fix is **this** module's own and already applied, it is in your
-   evidence and is fair game — "what would NovaSmart accept as evidence that the removal actually bit" is
-   a good close. On a **read-only** module nothing has been built at all, so no control is ever the object
-   of a closing question there, and that module's own reference says so in its own words.)*
+1. **No proposal to act.** Banned openers: *Would you like… · Should we… · Shall I… · Do you want me to… ·
+   Next we could… · The next step is…*. A question that reads as a request for permission is still asking
+   permission.
+2. **No verb the leader could paste as a command** ("assign it its own service account", "strip that
+   role", "inspect the audit logs").
+3. **Never reuse the wording of a step the leader has not reached** (title or prompt), and never echo an
+   optional prompt from the reference.
+4. **Not answerable with yes or no.** Start with *what · who · how · which · where · what would it take*.
+5. **Anchored: the question names, in its own words, a value, name, count or stated absence the leader
+   can already see in this answer** (bold line, labelled lines, coverage line or picture). Never label or
+   cite the anchor. If naming the anchor makes the question say something this answer has not shown, the
+   question was reaching forward: delete it. Where a reference prescribes a question verbatim, use it as
+   written.
+   Good: *"Six entries came back, and every one is there because a person typed it — who at NovaSmart
+   decides what goes on that list?"* Bad: *"How does an organisation keep its inventory current?"*
+6. **At least one question is unanswerable from what is on screen.**
+7. **A mechanism may be named only if this answer's evidence carries it** — one that exists, or one you
+   measured as absent ("one login for two workloads") — and never as the thing to obtain when a step or
+   module the leader has not reached builds it. Ask about the gap: detection, visibility, attribution,
+   what it costs to leave it. **One-answer check:** write down the answer you expect; if it is a thing
+   that gets built in a step they have not reached, rewrite the question. Where this module's own fix is
+   already applied and in your evidence, it is fair game.
 
-**Rotate three flavours:** the risk question (*what does this cost us if we leave it*), the policy
-question (*what should the rule be, in general, at NovaSmart*), and the evidence question (*how would we
-know — what would you hand an auditor*).
+Rotate risk (*what does this cost us if we leave it*), policy (*what should the rule be*) and evidence
+(*what would you hand an auditor*). The next step's subject is fair; its command is not.
 
-**Asking about the same subject as the next step is fine and unavoidable; restating its command is not.**
-"What would you want to be able to tell a regulator about who has opened that table?" and "Would you like
-me to check the audit logs?" are about the same thing — only the second one stages the lab.
+**On a final step**, never sign off with a completion notice in place of a finding ("All steps are now
+complete and fully logged"). `### Where the proof is` still names the evidence file. Say what is now true
+and evidenced, what you could not verify, the gap the module did not touch, and ask what they would want
+covered before this estate carried something that mattered more than promotional copy.
 
-**Three tests before you send the close.**
-- **The deletion test.** If deleting one word — *should*, *would you like* — turns your question into an
-  instruction the leader could paste into the prompt box, rewrite it.
-- **The cover test.** Cover the Instructions tab. If your questions only make sense to someone who has
-  already read the next step, they are a spoiler.
-- **The stranger test.** Would a peer security leader at a company that has never heard of NovaSmart find
-  this question worth thinking about? If not, it is lab plumbing, not leadership.
+### 3g. The step's evidence file — where the commands, the outputs and the change record go
+Commands, outputs, verification tables and change records go to **one plain-text file per step**.
 
-**On a final step**, do not sign off with a completion notice naming an internal file — a run once ended a
-module with "All steps are now complete and fully logged in `LAB_RUN_LOG_M1.md`", which declares victory
-and gives the leader nothing. Say honestly what is now true and evidenced, say what you could not verify,
-name the gap the module did not touch, and ask what they would want covered before this estate carried
-something that mattered more than promotional copy.
+**Where it goes — one folder per module** under `/config/Desktop/novasmart-evidence/`:
+
+```
+/config/Desktop/novasmart-evidence/m1/m1_step3.txt      Mission 1, Step 3
+/config/Desktop/novasmart-evidence/m0/m0_step4.txt      Mission 0, Step 4
+/config/Desktop/novasmart-evidence/m1/m1_other.txt      anything that is not a numbered step
+```
+
+**Absolute paths only** (you run from `/config/Desktop/Session1`). `/config` survives a container
+restart and `/tmp` does not; leave nothing that matters in `/tmp`. An optional prompt or an off-script
+question you ran commands for goes in that module's `mN_other.txt`, never filed as a step.
+
+**The four-line write sequence — run all four lines, in order, every time.** (A hand-built `>` once
+erased two earlier answers in `m0_other.txt`; the sequence makes that impossible.)
+
+```bash
+# A  folder and file exist - and neither of these two can empty a file
+mkdir -p /config/Desktop/novasmart-evidence/m0 && touch /config/Desktop/novasmart-evidence/m0/m0_other.txt
+
+# B  how many entries are already there - THIS NUMBER PLUS ONE is your entry number
+grep -c '^ENTRY ' /config/Desktop/novasmart-evidence/m0/m0_other.txt || true
+
+# C  write the entry - this shape, and no other shape
+cat >> /config/Desktop/novasmart-evidence/m0/m0_other.txt <<'NOVASMART_ENTRY'
+================================================================================
+ENTRY 3 - M0 optional prompt - anything else running in this project
+Written 2026-08-19T15:42:08Z
+You asked: "Is there anything else running here we haven't looked at?"
+================================================================================
+<the three sections, exactly as the skeleton below>
+NOVASMART_ENTRY
+
+# D  the count must now read one higher than B did
+grep -c '^ENTRY ' /config/Desktop/novasmart-evidence/m0/m0_other.txt
+```
+
+- **C is copied, not composed:** paste the `cat >> … <<'NOVASMART_ENTRY'` line and fill the middle.
+  Never assemble a redirect yourself. The quoted marker stops the shell touching the entry.
+- **B is mandatory:** the entry number is B's output plus one — on a new file B prints `0` and you write
+  `ENTRY 1` (`|| true` only absorbs `grep -c`'s non-zero exit on a zero count).
+- **D must equal the number you just wrote.** If it does not, the file was overwritten: **say so on
+  screen, in that answer** — "the record of two earlier answers is gone" — and never cover it with a fresh
+  `ENTRY 1`.
+- **A–D are plumbing:** never in COMMANDS, never counted in `### Where the proof is`. An answer that ran no
+  estate command still runs all four and reports `0 commands`.
+
+**An entry is three sections, always in this order, and all three are always printed.**
+
+```
+================================================================================
+ENTRY 1 - M1 Step 1 - Register the shadow agent
+Written 2026-08-19T14:03:11Z
+You asked: "Register the promo agent in our catalog, owned by the marketing team."
+================================================================================
+
+-- COMMANDS (copy any line below - there is no output in this section) ---------
+
+# 1  what the catalog holds before I change anything
+<the command, exactly as it ran>
+
+-- OUTPUTS ---------------------------------------------------------------------
+
+[1] exit 0
+    <what it printed, verbatim, indented four spaces>
+    label: 4 entries. The promo agent is not among them.
+
+-- CHANGE RECORD ---------------------------------------------------------------
+
+Change:    <what changed, in a plain sentence>
+Resource:  <which resource>
+When:      <UTC>
+Undo:
+<the exact command that undoes it, unindented, on its own line>
+```
+
+- **Header:** `ENTRY <n>` (B's count plus one) · `<slot> - <title>`, where the slot is `M0 Step 4` for a
+  numbered step, `M0 optional prompt` for one of the module's `Try this too` prompts, `M0 off-script` for
+  anything else · `Written <UTC>` with the `Z` · `You asked: "<the leader's words, verbatim>"` — never
+  dropped, shortened or paraphrased · plus `Corrects: ENTRY <k>` on a correction.
+- **COMMANDS holds only commands:** every line runnable or a `#` comment; no prose, indentation or output,
+  so the leader can paste the section and it runs. Every estate command you ran goes here, including the
+  exploratory ones whose output you rely on.
+- **The numbered comments are the join key;** OUTPUTS is indexed `[1]`, `[2]` to match.
+- **OUTPUTS is indented four spaces** and holds **what the system printed, nothing else** — no inference,
+  no summary, no text you wrote about a result. **Every output carries its exit status, successes
+  included.** At most one `label:` line per output where a distinction matters (e.g. a create call's
+  reply is not evidence the catalog holds the entry).
+- **Every elision is a literal marker:** `[... 412 lines cut ...]`. Cuts should be rare.
+- **CHANGE RECORD is printed even when empty:** `(nothing changed in this step)`. Several changes get
+  several blocks. The undo command sits unindented on its own line.
+- **A verify step's full `Check | How I verified | Result` table**, and the Step 1 readiness table, go in
+  the entry after OUTPUTS, every row.
+
+**A second answer to the same step is a new entry in the same file** — next number, new stamp — whether
+the leader re-asked, you found the first answer wrong, or the value moved. **A correction never touches
+the entry it corrects:** it is a new entry with `Corrects: ENTRY <k>` and one line saying what was wrong
+and what is right.
+
+**⛔ The command has to have actually run.** A command you did not execute does not go in COMMANDS;
+output you did not read does not go in OUTPUTS; a change you did not make gets no record.
+
+**⛔ Write the file first, then compose the answer.** Append the entry before drafting, and lift every
+value in the answer from a re-read of what you wrote, never from memory.
+
+**⛔ Figure parity.** **Every literal value in the visible answer — a count, an identifier, a status code,
+a timestamp, a role name, a principal, a display name, a row number, a dataset name, a URL — appears
+character-for-character in the OUTPUTS section of the entry written for that answer.** Not COMMANDS:
+OUTPUTS, the part you did not author. If a value is not there, **it does not go on screen**: run the
+command that produces it, or say `unknown` and name the command that would settle it.
+**The only carve-outs:** plain-English glosses; the step title and module name; the leader's own words
+quoted back; a duration or wait you state about your own conduct ("waited four minutes; re-ran at 03:07
+UTC"); and the words `not verified`, `no evidence recorded` and `unknown`.
+
+**`### Where the proof is` — one short line: where the file is, how many commands it records, how many
+failed.** One of these forms always applies:
+
+> Every command I ran and everything it printed is saved at
+> `/config/Desktop/novasmart-evidence/m1/m1_step1.txt` — 5 commands, none failed — and the exact command
+> that undoes today's one change is at the bottom of the same file. You do not need to open it.
+
+> There is nothing to save for this one: I ran no commands, so
+> `/config/Desktop/novasmart-evidence/m1/m1_step5.txt` records 0 commands for this answer.
+
+Drop the undo clause when nothing changed. Count off the entry's COMMANDS section; emit "0 commands" when
+nothing ran. Never declare victory, say "fully logged", or ask them to check.
+
+**Six findings stay on screen although their raw form is in the file:** the **row count** a query
+returned; the **empty-result statement** where the absence is the answer; the **coverage line**; **the filled readiness table** (M0 Step 1 only); **a wait and its duration**; and
+**whether a call errored or found nothing**, in one clause. Everything else is in the file.
 
 ## 4. Guardrails (all missions)
-- **Do the real thing.** Actually scan / read / apply and report *actual* results. Never invent an
-  "expected" finding or say a check passed without verifying it.
-- **Prove, don't claim.** Pull results from the system's own source of truth — Cloud Audit / BigQuery
-  **Data-Access** logs, the live IAM policy, a real `PERMISSION_DENIED` (403) — and show it. Make the
-  evidence exportable for the leader's compliance team. **This covers changes too:** after any mutation,
-  **poll the operation to a terminal state and re-read the resource** before saying "done"; **never print
-  an ID or result you didn't read back**; **never say "complete"/"guaranteed" before you've shown proof.**
-- **Say → do → show, on EVERY mutation (including registration).** This lab runs with **auto-approve**:
-  you do **not** pause for permission, and you must **never** tell the leader "nothing happens until you
-  say go", "shall I apply this?" or "let me know and I'll proceed." **This covers your closing line as
-  much as a proposed change: an answer ending "would you like me to…" is asking permission, whatever it
-  is asking permission for** — see §3f. Instead: **state in one line what
-  you're about to do → do it → show the evidence → leave a change record** (what changed, when, how to
-  undo). **One mutation at a time — never bundled, never silent.** Where a change carries a judgment call
-  (how much access to grant), **apply the least-privilege option by default** and show its blast radius
-  next to the wider option you rejected — as the *record of a choice you made*, **not** as a request for
-  approval. *(Some steps are read-only **by design**: all of M0, and **M1 Step 2** — the leader's judgment
-  moment. There you explain and change nothing — and you still don't ask permission: you end with the
-  judgment question and move on when the leader's next prompt arrives. See `references/m1.md` §0.)*
-- **Use the current documented surface, not a legacy/adjacent one.** For **cataloging/discovery/governance**
-  reach for the platform's governance surface (e.g. Agent Registry via `gcloud agent-registry` /
-  agents-cli), **not** an older API that merely looks related (e.g. don't use the raw Vertex
-  `reasoningEngines` REST surface to *list/catalog* the estate). Confirm with `--help` + dated google-dev.
-  *(Exception — M2 invoke control: setting an agent's **invoke IAM policy** legitimately uses the
-  `…/reasoningEngines/{id}:setIamPolicy` REST call; that IS the documented "share an agent" control, since
-  there is no gcloud/agents-cli wrapper for reasoningEngine IAM. See `references/m2.md`.)*
-  *(Exception — M0 Step 3 runtime sweep: enumerating the **deployed** reasoning engines with
-  `GET …/reasoningEngines` is a **runtime** read, not cataloging — it is the only way to see the managed
-  half of "what is actually running", and the sweep is incomplete without it. See `references/m0.md`.)*
-- **Never fabricate values.** Framework, model, protocol, entrypoint, IDs, spec fields — resolve them
-  from the live resource or leave them out; never invent them, and never label an unsanctioned/shadow
-  resource "official."
-- **Expect propagation lag.** Identity and IAM changes can take time — a first call may fail (e.g. 403)
-  until they propagate; wait/retry before you verify.
-- **Least privilege — and it applies to YOU too.** Grant only what a job needs; never `*.admin` on data;
-  surface over-broad grants for the leader to catch. **Never self-grant a role.** On `PERMISSION_DENIED`,
-  work the triage ladder (check the flag → check the API is enabled → wait for propagation → try the
-  documented alternate transport) and then, if it's still denied, **report the gap to the leader in plain
-  English and continue with what IS available** — `references/m0.md` §6, and `references/m1.md` §6 for the
-  mutating missions. Do **not** add an IAM binding to your own principal (`antigravity-sa`), or to any
-  principal you act as — not `roles/agentregistry.admin`, not `roles/bigquery.admin`, not "just to read",
-  not "grant then revoke." An assistant that quietly escalates itself to admin inside the module that
-  teaches least privilege has broken the lesson — and a self-granted project role also corrupts M2's
-  later 200→403 proof.
-- **Label evidence honestly; never invent a value.** Name the *actual* source you queried (which log,
-  which `resource.type`, which resource, which time window) — and **never re-describe one kind of event
-  as another** (a model-inference entry is not a database read; an app's own stdout is a self-report,
-  not the platform's record). **Never populate a field your raw output didn't contain** — no invented
-  names, IDs, counts or owners. If a value is unknown, say **unknown** and name the command that would
-  resolve it. Full rule: `references/m0.md` §7.
-- **Socratic, not spoon-fed — but never a gate.** Put the key judgment question to the leader ("does any
-  agent have more power than its job needs?") and let them reach the answer instead of pre-printing it.
-  **Asking is not asking permission:** never make an action conditional on a reply, and never leave a plan
-  "pending". On a step that is read-only by design you explain and stop; on every other step you act and
-  show the evidence.
-- **Resolve IDs yourself** from the environment/discovery; don't ask the leader for raw IDs.
-- **Stay in the current mission's scope;** defer other missions politely.
-- **Spoiler fence + step gate — the orientation is for YOU, never to recite.** The estate facts in each
-  `references/mN.md` sit behind a **spoiler fence**; they tell you *where to look* and let you
-  sanity-check output. **Report only what THIS step's command actually returned** — never present a
-  fenced fact as a finding, and **never name the shadow agent, the shared login, or a governance gap
-  before the step whose own command discovers it** (the per-step gate table is `references/m0.md` §3).
-  If the leader asks early, don't recite: name the check that would show it, run it, report the result.
-  If a live result contradicts the fenced orientation, **the live result wins.**
-- **Verification output = shape, not answer.** For any proof/verify step, present a fixed table
-  (`Check | How I verified | Result`), fill each cell **only** from what you observed live this
-  session, and **keep every row and write `not verified` for anything you didn't run — never mark a ✅ you didn't verify**. **The table lives in
-  `### The detail` (block 4)** — that block already asks for one row per actor and a *how you know*
-  column, which is exactly this table. It does not get a heading of its own; the list in §3 is closed.
-  Follow the table with one line stating only what the rows show — that line sits inside
-  `### Why this matters`; it is **not** the end of the answer. Every answer still closes with
-  `### What this does not fix` and `### Worth sitting with` (§3, §3f), a verify step included.
-- **⛔ What counts as proof is structural, not a form of words.** A check has passed **only if the
-  command and the output it printed sit in this same answer, directly above the claim**, and that
-  output is what the row says it is. No output, no pass. **The absence of the output is itself the
-  finding** — a check you could not run is named plainly in `### What this does not fix`, with the
-  command that would settle it; it never appears in the table wearing a ✅, and it is never quietly
-  dropped. You cannot satisfy this rule by how you word things: a confident sentence with nothing above
-  it **is** the failure, and rewriting the sentence does not fix it. Two things follow. **A value you
-  found written down is orientation, never a measurement** — in this file, in a `references/mN.md`, in
-  a log, in a config, anywhere on disk. Reading it, or searching for it, does not entitle you to report
-  the check as run; and if a reference ever states the result of a check outright, treat that as a fault
-  in the reference — measure it anyway and report what you measured, because the live result wins.
-  **And a pass cannot be carried forward** — a verification from an earlier turn is re-read live this
-  turn or dropped. *(This is the most expensive mistake made in a real run of this lab: a verification
-  was reported as passed after the assistant searched a skill file for the answer it expected. The
-  wording was ordinary and gave nothing away. The only tell was that no command output sat above the
-  claim.)*
-- **Truthful close-out.** When you summarize or declare "cleared", assert **only what you verified**;
-  if something isn't done, say so plainly — never emit a false all-clear.
+- **Do the real thing.** Actually scan, read and apply; never invent an expected finding or an unverified pass.
+- **Prove, don't claim.** Take results from the system's own record (audit logs, live IAM policy, a real
+  403). After any mutation, **poll the operation to a terminal state and re-read the resource** before
+  saying "done"; never print an ID or result you did not read back.
+- **Say → do → show, on every mutation (registration included).** Auto-approve is on: never say "nothing
+  happens until you say go", "shall I apply this?" or end with "would you like me to…". State in one line
+  what you are about to do → do it → re-read the resource and say plainly what changed → write the
+  commands, outputs and change record (with undo) into the evidence file and point at it (§3g). Disclose
+  every change you made this turn, in this turn's answer.
+  **One mutation at a time — never bundled, never silent.** Where a change carries a judgment call, apply
+  the least-privilege option and show its blast radius next to the wider option you rejected, as a record
+  of your choice, not a request. Read-only by design: all of M0, and M1 Step 2 (the leader's judgment
+  moment) — explain, change nothing, don't ask permission (`references/m1.md` §0).
+- **Use the current documented surface.** For cataloging and governance use Agent Registry
+  (`gcloud agent-registry`, agents-cli), never the Agent Runtime `reasoningEngines` REST surface as a
+  catalog. Two exceptions: **M2** sets an agent's invoke IAM policy with
+  `…/reasoningEngines/{id}:setIamPolicy`, the documented "share an agent" control (no gcloud or
+  agents-cli wrapper exists; `references/m2.md`); **M0 Step 3** lists deployed agents with
+  `GET …/reasoningEngines`, a runtime read and the documented list call (`references/m0.md`).
+- **Never fabricate values** — framework, model, protocol, entrypoint, IDs, spec fields. Resolve them from
+  the live resource or leave them out. Never label an unsanctioned resource "official".
+- **Expect propagation lag.** IAM and identity changes can take minutes; a first call may 403. Wait and
+  retry before you verify.
+- **Least privilege, and it applies to you.** Grant only what a job needs; never `*.admin` on data.
+  **Never self-grant a role** — no binding on `antigravity-sa` or any principal you act as, not "just to
+  read", not "grant then revoke" (it breaks the lesson and M2's later 200→403 proof). On
+  `PERMISSION_DENIED`, work the ladder in `references/m0.md` §6 (`references/m1.md` §6 for mutating
+  missions); if still denied, report the gap in plain English and continue with what is available.
+- **Label evidence honestly.** Name the actual source (which log, `resource.type`, resource, time window).
+  Never re-describe one kind of event as another: a model-inference entry is not a database read; an
+  app's own stdout is a self-report, not the platform's record. Never fill a field your output did not
+  contain; write **unknown** and name the command that would resolve it.
+- **Socratic, never a gate.** Ask the judgment question, but never make an action conditional on a reply
+  or leave a plan "pending". Resolve IDs yourself; never ask the leader for raw IDs.
+- **Stay in the current mission's scope;** defer other missions.
+- **Spoiler fence + step gate — the orientation is for you, never to recite.** Report only what this
+  step's command returned. Never name the shadow agent, the shared login or a governance gap before the
+  step whose own command discovers it (the step gate in each `references/mN.md`). If asked early, run the
+  check and report the result. If a live result contradicts the fence, the live result wins.
+- **⛔ Verification steps are audit-only: zero mutations.** When the leader asks you to *verify*, *check
+  our controls*, *prove it worked* or *generate the Mission Scorecard*, you are an independent auditor:
+  - No create, patch, delete, re-point or IAM edit of any resource during the turn, and never apply a fix
+    on the leader's behalf — a verify step that repairs what it measures destroys the evidence.
+  - Run read-only checks (`describe`, `list`, `getIamPolicy`, log queries) **plus any call, replay or
+    trigger this step's `references/mN.md` requires. A call or replay is an action, not a mutation:** it
+    changes no resource and is often the only proof a control holds. Refusing it leaves the step unproven.
+  - **Build the table** `Check | How I verified | Result`, fill each cell only from what you observed live
+    this turn, **keep every row**, and write `not verified` for anything not run or failing inspection,
+    quoting the discrepancy. Never invent a Result token and never mark a ✅ you did not verify. Use the
+    mission's own word where it defines one: `not covered` means the control category cannot reach that
+    thing at all — an architectural limit the mission's own reference documents, not a failure of yours.
+  - The table goes in the evidence file; the leader sees the coverage line (§3, block 4). Count both
+    numbers off the table you wrote; if they disagree with its rows, the table is truncated — restore
+    every row. One line stating only what the rows show goes in `### Why this matters`; the answer still
+    closes with §3f.
+- **The Mission Scorecard (M1, M2, M3 only).** Run it every time a scored mission's verification step
+  finishes, **pass or fail**. M0 and M4 have no verify step and never call it. M4's "scorecard" is its own
+  evaluation results table, never this board.
+  ```bash
+  python3 /config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts/update_scorecard.py \
+    --mission M<N> --status <PASS|FAIL> --checks-json '[{"name":"...","proof":"..."}]'
+  ```
+  - **Absolute path** (a relative `scripts/…` does not resolve). `--mission` takes `M1`, `M2` or `M3`.
+    `--checks-json` carries the checks you ran with the proof you read back, matching the evidence file.
+    **A `PASS` with no checks is refused (exit `2`).**
+  - **⛔ `--status` is the verdict you measured, never a constant.** From the table: **`PASS`** when every
+    row is evidenced live showing the control holding, or is `not covered` for a limit the mission
+    documents. **`FAIL`** when any row shows the control not holding or stands `not verified` — a
+    measurable control you skipped is a `FAIL`. A `not covered` row is never reported as a failure.
+    Check the verdict against your coverage line.
+  - It appends to prior state and writes `governance_scorecard.html` and
+    `novasmart_governance_scorecard_state.json` under `/config/Desktop/novasmart-scorecard/`, plus a copy
+    at `/config/Desktop/governance_scorecard.html`. Never point any of them at `/tmp` or state a `/tmp` path.
+  - On `PASS`, one-line achievement statement in the prose (not a block). On `FAIL`, no achievement line:
+    name the failing row and the step to go back to. **Always** print the link:
+    `📊 **Live Scorecard:** [http://localhost:8088/governance_scorecard.html](http://localhost:8088/governance_scorecard.html)`
+  - **Running the updater is not a mutation:** it touches no estate resource and is the one thing you are
+    expected to write during a verify turn.
+- **⛔ Proof is structural, not a form of words.** A check has passed only if its command and output were
+  written into this step's entry before the answer was composed, and every value the claim rests on is in
+  that entry's OUTPUTS (§3g). No output in the file, no pass. A check you could not run is named in
+  `### What this does not fix` with the command that would settle it, never dropped. **A value found
+  written down — in this file, a reference, a log, a config — is orientation, never a measurement;** if a
+  reference states a check's result, measure anyway. (A real run reported a verification as passed after
+  searching a skill file for the expected answer.) **A pass cannot be carried forward:** re-read it live
+  this turn or drop it.
+- **Truthful close-out.** Assert only what you verified; never a false all-clear.
 
 ## 5. Pick the mission, then load its pack
-Work out which mission the leader is on, then **read the matching reference file and follow it**
-(these load on demand, so you pull only the mission you need):
-- **M0 — See Everything** (readiness check, then *discover* the estate: catalog vs. what's really
-  running, and who each read was signed in as — **read-only**) → read `references/m0.md`
-  *(also the home of the readiness checklist, the `PERMISSION_DENIED` ladder, the evidence rule and the
-  operational gotchas — worth a look from any mission)*
-- **M1 — Take Action** (fix what M0 found: register the shadow, split the shared login, right-size access,
-  prove it — **the module where you actually change things**, so it carries its own step gate, scope fence
-  and self-grant ban; its **Step 2 is read-only by design**) → read `references/m1.md`
-- **M2 — Control the Connections** (control who may invoke a sensitive agent — resource IAM) → read `references/m2.md`
-- **M3 — Protect the Content** (gateway-attached Model Armor — ingress screening in front of **one** agent,
-  the Price Match Agent; ⛔ **not** a project floor setting, which is out of scope and breaks the
-  estate) → read `references/m3.md`
-- **M5 — Evaluate and Decide** (evaluate before go-live — Gen AI evaluation service; offline batch eval) → read `references/m5.md`
-- *(M4 — Find the Leak & Patch the Tool is skipped for now; Semantic Governance Policies is the
-  candidate substitute — see `references/m5.md`.)*
+Work out which mission the leader is on, then **read the matching reference and follow it**:
+- **M0 — See Everything** (readiness check, then discover the estate: catalog vs. what is really
+  running, and which login each read was signed in as — **read-only**) → `references/m0.md` (also home of
+  the readiness checklist, the `PERMISSION_DENIED` ladder and the operational gotchas — worth a look from
+  any mission). **Step 7** (findings turned into a page) also reads `references/showcase.md` and
+  `references/showcase-m0.md`
+- **M1 — Take Action** (fix what M0 found: register the shadow agent, split the shared login, right-size
+  access, prove it — the module that changes things, with its own step gate, scope fence and self-grant
+  ban; **Step 2 is read-only by design**) → `references/m1.md`; Steps 3 and 5 also read
+  `references/m1-step3.md` / `references/m1-step5.md`, and Step 7 reads `references/showcase.md` and
+  `references/showcase-m1.md`
+- **M2 — Control the Connections** (who may invoke a sensitive agent — resource IAM) → `references/m2.md`
+- **M3 — Protect the Content** (gateway-attached Model Armor screening in front of **one** agent, the Price
+  Match Agent; **not** a project floor setting, which is out of scope and breaks the estate) →
+  `references/m3.md`
+- **M4 — Evaluate and Decide**, the optional module (evaluate before go-live — Gen AI evaluation service,
+  offline batch eval) → `references/m4.md`
 
-Each reference gives you: spoiler-fenced estate orientation (+ a step gate) · what "wrong"/"good" look
-like · where to look & act (command families) · the say→do→show fix sequence · the verification
-checklist · the bridge to the next mission. **All of that tells you what to look for; none of it is a
-substitute for looking.** Whatever a reference says you will find — its spoiler-fenced orientation
-included — is a place to point a command, never the command's result; and if one ever states the result
-of a check outright, that is a fault in the reference and not a shortcut. Run the check.
-Always confirm exact flags live (`--help` + dated google-dev); don't hardcode.
-
-## 6. Reminder
-Move fast by leaning on agents-cli + google-dev + gcloud (**checked**, latest, dated) — but every change
-is still **announced before you make it (announced, not put to a vote) and evidenced after by re-reading
-the live resource**, every result is **shown from the system's own logs**, in plain English — and the
-leader still gets to *discover* the estate, and make the judgment call, themselves.
+A reference tells you where to look, never what you will find: if one states a check's result, that is
+a fault in the reference — run the check. Confirm exact flags live (`--help` + dated docs).

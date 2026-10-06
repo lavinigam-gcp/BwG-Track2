@@ -53,14 +53,14 @@ Four AI workloads run at NovaSmart. Two power the price-match co-pilot, one pers
 | :---- | :---- | :---- | :---- | :---- | :---- |
 | Price Match Agent (the front desk) | Store Systems, to answer associates instantly | Weighs the competitor's price and stock, our own stock and margin; approves matches up to 10% on the spot, denies when the competitor is out of stock or the margin is too thin, and escalates bigger discounts to the back office | Competitor price and stock, our inventory | None. It works well and already has its own identity | Agent Runtime |
 | Markdown Strategy Agent (the back office) | Pricing and Finance, to protect margin | Only consulted for discounts above 10%. Reads the confidential cost and margin data and makes the real call | Confidential cost and margin data | Only other agents should be able to call it, never customers or associates. It already has its own identity | Agent Runtime |
-| Customer Personalization Agent (shopper-facing) | Customer Experience, to tailor offers and rewards to each shopper | Personalizes promotions and VIP rewards using customer records | Customer records, through the MCP doorway | Shares one login with the marketing promo agent, so their reads of customer data cannot be told apart | Agent Runtime |
+| Customer Personalization Agent (shopper-facing) | Customer Experience, to tailor offers and rewards to each shopper | Personalizes promotions and VIP rewards using customer records | Customer records, through the MCP doorway | Shares one login with the marketing promo agent, so their reads of customer data are recorded under that login, never as either agent | Agent Runtime |
 | Demand and Promotion Agent, running as `promo-agent-shadow` (marketing) | Marketing, to auto-generate local promos | Writes promotional campaign copy and flash-sale bundles | One tool, and it extracts customer records: names, emails, loyalty tier and lifetime value, read straight from the customer database | The shadow. It is not in the official catalog, it shares that same login, and a marketing agent has no business reading customer records at all | Cloud Run |
 
 Two supporting pieces sit behind all of this: the customer database, and a controlled doorway the agents use to reach it. You will hear that doorway called an MCP.
 
 The customer database is small and very sensitive. It holds 20 customer records, each with a name, an email address, a loyalty tier, a lifetime value and similar details. Twenty records is exactly the point: this is the shape of the problem, not the scale of it. In your real estate it would be millions.
 
-Plain-English translations: *Agent Runtime* and *Cloud Run* are two different places Google Cloud runs software. Think of Agent Runtime as the official managed home for agents, and Cloud Run as a box someone can spin up on the side. An *MCP* is a controlled doorway an agent uses to reach data. You do not need the internals — agy handles those.
+Plain-English translations: *Agent Runtime* and *Cloud Run* are two different places Google Cloud runs software. Agent Runtime is Google Cloud's managed service for running agents. Cloud Run is Google Cloud's service for running any container — a website, a tool, or an agent — and it can put an agent in the catalog too, but only if the agent is deployed as one. An *MCP* is a controlled doorway an agent uses to reach data. You do not need the internals — agy handles those.
 
 <!-- FIGURE:F04 BEGIN -->
 
@@ -72,7 +72,7 @@ Plain-English translations: *Agent Runtime* and *Cloud Run* are two different pl
 
 The marketing agent was stood up off to the side. That is classic shadow IT: technology running without sign-off. Because nobody catalogued it, it has been quietly running up cloud costs and reaching into customer data with no owner and no oversight.
 
-Worse, that promo agent and a completely legitimate agent, Customer Personalization, were set up sharing one login — a service account named `novasmart-customer-sa`. Their reads of customer data are therefore impossible to tell apart. When something goes wrong, nobody can say which one did it.
+Worse, that promo agent and a completely legitimate agent, Customer Personalization, were set up sharing one login — a service account named `novasmart-customer-sa`. Their reads of customer data are therefore recorded under that login, never under either agent's name. When something goes wrong, the record itself cannot say which one did it.
 
 Nobody here was malicious. Marketing just needed to ship a promo fast, so they stood up a service on the side, which made it a shadow. They reused an existing shared login to save time, which removed accountability. That login already had broad power over the database, which made it over-privileged. Every one of those is a normal speed-versus-governance shortcut, and every one of them is why you now have a problem.
 
@@ -116,7 +116,7 @@ One thing to know about this module: M0 only looks. Every step here reads, lists
 
 - Agent Registry — the official catalog of the agents you run. It answers "what do we have?" Note that it is a record of what got registered, not a live scan of what is running.
 - Agent Identity — a unique, tamper-proof ID badge for a single agent, so every action can be traced to exactly one of them. It answers "who did it?"
-- Service account — a login used by software rather than a person. When several agents share one, every action they take looks identical in the logs.
+- Service account — a login used by software rather than a person. When several agents share one, the logs show the same login for all of them and never name the agent that acted.
 - MCP — the controlled doorway an agent uses to reach data, instead of reaching into the database directly.
 
 In one line, the fix you are heading towards: replace one shared service account with a per-agent Agent Identity, so every action ties to exactly one agent and each agent gets only the access its job needs. But first you have to see the problem clearly, which is what M0 is for.
@@ -138,13 +138,13 @@ That number looks reassuring. It is not.
 | Price Match Agent | Yours. The front desk of the price-match co-pilot |
 | `markdown-strategy-agent` | Yours. The back office that handles discounts above 10% |
 | `customer-personalization-agent` | Yours. Shopper offers and VIP rewards |
-| Workspace Agent | Not yours. A platform built-in that ships with the environment. Nobody at NovaSmart deployed it |
-| Gemini Enterprise Core Assistant | Not yours. Another platform built-in, listed only in the `global` location |
-| Deep Research | Not yours. Another platform built-in, listed only in the `global` location |
+| Workspace Agent | Not yours. A Google-published agent the catalog lists automatically. Nobody at NovaSmart deployed it |
+| Gemini Enterprise Core Assistant | Not yours. One of Google's own agents that come with the Gemini Enterprise app set up in this project, listed only in the `global` location |
+| Deep Research | Not yours. Another of Google's agents that come with that Gemini Enterprise app, listed only in the `global` location |
 
-Do not be thrown by the names you do not recognise. The platform contributes a few built-in entries of its own, and they sit in your catalog alongside the agents your teams actually deployed — nobody at NovaSmart deployed them, and nothing of yours is running them. Two of them, Gemini Enterprise Core Assistant and Deep Research, are only listed in the `global` location, so the count you get back depends on where you look. The regional listing returns four entries and the `global` one returns three, with Workspace Agent appearing in both — only putting the two together gives you the full six. The number is not the thing to hold on to. Which entries are yours is.
+Do not be thrown by the names you do not recognise. Google contributes a few built-in entries of its own, and they sit in your catalog alongside the agents your teams actually deployed. Workspace Agent is published by Google. Gemini Enterprise Core Assistant and Deep Research come with the Gemini Enterprise app that was set up in this project: nobody at NovaSmart built them, and they are not one of the four workloads in this story. Those two are only listed in the `global` location, so the count you get back depends on where you look. The regional listing returns four entries and the `global` one returns three, with Workspace Agent appearing in both — it is the same agent, with the same agent ID in both listings — so only putting the two together gives you the full six. The number is not the thing to hold on to. Which entries are yours is.
 
-Notice that two of your own three are listed in lowercase with hyphens rather than as the readable names your teams use for them. That is not a mistake in the catalog. It is what whoever deployed them typed, and nothing has ever made it consistent. Small as it looks, it is the same problem as the rest of this module: the catalog reflects what was done, not what anyone intended, and you cannot match a list against your own understanding of the estate until you can see both.
+Notice that two of your own three are listed in lowercase with hyphens rather than as the readable names your teams use for them. That is not a mistake in the catalog. The catalog took those names from each agent's self-description card, which someone filled in lowercase. The runtime itself calls them Markdown Strategy Agent and Customer Personalization Agent — the same agent, two names in two places. Small as it looks, it is the same problem as the rest of this module: the catalog reflects what was done, not what anyone intended, and you cannot match a list against your own understanding of the estate until you can see both.
 
 Read that list against the cast above and the inversion jumps out. The catalog names things you never deployed, and it is missing something you did: the marketing promo agent, `promo-agent-shadow`, is nowhere in it.
 
@@ -158,13 +158,13 @@ Cataloguing still matters enormously. The registry is your single list of every 
 
 <!-- FIGURE:F08 BEGIN -->
 
-![Out of six catalog entries across regional and global listings, only Price Match Agent, Markdown Strategy Agent, and Customer Personalization Agent are yours. The remaining three entries are platform built-ins, including Workspace Agent, Gemini Enterprise Core Assistant, and Deep Research.](images/F08_catalog_breakdown.jpg)
+![Out of six catalog entries across regional and global listings, only Price Match Agent, markdown-strategy-agent, and customer-personalization-agent are yours. The remaining three entries are Google's own built-in agents: Workspace Agent, Gemini Enterprise Core Assistant, and Deep Research.](images/F08_catalog_breakdown.jpg)
 
 <!-- FIGURE:F08 END -->
 
 ## Step 3 · Widen the net
 
-The catalog only knows about things that registered themselves. To find everything else, you stop asking the catalog and start asking the cloud: list everything actually running, then compare the two lists.
+The catalog only knows about things that were registered, automatically or by hand. To find everything else, you stop asking the catalog and start asking the cloud: list everything actually running, then compare the two lists.
 
 That comparison is where the shadow surfaces.
 
@@ -172,19 +172,19 @@ That comparison is where the shadow surfaces.
 | :---- | :---- | :---- |
 | Price Match Agent | Yes | Known, and it has its own identity |
 | Markdown Strategy Agent | Yes | Known, and it has its own identity |
-| Customer Personalization Agent | Yes | Known, but it shares a login, so its reads cannot be told apart |
-| `promo-agent-shadow` (the Demand and Promotion Agent) | No | Uncatalogued. Running on Cloud Run, off the official platform, and sharing that same login |
+| Customer Personalization Agent | Yes | Known, but it shares a login, so its reads are recorded under that login, not as this agent |
+| `promo-agent-shadow` (the Demand and Promotion Agent) | No | Uncatalogued. Running on Cloud Run as an ordinary web service, and sharing that same login |
 
-The scan will also show ordinary plumbing alongside these: the store website and the data doorway the agents call. Those are supporting services, not agents, and they are expected. There is exactly one uncatalogued agent workload in your estate, and it is the promo agent.
+The scan will also show ordinary plumbing alongside these: the store website, the data doorway the agents call, and `remote-browser-vm1`, the workstation this lab runs on. Those are supporting services, not agents, and they are expected. There is exactly one uncatalogued agent workload in your estate, and it is the promo agent.
 
-Workspace Agent does not appear in this list at all, which is the other half of the same lesson. It sits in the catalog because the platform provides it, not because anything of yours is running it. The two lists were never going to line up on their own, and only comparing them tells you where they differ.
+Workspace Agent, Gemini Enterprise Core Assistant and Deep Research do not appear in this list at all, which is the other half of the same lesson. They sit in the catalog because Google provides them, not because any of your teams deployed them. The two lists were never going to line up on their own, and only comparing them tells you where they differ.
 
-Why does a shadow agent happen at all? Build an agent the official way and the platform registers it in the catalog for you, automatically. This promo agent skipped that path — it was spun up as a plain web service off to the side, so nothing ever recorded it. It has been running unseen simply because no one knew to look.
+Why does a shadow agent happen at all? Deploy an agent to Agent Runtime, or to Cloud Run marked as an agent, and the platform registers it in the catalog for you. Cloud Run is not the problem. This promo agent was deployed to Cloud Run as an ordinary web service with a shared login, so nothing ever recorded it. It has been running unseen simply because no one knew to look.
 
 Two separate problems are now on the table, and it matters that you keep them separate:
 
 - Visibility. One workload is running that nobody catalogued and nobody owns.
-- Accountability. A legitimate agent and that shadow agent share one identity, so their actions cannot be told apart.
+- Accountability. A legitimate agent and that shadow agent share one identity, so the record never names which of them acted.
 
 Fixing the first does not fix the second. Registering the promo agent would make it visible and owned, and it would still be sharing a login and still be reading customer records.
 
@@ -196,47 +196,47 @@ Fixing the first does not fix the second. Registering the promo agent would make
 
 ## Step 4 · Who's reading customer data
 
-Security emails you: they are seeing heavy reads against customer records, and the reads they are worried about all sign in with the same generic account, so they cannot tell which agent actually did it.
+Security emails you: they are seeing heavy reads against customer records, and the reads they are worried about all sign in with the same generic account, so the log never names the agent that actually did it.
 
 You ask for the evidence. What comes back is Cloud Audit Logs, the platform's own record of data access — immutable and system-generated, not agy's opinion, and exportable for your compliance team.
 
-Here is the shape of what that log gives you. Your timestamps will differ.
+Here is the shape of what that log gives you on a busy day. Your timestamps will differ, and so may the number of rows: a fresh lab often shows only the promo campaign's read.
 
 | Time | What happened | Login that did it |
 | :---- | :---- | :---- |
 | 09:12:04 | Read a customer profile, touching all seven fields, including last purchase date and preferred category | `novasmart-customer-sa` |
 | 09:12:37 | Bulk read across the customer table for a promo campaign, touching five fields: customer id, name, email, loyalty tier and lifetime value | `novasmart-customer-sa` |
-| 09:12:51 | Read a customer profile for the storefront | the project's default compute account |
+| 09:12:51 | May appear: read a customer profile for the storefront | the project's default compute account |
 | 09:13:15 | Checked a competitor price and our stock for a match request | Price Match Agent's own agent identity |
 | 09:13:52 | Read confidential cost and margin data for an escalated discount | Markdown Strategy Agent's own agent identity |
 
-The first three rows are reads of the customer database. The third is the one people miss: the store portal itself runs as the project's default compute account, which holds Owner-level rights over everything in the project, so a shopper browsing the site reads customer records under a login that could do anything at all. The last two rows are reads of pricing and competitor data, shown here so you can see the contrast. A question scoped to customer records returns the customer-data rows and leaves the pricing ones out.
+The first three rows are reads of the customer database. The third may or may not appear in yours: the store portal itself runs as the project's default compute account, so that login shows up whenever someone has loaded the storefront in the window you look at. The last two rows are reads of pricing and competitor data, shown here so you can see the contrast. A question scoped to customer records returns the customer-data rows and leaves the pricing ones out.
 
 One line in your own result will not match anything in that table: the lab's own setup account, which loaded these sample customer records into the database when your project was built. Its login is named after the project itself rather than after any workload. It is not one of the agents, it is not the shared login, and it is not what this step is asking about — it is housekeeping. Recognising a line like that and setting it aside is part of reading an audit trail.
 
-Look carefully at what the log does and does not contain. Three things in it matter here: when it happened, what was accessed, and the login that did it. The raw record carries other technical detail as well. What it has nowhere is a field where an agent announces its own name, and there should not be one — a name a caller supplies about itself is not evidence.
+Look carefully at what the log does and does not contain. Three things in it matter here: when it happened, what was accessed, and the login that did it. The raw record carries other technical detail as well, including which Google service used the login — more on that below. What it has nowhere is a field where an agent announces its own name, and there should not be one — a name a caller supplies about itself is not evidence.
 
-So the only identifier you get is the login, and the bottom two rows show what a good one looks like. Price Match and Markdown Strategy each sign in as themselves, so each of those lines names exactly one agent. You could hand either row to an auditor as it stands.
+So the only identity the record names is the login, and the bottom two rows show what a good one looks like. Price Match and Markdown Strategy each sign in as themselves, so each of those lines names exactly one agent. You could hand either row to an auditor as it stands.
 
-The top two rows cannot do that. Two entirely different workloads — a legitimate personalization request and a marketing bulk extract of customer records — arrive wearing the same badge, thirty-three seconds apart in the sample above, and the platform genuinely cannot distinguish them. The identity in those rows is a shared service account, not an agent, and the real agent identity for those two was never in the record to begin with. That holds however many such lines your own log turns out to hold: one read under a shared login already tells you a read happened and refuses to tell you which agent made it.
+The top two rows cannot do that. Two entirely different workloads — a legitimate personalization request and a marketing bulk extract of customer records — arrive wearing the same badge, thirty-three seconds apart in the sample above. The identity in those rows is a shared service account, not an agent. The entry does record one more thing: which Google service used that login — Cloud Run for one read, Agent Runtime for the other. Here each runtime hosts only one of the two agents, so you can work out which read was which. But that is where they happen to be deployed, not who they are: the record names neither agent, and that stops working the day a second workload on either runtime picks up the same login. That holds however many such lines your own log turns out to hold: one read under a shared login tells you a read happened and which runtime it came through, never which agent made it.
 
-Now look once more at those top two rows. What was accessed is recorded more finely than it first appears: the record also lists which fields of the customer table each read actually touched, and on that the two do not match. The personalization read took all seven fields, including last purchase date and preferred category. The promo campaign's bulk read took five, asking for neither of those two.
+Now look once more at those top two rows, and at your own if more than one read shows up under that login. What was accessed is recorded more finely than it first appears: the record also lists which fields of the customer table each read actually touched, and on that the two do not match. The personalization read took all seven fields, including last purchase date and preferred category. The promo campaign's bulk read took five, asking for neither of those two.
 
-Be exact about how far that carries you, because this is the kind of inference it is easy to overstate. Two different field lists tell you there were two different questions asked of the table. They do not, on their own, tell you there were two different pieces of software asking: one workload can perfectly well ask two different questions. It is a lead worth pulling on, not a proof. It also names nobody. Nothing in the record ties the five-field read to marketing rather than to anything else you run, and whether you see the comparison at all depends on both reads having happened while you were looking.
+Be exact about how far that carries you, because this is the kind of inference it is easy to overstate. Two different field lists tell you there were two different questions asked of the table. They do not, on their own, tell you there were two different pieces of software asking: one workload can perfectly well ask two different questions. It is a lead worth pulling on, not a proof. It also names nobody. Nothing in the record names marketing; the only link is that the five-field read came through Cloud Run, and you know from Step 3 what runs there under that login. Whether you see the comparison at all depends on both reads having happened while you were looking, and a repeated identical query that the database answers from its cache leaves no line at all.
 
-What it does show you is the shape of the problem. Two different questions were put to your customer table, and the trail offers you one identity for both of them. Everything you would now want to know, starting with whether that was one workload or two, has to come from somewhere other than the audit trail.
+What it does show you is the shape of the problem. Two different questions were put to your customer table, and the trail offers you one identity for both of them. The trail gets you as far as the runtime. Naming the agent, starting with whether that was one workload or two, takes Step 3's inventory and a look at which login each workload uses.
 
-Notice how you worked out which was which: not from the log, but from Step 3. You know `promo-agent-shadow` runs under that login because you inspected the running service. That is an inference you had to assemble by hand. It is not something the audit trail proves, and it is not something you could produce at speed, under pressure, for thousands of records.
+Notice how you worked out which was which: not from the log alone, but from Step 3 and from re-reading each workload's settings. You know `promo-agent-shadow` runs under that login because you inspected the running service, and you know it is the only thing on Cloud Run doing so. That is an inference you had to assemble by hand. It is not something the audit trail proves, it rests on an accident of hosting, and it is not something you could produce at speed, under pressure, for thousands of records.
 
 Why this is bad, in the terms your board will use:
 
 - You cannot stop the bad reads without also breaking the good agent, because you have no way to target one and not the other.
-- You cannot answer the first question any auditor, regulator or breach report asks: who accessed this data? Right now the honest answer is "we don't know."
-- Full access has been granted to a login rather than to an agent, so anything running under that login inherits everything it can do.
+- You cannot answer the first question any auditor, regulator or breach report asks: who accessed this data? Right now the honest answer is "a shared login did it, and our guess at which agent rests on where each one happens to be hosted."
+- Access has been granted to a login rather than to an agent, so anything running under that login inherits everything it can do.
 
 <!-- FIGURE:F10 BEGIN -->
 
-![The Customer Personalization Agent and promo-agent-shadow both authenticate using the shared service account novasmart-customer-sa. The sample audit rows below them carry that one identity for two different workloads thirty-three seconds apart, so the platform cannot show which agent did it.](images/F10_shared_identity.jpg)
+![The Customer Personalization Agent and promo-agent-shadow both authenticate using the shared service account novasmart-customer-sa. The sample audit rows below them carry that one identity for two different workloads thirty-three seconds apart, so the record never names the agent that did it.](images/F10_shared_identity.jpg)
 
 <!-- FIGURE:F10 END -->
 
@@ -264,7 +264,7 @@ Apply it to the case in front of you. A marketing agent writes promotional copy.
 
 ### Blast radius
 
-Blast radius is how much can go wrong if a single agent is later tricked, misconfigured or breached. Today, anything running under the shared login inherits that login's full power over the customer database, so the blast radius of any one of them is the whole table.
+Blast radius is how much can go wrong if a single agent is later tricked, misconfigured or breached. Today, anything running under the shared login inherits whatever that login is allowed to do, so the blast radius of any one of them is at least the whole customer table.
 
 The tempting shortcut is to over-grant "just to be safe" so nothing breaks. That is precisely the shortcut marketing took, and it is how you end up back here. Be clear with yourself about what breaks if you take it now.
 

@@ -1,0 +1,286 @@
+{
+  "figure_id": "L1_01",
+  "tab": "what_did_we_learn",
+  "module": "M1",
+  "intent": "For each of the five prompted steps of Module 1, show the step and the Google Cloud product agy worked with, and what came out: the promo agent registered and owned but not yet safe; the shared login able to change or delete all data; each agent signing in as itself; the promo agent's route to customer data already closed by Step 3; and a denial in the audit log as the proof.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "each lane left to right, lanes top to bottom",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 13% of the frame, full width",
+        "contains": "the title, top-left, on one line"
+      },
+      {
+        "id": "lane_1",
+        "occupies": "from about 16% to about 29% of the frame height, full width inside the margins",
+        "contains": "one wide step card (white, holding the step label and a blue product chip), arrow, finding card"
+      },
+      {
+        "id": "lane_2",
+        "occupies": "from about 33% to about 46% of the frame height, full width inside the margins",
+        "contains": "one wide step card (white, holding the step label and a blue product chip), arrow, finding card"
+      },
+      {
+        "id": "lane_3",
+        "occupies": "from about 50% to about 63% of the frame height, full width inside the margins",
+        "contains": "one wide step card (white, holding the step label and a blue product chip), arrow, finding card"
+      },
+      {
+        "id": "lane_4",
+        "occupies": "from about 67% to about 80% of the frame height, full width inside the margins",
+        "contains": "one wide step card (white, holding the step label and a blue product chip), arrow, finding card"
+      },
+      {
+        "id": "lane_5",
+        "occupies": "from about 84% to about 97% of the frame height, full width inside the margins",
+        "contains": "one wide step card (white, holding the step label and a blue product chip), arrow, finding card"
+      }
+    ],
+    "columns": "two columns in every lane: wide white step cards at left (x 4%-58%), finding cards at right (x 64%-96%); all cards in a column are the same size and aligned; one arrow joins them; each blue product chip fits its text and sits right-aligned at the right end of its step card"
+  },
+  "elements": [
+    {
+      "id": "s1",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small simple outline chat-bubble icon at its far left, then the step label, then at the card's right end a soft blue rounded chip holding the product name",
+      "position": "lane 1, left column",
+      "colour_role": "neutral",
+      "label": "1 · Register it",
+      "chip": {
+        "colour_role": "working_system",
+        "label": "Agent Registry"
+      }
+    },
+    {
+      "id": "f1",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 1, right column",
+      "colour_role": "neutral",
+      "label": "Owned, not yet safe"
+    },
+    {
+      "id": "s2",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small simple outline chat-bubble icon at its far left, then the step label, then at the card's right end a soft blue rounded chip holding the product name",
+      "position": "lane 2, left column",
+      "colour_role": "neutral",
+      "label": "2 · See its power",
+      "chip": {
+        "colour_role": "working_system",
+        "label": "IAM"
+      }
+    },
+    {
+      "id": "f2",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 2, right column",
+      "colour_role": "problem",
+      "label": "Can change or delete all data"
+    },
+    {
+      "id": "s3",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small simple outline chat-bubble icon at its far left, then the step label, then at the card's right end a soft blue rounded chip holding the product name",
+      "position": "lane 3, left column",
+      "colour_role": "neutral",
+      "label": "3 · One login each",
+      "chip": {
+        "colour_role": "working_system",
+        "label": "Agent Identity + Cloud Run"
+      }
+    },
+    {
+      "id": "f3",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 3, right column",
+      "colour_role": "good_outcome",
+      "label": "Each signs in as itself"
+    },
+    {
+      "id": "s4",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small simple outline chat-bubble icon at its far left, then the step label, then at the card's right end a soft blue rounded chip holding the product name",
+      "position": "lane 4, left column",
+      "colour_role": "neutral",
+      "label": "4 · Cut marketing's access",
+      "chip": {
+        "colour_role": "working_system",
+        "label": "BigQuery access list"
+      }
+    },
+    {
+      "id": "f4",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 4, right column",
+      "colour_role": "good_outcome",
+      "label": "Already closed in Step 3"
+    },
+    {
+      "id": "s5",
+      "shape": "wide rounded rectangle card, white fill, medium grey outline, with a small simple outline chat-bubble icon at its far left, then the step label, then at the card's right end a soft blue rounded chip holding the product name",
+      "position": "lane 5, left column",
+      "colour_role": "neutral",
+      "label": "5 · Prove it",
+      "chip": {
+        "colour_role": "working_system",
+        "label": "Cloud Audit Logs"
+      }
+    },
+    {
+      "id": "f5",
+      "shape": "wide rounded rectangle card",
+      "position": "lane 5, right column",
+      "colour_role": "good_outcome",
+      "label": "Denial in the log is the proof"
+    }
+  ],
+  "connections": [
+    {
+      "from": "s1",
+      "to": "f1",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "s2",
+      "to": "f2",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "s3",
+      "to": "f3",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "s4",
+      "to": "f4",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "s5",
+      "to": "f5",
+      "style": "solid arrow, neutral grey, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "What each prompt tested",
+      "position": "title, top-left, one line",
+      "face": "sans"
+    },
+    {
+      "text": "1 · Register it",
+      "position": "lane 1 step card, left of the chip, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Agent Registry",
+      "position": "lane 1 step card, inside the soft blue chip at its right end, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Owned, not yet safe",
+      "position": "lane 1 finding card, one line",
+      "face": "sans"
+    },
+    {
+      "text": "2 · See its power",
+      "position": "lane 2 step card, left of the chip, one line",
+      "face": "sans"
+    },
+    {
+      "text": "IAM",
+      "position": "lane 2 step card, inside the soft blue chip at its right end, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Can change or delete all data",
+      "position": "lane 2 finding card, one line",
+      "face": "sans"
+    },
+    {
+      "text": "3 · One login each",
+      "position": "lane 3 step card, left of the chip, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Agent Identity + Cloud Run",
+      "position": "lane 3 step card, inside the soft blue chip at its right end, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Each signs in as itself",
+      "position": "lane 3 finding card, one line",
+      "face": "sans"
+    },
+    {
+      "text": "4 · Cut marketing's access",
+      "position": "lane 4 step card, left of the chip, one line",
+      "face": "sans"
+    },
+    {
+      "text": "BigQuery access list",
+      "position": "lane 4 step card, inside the soft blue chip at its right end, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Already closed in Step 3",
+      "position": "lane 4 finding card, one line",
+      "face": "sans"
+    },
+    {
+      "text": "5 · Prove it",
+      "position": "lane 5 step card, left of the chip, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Cloud Audit Logs",
+      "position": "lane 5 step card, inside the soft blue chip at its right end, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Denial in the log is the proof",
+      "position": "lane 5 finding card, one line",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "lanes": 5,
+    "step_cards": 5,
+    "product_chips": 5,
+    "finding_cards": 5,
+    "arrows": 5,
+    "icons": 5,
+    "text_strings": 16
+  },
+  "mandatory": [
+    "Exactly five horizontal lanes, each with exactly one wide white step card and one finding card joined left to right by one arrow",
+    "Each step card is white with a medium grey outline and holds, left to right: a small outline chat-bubble icon, the step label (for example '1 · Register it'), and a soft blue chip with the product name",
+    "The five product chips are soft blue; finding card 1 is a very light grey (#F1F3F4) with a medium grey outline, as light as the step cards' background tone; finding card 2 is soft red; finding cards 3, 4 and 5 are soft green",
+    "Every label is semibold near-black ink (#1F2328), never grey, and sits on ONE line; the step label keeps its number and the middle dot '·' exactly as written",
+    "The title is bold, large, top-left and on one line",
+    "The five lanes are evenly spaced and fill the frame from below the title to the bottom margin; each card is at least 11% of the frame height tall",
+    "All text is large enough to read when the image is 1000px wide"
+  ],
+  "prohibitions": [
+    "NO third-party logos and NO Google logo",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines' anywhere",
+    "NO project IDs, NO email addresses, NO 'projects/' paths, NO '@' characters",
+    "NO people, faces, hands, silhouettes or characters",
+    "NO text that is not listed in text_exact",
+    "NO check marks, ticks or crosses",
+    "NO column headings",
+    "NO sixth lane and NO third card in any lane",
+    "NO pills with monospace text, NO monospace text",
+    "NO green on any step card, chip, or on finding cards 1 and 2",
+    "NO step number anywhere except at the start of each step label",
+    "NO dark or mid grey fill on any card"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-instructions.md:33-35",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-instructions.md:57",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-instructions.md:67",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-instructions.md:85",
+    ".lavi-working/labbench/runs/m1-v5-artifacts/evidence_all.txt:801-880",
+    ".lavi-working/labbench/runs/m1-v5-artifacts/evidence_all.txt:990-1010",
+    ".lavi-working/labbench/review/guides/m1/QA-learned-v2.md (rebuild per review)"
+  ],
+  "alt_text": "The title reads: What each prompt tested. Five rows, each a white step card with a blue product chip and an arrow to a finding. 1 · Register it, Agent Registry, leads to Owned, not yet safe, in gray. 2 · See its power, IAM, leads to Can change or delete all data, in red. 3 · One login each, Agent Identity + Cloud Run, leads to Each signs in as itself, in green. 4 · Cut marketing's access, BigQuery access list, leads to Already closed in Step 3, in green. 5 · Prove it, Cloud Audit Logs, leads to Denial in the log is the proof, in green."
+}

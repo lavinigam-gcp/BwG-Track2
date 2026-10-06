@@ -1,0 +1,266 @@
+{
+  "figure_id": "L0_02",
+  "tab": "what_did_we_learn",
+  "module": "M0",
+  "intent": "Show that Module 0 found two different gaps. Visibility: an agent is running that the catalog does not list. Accountability: two agents sign in with one login, so the audit log records the login and not the agent. The right panel shows what was read (customer names and emails) and that the audit log records the login, not the agent.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left panel then right panel, then the bottom bar",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 14% of the frame, full width",
+        "contains": "the title, top-left"
+      },
+      {
+        "id": "left_panel",
+        "occupies": "from about 18% to about 80% of the frame height, left half inside the margins",
+        "contains": "the Visibility gap panel: two side-by-side lists"
+      },
+      {
+        "id": "right_panel",
+        "occupies": "from about 18% to about 80% of the frame height, right half inside the margins, same size as the left panel",
+        "contains": "the Accountability gap panel: two agents, one login, one audit log"
+      },
+      {
+        "id": "bottom_bar",
+        "occupies": "from about 84% to about 95% of the frame height, full width inside the margins",
+        "contains": "one takeaway sentence"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "left_panel",
+      "shape": "large rounded rectangle panel with a thin grey outline and white fill",
+      "position": "left half",
+      "colour_role": "neutral",
+      "label": "Visibility gap",
+      "label_placement": "bold heading top-left inside the panel"
+    },
+    {
+      "id": "catalog_list",
+      "shape": "tall rounded rectangle card holding four stacked rows",
+      "position": "inside the left panel, left of centre",
+      "colour_role": "working_system",
+      "label": "Catalog",
+      "label_placement": "heading at the top of the card",
+      "rows": "three soft blue horizontal bars with no text, then a fourth row that is an empty slot drawn with a dashed grey outline and no text"
+    },
+    {
+      "id": "running_list",
+      "shape": "tall rounded rectangle card holding four stacked rows, same size as the Catalog card",
+      "position": "inside the left panel, right of centre, level with the Catalog card",
+      "colour_role": "working_system",
+      "label": "Running",
+      "label_placement": "heading at the top of the card",
+      "rows": "three soft blue horizontal bars with no text, aligned with the Catalog card's three bars, then a fourth row holding the red pill"
+    },
+    {
+      "id": "shadow_left",
+      "shape": "pill",
+      "position": "fourth row of the Running card, level with the dashed empty slot in the Catalog card",
+      "colour_role": "problem",
+      "label": "promo-agent-shadow",
+      "style": "monospace text on a soft red pill with medium red stroke"
+    },
+    {
+      "id": "right_panel",
+      "shape": "large rounded rectangle panel with a thin grey outline and white fill, same size as the left panel",
+      "position": "right half",
+      "colour_role": "neutral",
+      "label": "Accountability gap",
+      "label_placement": "bold heading top-left inside the panel"
+    },
+    {
+      "id": "cpa",
+      "shape": "wide rounded pill, single line of text",
+      "position": "inside the right panel, left side, upper of two stacked agent boxes",
+      "colour_role": "working_system",
+      "label": "Customer Personalization Agent"
+    },
+    {
+      "id": "shadow_right",
+      "shape": "wide rounded pill, single line of monospace text",
+      "position": "inside the right panel, left side, directly below the Customer Personalization Agent box",
+      "colour_role": "problem",
+      "label": "promo-agent-shadow",
+      "label_face": "monospace"
+    },
+    {
+      "id": "login",
+      "shape": "pill, larger than the left-panel pill",
+      "position": "inside the right panel, centre, vertically between the two agent boxes",
+      "colour_role": "attention",
+      "icon": "simple flat outline key, left of the text",
+      "label": "novasmart-customer-sa",
+      "style": "monospace text on a soft amber pill with medium amber stroke"
+    },
+    {
+      "id": "customer_data",
+      "shape": "database cylinder",
+      "position": "inside the right panel, right side, upper half, level with the novasmart-customer-sa pill",
+      "colour_role": "neutral",
+      "label": "Customer data: names, emails",
+      "label_note": "one string; it may wrap only after the colon: 'Customer data:' / 'names, emails'; both lines semibold near-black"
+    },
+    {
+      "id": "audit_log",
+      "shape": "rounded rectangle shaped like a document with a folded top-right corner",
+      "position": "inside the right panel, right side, directly below the Customer data cylinder",
+      "colour_role": "neutral",
+      "label": "Audit log",
+      "sublabel": "Records the login, not the agent",
+      "sublabel_style": "semibold, primary near-black ink (#1F2328), as large as the label - this is the point of the panel, never faint grey"
+    },
+    {
+      "id": "bottom_bar",
+      "shape": "full-width rounded rectangle bar",
+      "position": "bottom band",
+      "colour_role": "neutral",
+      "label": "Fixing one gap does not fix the other.",
+      "label_placement": "centred in the bar"
+    }
+  ],
+  "connections": [
+    {
+      "from": "cpa",
+      "to": "login",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "shadow_right",
+      "to": "login",
+      "style": "solid arrow, neutral grey, no label"
+    },
+    {
+      "from": "login",
+      "to": "customer_data",
+      "style": "solid arrow, medium amber, no label"
+    },
+    {
+      "from": "customer_data",
+      "to": "audit_log",
+      "style": "short dashed grey line with an arrowhead, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "Visibility vs accountability",
+      "position": "title, top-left",
+      "face": "sans"
+    },
+    {
+      "text": "Visibility gap",
+      "position": "heading top-left inside the left panel",
+      "face": "sans"
+    },
+    {
+      "text": "Catalog",
+      "position": "heading of the left list card",
+      "face": "sans"
+    },
+    {
+      "text": "Running",
+      "position": "heading of the right list card",
+      "face": "sans"
+    },
+    {
+      "text": "promo-agent-shadow",
+      "position": "red pill in the fourth row of the Running card",
+      "face": "mono"
+    },
+    {
+      "text": "Accountability gap",
+      "position": "heading top-left inside the right panel",
+      "face": "sans"
+    },
+    {
+      "text": "Customer Personalization Agent",
+      "position": "label of the upper agent box in the right panel",
+      "face": "sans"
+    },
+    {
+      "text": "promo-agent-shadow",
+      "position": "label of the lower agent box in the right panel",
+      "face": "mono"
+    },
+    {
+      "text": "novasmart-customer-sa",
+      "position": "amber pill in the centre of the right panel",
+      "face": "mono"
+    },
+    {
+      "text": "Customer data: names, emails",
+      "position": "right panel, label of the database cylinder (may wrap only after the colon)",
+      "face": "sans"
+    },
+    {
+      "text": "Audit log",
+      "position": "label of the document shape at the right of the right panel",
+      "face": "sans"
+    },
+    {
+      "text": "Records the login, not the agent",
+      "position": "sublabel of the document shape",
+      "face": "sans"
+    },
+    {
+      "text": "Fixing one gap does not fix the other.",
+      "position": "centred in the bottom bar",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "panels": 2,
+    "list_cards": 2,
+    "blank_bars": 6,
+    "dashed_empty_slots": 1,
+    "agent_boxes": 2,
+    "pills": 2,
+    "document_shapes": 1,
+    "bottom_bars": 1,
+    "arrows": 4,
+    "text_strings": 13,
+    "database_cylinders": 1
+  },
+  "mandatory": [
+    "The two panels are the same size and sit side by side",
+    "The string 'promo-agent-shadow' appears exactly twice: once as the red pill in the Running card, once as the label of the lower red agent box in the right panel",
+    "The string 'novasmart-customer-sa' appears exactly once, in the amber pill in the right panel",
+    "The Catalog card's fourth row is an empty dashed slot directly level with the promo-agent-shadow pill in the Running card",
+    "The six list bars carry no text at all",
+    "Exactly two agent boxes in the right panel: the upper soft blue, the lower soft red",
+    "No arrow runs from either agent box directly to the Audit log",
+    "Every identifier is in a monospace face",
+    "The title is bold, large and top-left",
+    "All text is large enough to read when the image is 1000px wide",
+    "Every monospace identifier stays on ONE line: in the right panel the promo-agent-shadow box is wide enough (same width as the Customer Personalization Agent box) that 'promo-agent-shadow' is never wrapped or hyphenated",
+    "In the right panel both agents are drawn as wide rounded pills stacked one above the other on the left side of the panel, each with one arrow into the novasmart-customer-sa pill; the promo-agent-shadow pill text stays on one line (the longer agent name may wrap)",
+    "Both agents have an arrow into the single amber login pill; one amber arrow runs from the pill to the Customer data cylinder; one short dashed arrow runs from the cylinder down to the Audit log",
+    "'Records the login, not the agent' is set in semibold near-black ink (#1F2328), clearly readable, never light grey; it may wrap only after the comma",
+    "The text_exact list has 13 entries because 'promo-agent-shadow' appears twice; there are 12 distinct strings and no others"
+  ],
+  "prohibitions": [
+    "NO third-party logos and NO Google logo",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines' anywhere",
+    "NO project IDs, NO email addresses, NO 'projects/' paths, NO '@' characters",
+    "NO people, faces, hands or characters",
+    "NO check marks, ticks or crosses",
+    "NO text inside the list bars and NO agent names in the list cards other than the promo-agent-shadow pill",
+    "NO text that is not listed in text_exact",
+    "NO third agent box in the right panel",
+    "NO agent name written inside the Audit log shape",
+    "NO alteration of 'novasmart-customer-sa' or 'promo-agent-shadow' such as underscores, spaces or capital letters",
+    "NO identifier broken across two lines (never 'promo-agent-' on one line and 'shadow' on the next)",
+    "NO separate grey sublabel under the Customer data cylinder"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:184-189",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:171-178",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:217-221",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-instructions.md:51",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-instructions.md:65"
+  ],
+  "alt_text": "The title reads: Visibility vs accountability. Two panels side by side. Left, Visibility gap: a Catalog list and a Running list share three matching entries, and the Running list has one more item, promo-agent-shadow, with an empty dashed slot opposite it in the Catalog list. Right, Accountability gap: Customer Personalization Agent and promo-agent-shadow both point to one login, novasmart-customer-sa, which reads Customer data: names, emails. A dashed arrow leads down to an Audit log that reads: Records the login, not the agent. A bar across the bottom reads: Fixing one gap does not fix the other."
+}

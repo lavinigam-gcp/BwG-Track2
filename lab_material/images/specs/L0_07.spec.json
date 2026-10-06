@@ -1,0 +1,191 @@
+{
+  "figure_id": "L0_07",
+  "tab": "what_did_we_learn",
+  "module": "M0",
+  "intent": "Illustrate that the same two gaps appear in any sector: retail customer records (NovaSmart's case), healthcare patient records, banking account data and manufacturing supplier data. In each, an unlisted agent plus a shared login means no one can prove who touched the data.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "panels left to right, then the bar underneath",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 14% of the frame, full width",
+        "contains": "the title top-left on one line, and the 'Illustration' tag at the top-right corner"
+      },
+      {
+        "id": "panels",
+        "occupies": "from about 18% to about 70% of the frame height, full width inside the margins",
+        "contains": "four equal panels in one row with even gaps"
+      },
+      {
+        "id": "bar",
+        "occupies": "from about 76% to about 92% of the frame height, full width inside the margins",
+        "contains": "one wide amber bar with two text parts joined by a short arrow"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "tag",
+      "shape": "small rounded tag",
+      "position": "top-right corner, level with the title",
+      "colour_role": "neutral",
+      "label": "Illustration"
+    },
+    {
+      "id": "retail",
+      "shape": "tall rounded rectangle panel with a large simple flat outline database icon in its upper half, the sector name below the icon and the data line below that",
+      "position": "panels, first from left",
+      "colour_role": "working_system",
+      "label": "Retail",
+      "label_style": "bold near-black, on ONE line, never wrapped",
+      "sublabel": "Customer records",
+      "sublabel_style": "semibold, primary near-black ink (#1F2328), slightly smaller than the sector name, on ONE line, never light grey"
+    },
+    {
+      "id": "health",
+      "shape": "tall rounded rectangle panel, same size as the others, with a large simple flat outline document icon in its upper half",
+      "position": "panels, second from left",
+      "colour_role": "neutral",
+      "label": "Healthcare",
+      "label_style": "bold near-black, on ONE line, never wrapped",
+      "sublabel": "Patient records",
+      "sublabel_style": "semibold, primary near-black ink (#1F2328), slightly smaller than the sector name, on ONE line, never light grey"
+    },
+    {
+      "id": "banking",
+      "shape": "tall rounded rectangle panel, same size as the others, with a large simple flat outline padlock icon in its upper half",
+      "position": "panels, third from left",
+      "colour_role": "neutral",
+      "label": "Banking",
+      "label_style": "bold near-black, on ONE line, never wrapped",
+      "sublabel": "Account data",
+      "sublabel_style": "semibold, primary near-black ink (#1F2328), slightly smaller than the sector name, on ONE line, never light grey"
+    },
+    {
+      "id": "manufacturing",
+      "shape": "tall rounded rectangle panel, same size as the others, with a large simple flat outline gear icon in its upper half",
+      "position": "panels, far right",
+      "colour_role": "neutral",
+      "label": "Manufacturing",
+      "label_style": "bold near-black, on ONE line, never wrapped",
+      "sublabel": "Supplier data",
+      "sublabel_style": "semibold, primary near-black ink (#1F2328), slightly smaller than the sector name, on ONE line, never light grey"
+    },
+    {
+      "id": "bar",
+      "shape": "full-width rounded rectangle bar holding two text parts with a short solid arrow between them",
+      "position": "bar band",
+      "colour_role": "attention",
+      "left_text": "Unlisted agent + shared login",
+      "right_text": "No one can prove who touched it"
+    }
+  ],
+  "connections": [
+    {
+      "from": "bar left text",
+      "to": "bar right text",
+      "style": "short solid arrow inside the bar, medium amber, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "Same gaps, other industries",
+      "position": "title, top-left, one line",
+      "face": "sans"
+    },
+    {
+      "text": "Illustration",
+      "position": "tag at the top-right corner",
+      "face": "sans"
+    },
+    {
+      "text": "Retail",
+      "position": "panel 1, sector name",
+      "face": "sans"
+    },
+    {
+      "text": "Customer records",
+      "position": "panel 1, data line",
+      "face": "sans"
+    },
+    {
+      "text": "Healthcare",
+      "position": "panel 2, sector name",
+      "face": "sans"
+    },
+    {
+      "text": "Patient records",
+      "position": "panel 2, data line",
+      "face": "sans"
+    },
+    {
+      "text": "Banking",
+      "position": "panel 3, sector name",
+      "face": "sans"
+    },
+    {
+      "text": "Account data",
+      "position": "panel 3, data line",
+      "face": "sans"
+    },
+    {
+      "text": "Manufacturing",
+      "position": "panel 4, sector name",
+      "face": "sans"
+    },
+    {
+      "text": "Supplier data",
+      "position": "panel 4, data line",
+      "face": "sans"
+    },
+    {
+      "text": "Unlisted agent + shared login",
+      "position": "bar, left part",
+      "face": "sans"
+    },
+    {
+      "text": "No one can prove who touched it",
+      "position": "bar, right part after the arrow",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "panels": 4,
+    "icons": 4,
+    "tags": 1,
+    "bars": 1,
+    "arrows": 1,
+    "text_strings": 12
+  },
+  "mandatory": [
+    "Exactly four panels of identical size in one row; the first (Retail) is soft blue, the other three light grey",
+    "Each panel shows one icon, its sector name in bold near-black and its data line in semibold near-black (#1F2328), slightly smaller, never light grey",
+    "Every sector name and every data line sits on ONE line; 'Manufacturing' is the longest name and fits on one line with clear padding of at least 6% of the panel width on each side, so all four sector names use one smaller shared size if needed; no name is wrapped or hyphenated",
+    "The 'Illustration' tag is a small neutral rounded tag clearly visible at the top-right corner, level with the title",
+    "The bar is soft amber with both text parts in semibold near-black, each on one line, joined by one short arrow",
+    "The title is bold, large, top-left and on one line",
+    "The panels fill their band so there is no large empty area",
+    "Every panel, the tag and the bar have a visible 2px outline in their colour role's stroke colour",
+    "All text is large enough to read when the image is 1000px wide",
+    "The data lines ('Customer records', 'Patient records', 'Account data', 'Supplier data') and both bar texts are semibold near-black (#1F2328), never regular-weight grey"
+  ],
+  "prohibitions": [
+    "NO people, faces, hands, figures or characters; NO medical crosses, hearts, flags, currency signs, coins or factory chimneys with smoke",
+    "NO third-party logos and NO Google logo",
+    "NO green anywhere in the image",
+    "NO red anywhere in the image",
+    "NO check marks, ticks or crosses",
+    "NO fifth panel",
+    "NO 'NovaSmart' text anywhere",
+    "NO text that is not listed in text_exact",
+    "NO light grey or faint text for the data lines",
+    "NO sector name broken across two lines (never 'Manufac-' / 'turing', never 'Health-' / 'care')"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:79",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m0-context.md:77",
+    ".lavi-working/labbench/review/guides/m0/v2-plan/A-learned-plan.md §3 L0_07"
+  ],
+  "alt_text": "The title reads: Same gaps, other industries, with a tag reading Illustration. Four panels, each with an icon: Retail with customer records, in blue; then, in gray, Healthcare with patient records, Banking with account data, and Manufacturing with supplier data. An amber bar beneath reads: Unlisted agent + shared login, with an arrow to: No one can prove who touched it."
+}

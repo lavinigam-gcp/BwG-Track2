@@ -1,0 +1,146 @@
+{
+  "figure_id": "S1_07",
+  "file": "images/S1_07_reusable_vs_novasmart.webp",
+  "tab": "skill_mapping",
+  "module": "M1",
+  "intent": "Which parts of the Module 1 skill a builder can reuse anywhere, and which are tied to the NovaSmart lab.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left panel then right panel",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 12%, full width",
+        "contains": "the title only, top-left, one line"
+      },
+      {
+        "id": "left",
+        "occupies": "left half inside the margins, from 16% to 92% of the height",
+        "contains": "a soft blue panel (#E8F0FE fill, medium blue outline) with a heading and six stacked rows"
+      },
+      {
+        "id": "right",
+        "occupies": "right half inside the margins, from 16% to 92% of the height",
+        "contains": "a light grey panel with a heading and three stacked rows"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "lp",
+      "shape": "large rounded panel",
+      "position": "left region",
+      "colour_role": "working_system",
+      "label": "Reusable anywhere"
+    },
+    {
+      "id": "rp",
+      "shape": "large rounded panel",
+      "position": "right region",
+      "colour_role": "neutral",
+      "label": "NovaSmart only"
+    }
+  ],
+  "connections": [],
+  "text_exact": [
+    {
+      "text": "What to take from this skill",
+      "position": "title, top-left, one line, bold",
+      "face": "sans"
+    },
+    {
+      "text": "Reusable anywhere",
+      "position": "left panel heading",
+      "face": "sans"
+    },
+    {
+      "text": "NovaSmart only",
+      "position": "right panel heading",
+      "face": "sans"
+    },
+    {
+      "text": "Read before you write",
+      "position": "left row 1, icon: magnifier",
+      "face": "sans"
+    },
+    {
+      "text": "One change, then re-read",
+      "position": "left row 2, icon: circular arrow",
+      "face": "sans"
+    },
+    {
+      "text": "Every change has an undo",
+      "position": "left row 3, icon: undo arrow",
+      "face": "sans"
+    },
+    {
+      "text": "Grant first, remove last",
+      "position": "left row 4, icon: list with an arrow",
+      "face": "sans"
+    },
+    {
+      "text": "Prove it with a triggered denial",
+      "position": "left row 5, icon: shield outline",
+      "face": "sans"
+    },
+    {
+      "text": "Never grant yourself a role",
+      "position": "left row 6, icon: key",
+      "face": "sans"
+    },
+    {
+      "text": "NovaSmart names and seed bucket",
+      "position": "right row 1, icon: storefront outline",
+      "face": "sans"
+    },
+    {
+      "text": "The 16-check list",
+      "position": "right row 2, icon: simple outline bullseye target",
+      "face": "sans"
+    },
+    {
+      "text": "Step 7 show formats",
+      "position": "right row 3, icon: page layout with three blocks",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "panels": 2,
+    "left_rows": 6,
+    "right_rows": 3,
+    "arrows": 0,
+    "text_strings": 12
+  },
+  "mandatory": [
+    "The left panel is soft blue (working_system); the right panel is light grey (neutral)",
+    "Two panels of identical size side by side; each row is a white rounded strip with a small outline icon at its left; left-panel row text sits on one line; right-panel row text may wrap onto two lines, breaking only between words",
+    "The right panel's three rows are taller than the left rows and evenly spaced so the first row aligns with left row 1 and the last row aligns with left row 6; no empty lower half",
+    "The number in 'The 16-check list' is the digits 16",
+    "Row text is semibold near-black",
+    "The title reads exactly 'What to take from this skill', bold, top-left, one line",
+    "Every string in text_exact appears exactly once, spelled exactly as written"
+  ],
+  "prohibitions": [
+    "NO green anywhere: no green fill, outline, icon or text",
+    "NO red anywhere",
+    "NO arrows",
+    "NO tick marks, crosses or X marks",
+    "NO person, head, crown or user icons",
+    "NO file names",
+    "NO command text, shell syntax, flags or flag values of any kind (no 'gcloud', 'curl', 'bq', 'agy -p', '--', '$', '|', 'stream-json')",
+    "NO URLs, hostnames or file paths other than the file names listed in text_exact",
+    "NO project IDs, project numbers, regions, or email addresses (nothing containing '@', 'projects/' or 'iam.gserviceaccount.com')",
+    "NO logos of any kind, including Google, Google Cloud, Gemini or Antigravity logos",
+    "NO people, faces, hands, silhouettes, robots, mascots or characters",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines'",
+    "NO text that is not listed in text_exact: no extra labels, numbers, step numbers, captions, legend, footnote or source note",
+    "NO identifier (file name or login name) broken across two lines",
+    "NO word broken at a hyphen",
+    "NO grey or faint text for any label; every label is semibold near-black #1F2328"
+  ],
+  "source_refs": [
+    "skills/novasmart-governance-lab/references/m1.md sections 0, 3, 6, 9",
+    "skills/novasmart-governance-lab/references/m1-step3.md, m1-step5.md, showcase.md"
+  ],
+  "alt_text": "What to take from this skill. A blue panel, Reusable anywhere: read before you write; one change, then re-read; every change has an undo; grant first, remove last; prove it with a triggered denial; never grant yourself a role. A gray panel, NovaSmart only: NovaSmart names and seed bucket; the 16-check list; Step 7 show formats."
+}

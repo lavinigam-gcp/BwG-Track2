@@ -1,0 +1,275 @@
+{
+  "figure_id": "S1_01",
+  "file": "images/S1_01_one_turn_swimlane.webp",
+  "tab": "skill_mapping",
+  "module": "M1",
+  "intent": "Same one-turn swimlane as Module 0 with one change: agy runs commands and re-reads anything it changed, and the evidence file it writes first now includes a change record.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left to right in time; five horizontal lanes stacked top to bottom; a staircase of six boxes, one per column",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 12% of the frame, full width",
+        "contains": "the title only, top-left, on one line"
+      },
+      {
+        "id": "lanes",
+        "occupies": "from 15% to 80% of the frame height, full width inside the margins",
+        "contains": "five equal-height horizontal lanes separated by thin light-grey rules; each lane has its label in a narrow column at the far left (about 12% of the width); the remaining width holds six columns"
+      },
+      {
+        "id": "identity_strip",
+        "occupies": "from 84% to 94% of the frame height, full width inside the margins",
+        "contains": "one light-grey strip holding ONLY two wide pills side by side, spanning the strip's full width; the strip has no label, no heading and no lane-label column"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "lane_you",
+      "shape": "lane, plain white background, separated from the next lane by a thin light-grey horizontal rule",
+      "position": "lane 1 (top)",
+      "colour_role": "neutral",
+      "label": "You"
+    },
+    {
+      "id": "lane_agy",
+      "shape": "lane, plain white background, separated from the next lane by a thin light-grey horizontal rule",
+      "position": "lane 2",
+      "colour_role": "working_system",
+      "label": "agy"
+    },
+    {
+      "id": "lane_skill",
+      "shape": "lane, plain white background, separated from the next lane by a thin light-grey horizontal rule",
+      "position": "lane 3",
+      "colour_role": "neutral",
+      "label": "Skill files"
+    },
+    {
+      "id": "lane_cloud",
+      "shape": "lane, plain white background, separated from the next lane by a thin light-grey horizontal rule",
+      "position": "lane 4",
+      "colour_role": "working_system",
+      "label": "Google Cloud"
+    },
+    {
+      "id": "lane_evidence",
+      "shape": "lane, plain white background, separated from the next lane by a thin light-grey horizontal rule",
+      "position": "lane 5 (bottom)",
+      "colour_role": "neutral",
+      "label": "Evidence file"
+    },
+    {
+      "id": "q",
+      "shape": "wide rounded rectangle with a small speech-bubble icon",
+      "position": "lane 1, column 1",
+      "colour_role": "neutral",
+      "label": "Plain-English question"
+    },
+    {
+      "id": "sees",
+      "shape": "wide rounded rectangle with a small list icon",
+      "position": "lane 2, column 2",
+      "colour_role": "working_system",
+      "label": "Sees skill name + description"
+    },
+    {
+      "id": "reads",
+      "shape": "wide rounded rectangle with a small document icon",
+      "position": "lane 3, column 3",
+      "colour_role": "neutral",
+      "label": "Reads skill files when needed"
+    },
+    {
+      "id": "cmds",
+      "shape": "wide rounded rectangle with a small cloud outline icon; text on two lines: 'Runs commands;' / 're-reads any change'",
+      "position": "lane 4, column 4",
+      "colour_role": "working_system",
+      "label": "Runs commands; re-reads any change"
+    },
+    {
+      "id": "writes",
+      "shape": "extra-wide rounded rectangle (wider than the other boxes) with a small document icon; text on two lines: line 1 'Writes m1_stepN.txt', line 2 '+ change record'",
+      "position": "lane 5, column 5",
+      "colour_role": "neutral",
+      "label": "Writes m1_stepN.txt + change record, with 'm1_stepN.txt' in monospace"
+    },
+    {
+      "id": "answer",
+      "shape": "wide rounded rectangle with a small page icon",
+      "position": "lane 1, column 6 (far right)",
+      "colour_role": "working_system",
+      "label": "Answer built only from this file"
+    },
+    {
+      "id": "pill_model",
+      "shape": "wide rounded pill, single line",
+      "position": "identity strip, left half",
+      "colour_role": "neutral",
+      "label": "Model sign-in: Google account or API key, with 'Model sign-in:' in bold"
+    },
+    {
+      "id": "pill_cloud",
+      "shape": "wide rounded pill, single line",
+      "position": "identity strip, right half",
+      "colour_role": "neutral",
+      "label": "Cloud commands run as antigravity-sa, all regular weight, with 'antigravity-sa' in monospace"
+    }
+  ],
+  "connections": [
+    {
+      "from": "q",
+      "to": "sees",
+      "style": "ONE grey elbow line: leaves the middle of the right edge of the box, runs right, turns down once, and ends with one arrowhead on the TOP edge of the next box; no label"
+    },
+    {
+      "from": "sees",
+      "to": "reads",
+      "style": "ONE grey elbow line: leaves the middle of the right edge of the box, runs right, turns down once, and ends with one arrowhead on the TOP edge of the next box; no label"
+    },
+    {
+      "from": "reads",
+      "to": "cmds",
+      "style": "ONE grey elbow line: leaves the middle of the right edge of the box, runs right, turns down once, and ends with one arrowhead on the TOP edge of the next box; no label"
+    },
+    {
+      "from": "cmds",
+      "to": "writes",
+      "style": "ONE grey elbow line: leaves the middle of the right edge of the box, runs right, turns down once, and ends with one arrowhead on the TOP edge of the next box; no label"
+    },
+    {
+      "from": "writes",
+      "to": "answer",
+      "style": "solid arrow, medium blue, rising from lane 5 to lane 1, no label"
+    }
+  ],
+  "text_exact": [
+    {
+      "text": "One prompt, start to finish",
+      "position": "title, top-left, one line, bold",
+      "face": "sans"
+    },
+    {
+      "text": "You",
+      "position": "lane 1 label, far left",
+      "face": "sans"
+    },
+    {
+      "text": "agy",
+      "position": "lane 2 label, far left",
+      "face": "sans"
+    },
+    {
+      "text": "Skill files",
+      "position": "lane 3 label, far left",
+      "face": "sans"
+    },
+    {
+      "text": "Google Cloud",
+      "position": "lane 4 label, far left",
+      "face": "sans"
+    },
+    {
+      "text": "Evidence file",
+      "position": "lane 5 label, far left",
+      "face": "sans"
+    },
+    {
+      "text": "Plain-English question",
+      "position": "box in lane 1, column 1",
+      "face": "sans"
+    },
+    {
+      "text": "Sees skill name + description",
+      "position": "box in lane 2, column 2",
+      "face": "sans"
+    },
+    {
+      "text": "Reads skill files when needed",
+      "position": "box in lane 3, column 3",
+      "face": "sans"
+    },
+    {
+      "text": "Runs commands; re-reads any change",
+      "position": "box in lane 4, column 4",
+      "face": "sans"
+    },
+    {
+      "text": "Writes m1_stepN.txt + change record",
+      "position": "box in lane 5, column 5; exactly two lines: line 1 is 'Writes m1_stepN.txt' with the whole file name in monospace, line 2 is '+ change record'",
+      "face": "sans"
+    },
+    {
+      "text": "Answer built only from this file",
+      "position": "box in lane 1, column 6",
+      "face": "sans"
+    },
+    {
+      "text": "Model sign-in: Google account or API key",
+      "position": "identity strip, left pill, one line; the words 'Model sign-in:' are bold, the rest regular weight",
+      "face": "sans"
+    },
+    {
+      "text": "Cloud commands run as antigravity-sa",
+      "position": "identity strip, right pill, one line, regular weight throughout (no bold word); 'antigravity-sa' in monospace",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "lanes": 5,
+    "boxes": 6,
+    "arrows": 5,
+    "pills": 2,
+    "text_strings": 14
+  },
+  "mandatory": [
+    "Exactly five lanes, top to bottom: You, agy, Skill files, Google Cloud, Evidence file",
+    "Exactly six boxes, one per column, in the lanes stated; the boxes form a staircase down from lane 1 to lane 5, then the last box sits back in lane 1 at the far right",
+    "Exactly five arrows, each from one box to the next box in reading order; the last arrow rises from the lane 5 box to the lane 1 box at the far right",
+    "'m1_stepN.txt' and 'antigravity-sa' are monospace and each stays on one line, with the capital N kept",
+    "Each box is wide enough that its label fits on at most two lines",
+    "The title reads exactly 'One prompt, start to finish', bold, top-left, one line",
+    "Every string in text_exact appears exactly once, spelled exactly as written",
+    "Lane labels are semibold near-black, same weight in all five lanes",
+    "In box 5 line 1 is 'Writes m1_stepN.txt' and line 2 is '+ change record'; the file name is never split after 'm1_'",
+    "In box 4 the word 're-reads' stays whole on one line",
+    "All five lanes have a plain white background; the only lane markings are thin light-grey horizontal rules between lanes, as in a table",
+    "Box fills: the boxes in the agy lane, the Google Cloud lane and the Answer box are soft blue with a blue border; the other three boxes are light grey with a grey border",
+    "Behind the two pills there is one filled light-grey (#F1F3F4) rounded rectangle running the full width of the frame inside the margins; both pills sit inside it with padding on every side",
+    "The five lane labels are BOLD near-black, like the row headers of a table; 'Skill files', 'Google Cloud' and 'Evidence file' each break onto two lines in the narrow label column",
+    "Text inside the six boxes and the two pills is regular weight (not bold); only the lane labels, the title and the words 'Model sign-in:' are bold"
+  ],
+  "prohibitions": [
+    "NO label or heading for the bottom strip: no 'Identity', 'Sign-ins' or any other word outside the two pills",
+    "NO colour-role names rendered as text: the words 'working_system', 'neutral' or any other role name never appear in the image; lane labels are only the single label listed",
+    "NO green anywhere",
+    "NO red anywhere",
+    "NO arrow labels",
+    "NO second connector between the same two boxes: each box has exactly one outgoing line and one incoming line",
+    "NO line leaving the bottom edge of any of the first five boxes; nothing enters a box from its left edge",
+    "NO 'm1_' at the end of one line with 'stepN.txt' on the next",
+    "NO seventh box, no branch, no loop-back arrow",
+    "NO word 'Antigravity'; the tool is lowercase 'agy'",
+    "NO command text, shell syntax, flags or flag values of any kind (no 'gcloud', 'curl', 'bq', 'agy -p', '--', '$', '|', 'stream-json')",
+    "NO URLs, hostnames or file paths other than the file names listed in text_exact",
+    "NO project IDs, project numbers, regions, or email addresses (nothing containing '@', 'projects/' or 'iam.gserviceaccount.com')",
+    "NO logos of any kind, including Google, Google Cloud, Gemini or Antigravity logos",
+    "NO people, faces, hands, silhouettes, robots, mascots or characters",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines'",
+    "NO text that is not listed in text_exact: no extra labels, numbers, step numbers, captions, legend, footnote or source note",
+    "NO identifier (file name or login name) broken across two lines",
+    "NO word broken at a hyphen",
+    "NO coloured or tinted lane backgrounds; lanes are white",
+    "NO quotation marks or apostrophes around the title or any label",
+    "NO bold on the word 'Cloud' in the right pill; the whole right pill is regular weight, with 'antigravity-sa' in monospace",
+    "NO grey or faint text for any label; every label is near-black #1F2328"
+  ],
+  "source_refs": [
+    "guides-template/base-specs/S_one_turn_swimlane.spec.json (S0_01 geometry, copied)",
+    "skills/novasmart-governance-lab/references/m1.md lines 19-21 (say, do, re-read, change record with undo)",
+    ".lavi-working/labbench/runs/m1-v5/m1/trace.md lines 46 and 118 (Turn 1 reads SKILL.md, then references/m1.md)"
+  ],
+  "alt_text": "One prompt, start to finish: a swimlane with five lanes: You, agy, Skill files, Google Cloud, Evidence file. Your plain-English question goes to agy, which sees the skill name and description, reads skill files when needed, runs commands on Google Cloud and re-reads any change, and writes m1_stepN.txt with a change record; an arrow then rises to the answer, built only from this file. A strip below reads: Model sign-in: Google account or API key; Cloud commands run as antigravity-sa."
+}

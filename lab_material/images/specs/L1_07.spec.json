@@ -1,0 +1,244 @@
+{
+  "figure_id": "L1_07",
+  "tab": "what_did_we_learn",
+  "module": "M1",
+  "intent": "Show where the estate stands after Module 1: Visible and Attributable are now built (green); Least privileged is only partly true, for the two agents changed, so it stays grey with an amber marker; the other three are not yet built. Same geometry as the Module 0 strip.",
+  "aspect_ratio": "16:9",
+  "layout": {
+    "reading_direction": "left to right",
+    "regions": [
+      {
+        "id": "title_band",
+        "occupies": "top 14% of the frame, full width",
+        "contains": "the title, top-left, one line"
+      },
+      {
+        "id": "marker_band",
+        "occupies": "from about 17% to about 27% of the frame height",
+        "contains": "one amber marker, above the third segment only"
+      },
+      {
+        "id": "segment_row",
+        "occupies": "from about 31% to about 77% of the frame height, full width inside the margins (segments are tall, nearly as tall as they are wide)",
+        "contains": "six equal tall segments in one horizontal row with small even gaps between them"
+      },
+      {
+        "id": "tag_band",
+        "occupies": "from about 81% to about 92% of the frame height",
+        "contains": "one module tag centred under each segment"
+      }
+    ]
+  },
+  "elements": [
+    {
+      "id": "seg_0",
+      "shape": "tall rounded rectangle segment, same size as the other five, medium grey #8A9099 outline",
+      "position": "segment row, first from the left",
+      "colour_role": "good_outcome",
+      "label": "Visible"
+    },
+    {
+      "id": "seg_1",
+      "shape": "tall rounded rectangle segment, same size as the other five, medium grey #8A9099 outline",
+      "position": "segment row, second from the left",
+      "colour_role": "good_outcome",
+      "label": "Attributable"
+    },
+    {
+      "id": "seg_2",
+      "shape": "tall rounded rectangle segment, same size as the other five, medium grey #8A9099 outline",
+      "position": "segment row, third from the left",
+      "colour_role": "neutral",
+      "label": "Least privileged",
+      "label_lines": "'Least' on the first line and 'privileged' on the second line, no hyphen"
+    },
+    {
+      "id": "seg_3",
+      "shape": "tall rounded rectangle segment, same size as the other five, medium grey #8A9099 outline",
+      "position": "segment row, fourth from the left",
+      "colour_role": "neutral",
+      "label": "Access controlled",
+      "label_lines": "'Access' on the first line and 'controlled' on the second line, no hyphen"
+    },
+    {
+      "id": "seg_4",
+      "shape": "tall rounded rectangle segment, same size as the other five, medium grey #8A9099 outline",
+      "position": "segment row, fifth from the left",
+      "colour_role": "neutral",
+      "label": "Screened"
+    },
+    {
+      "id": "seg_5",
+      "shape": "tall rounded rectangle segment, same size as the other five, medium grey #8A9099 outline",
+      "position": "segment row, far right",
+      "colour_role": "neutral",
+      "label": "Measured"
+    },
+    {
+      "id": "tag_0",
+      "shape": "small rounded tag",
+      "position": "centred under Visible",
+      "colour_role": "neutral",
+      "label": "M1"
+    },
+    {
+      "id": "tag_1",
+      "shape": "small rounded tag",
+      "position": "centred under Attributable",
+      "colour_role": "neutral",
+      "label": "M1"
+    },
+    {
+      "id": "tag_2",
+      "shape": "small rounded tag",
+      "position": "centred under Least privileged",
+      "colour_role": "neutral",
+      "label": "M1"
+    },
+    {
+      "id": "tag_3",
+      "shape": "small rounded tag",
+      "position": "centred under Access controlled",
+      "colour_role": "neutral",
+      "label": "M2"
+    },
+    {
+      "id": "tag_4",
+      "shape": "small rounded tag",
+      "position": "centred under Screened",
+      "colour_role": "neutral",
+      "label": "M3"
+    },
+    {
+      "id": "tag_5",
+      "shape": "small rounded tag, wider than the others to fit its text",
+      "position": "centred under Measured",
+      "colour_role": "neutral",
+      "label": "M4 · optional"
+    },
+    {
+      "id": "partial",
+      "shape": "small rounded marker with a short pointer that stops just above its segment, leaving a clear gap; it never touches the segment",
+      "position": "centred above Least privileged",
+      "colour_role": "attention",
+      "label": "Two agents only"
+    }
+  ],
+  "connections": [],
+  "text_exact": [
+    {
+      "text": "Where your estate stands after Module 1",
+      "position": "title, top-left",
+      "face": "sans"
+    },
+    {
+      "text": "Visible",
+      "position": "inside segment 1, centred",
+      "face": "sans"
+    },
+    {
+      "text": "Attributable",
+      "position": "inside segment 2, centred",
+      "face": "sans"
+    },
+    {
+      "text": "Least privileged",
+      "position": "inside segment 3, centred, set on two lines: 'Least' on the first line and 'privileged' on the second line, no hyphen",
+      "face": "sans"
+    },
+    {
+      "text": "Access controlled",
+      "position": "inside segment 4, centred, set on two lines: 'Access' on the first line and 'controlled' on the second line, no hyphen",
+      "face": "sans"
+    },
+    {
+      "text": "Screened",
+      "position": "inside segment 5, centred",
+      "face": "sans"
+    },
+    {
+      "text": "Measured",
+      "position": "inside segment 6, centred",
+      "face": "sans"
+    },
+    {
+      "text": "M1",
+      "position": "tag under segment 1",
+      "face": "sans"
+    },
+    {
+      "text": "M1",
+      "position": "tag under segment 2",
+      "face": "sans"
+    },
+    {
+      "text": "M1",
+      "position": "tag under segment 3",
+      "face": "sans"
+    },
+    {
+      "text": "M2",
+      "position": "tag under segment 4",
+      "face": "sans"
+    },
+    {
+      "text": "M3",
+      "position": "tag under segment 5",
+      "face": "sans"
+    },
+    {
+      "text": "M4 · optional",
+      "position": "tag under segment 6",
+      "face": "sans"
+    },
+    {
+      "text": "Two agents only",
+      "position": "amber marker above Least privileged",
+      "face": "sans"
+    }
+  ],
+  "counts": {
+    "segments": 6,
+    "module_tags": 6,
+    "markers": 1,
+    "arrows": 0,
+    "text_strings": 14
+  },
+  "mandatory": [
+    "Exactly six segments of identical width and height in one straight horizontal row, in the order Visible, Attributable, Least privileged, Access controlled, Screened, Measured",
+    "The segments are tall and fill the segment row: each segment is at least 40% of the frame height tall, so the frame has no large empty area",
+    "Visible and Attributable are filled soft green; Least privileged, Access controlled, Screened and Measured are light gray; no other segment is green",
+    "Exactly six module tags, one centred under each segment, reading M1, M1, M1, M2, M3, M4 · optional from left to right",
+    "The last tag reads exactly 'M4 · optional' with a middle dot",
+    "Exactly one amber marker reading 'Two agents only', centred above Least privileged; no marker above any other segment",
+    "'Least privileged' is set on two lines: 'Least' then 'privileged'; 'Access controlled' is set on two lines: 'Access' then 'controlled'; neither has a hyphen character anywhere",
+    "All six segment labels use the same semibold weight and size in near-black ink; each is fully inside its segment and no single word is broken",
+    "The title is bold, large, top-left and on one line",
+    "All text is large enough to read when the image is 1000px wide",
+    "Simple, regular geometry so the same layout can be reused with segments recoloured",
+    "All six segments have the identical medium gray outline (#8A9099); a marker's pointer stops just above its segment and never touches or recolors the segment's border"
+  ],
+  "prohibitions": [
+    "NO third-party logos and NO Google logo",
+    "NO 'Vertex AI', 'Agent Engine', 'reasoning engine' or 'reasoningEngines' anywhere",
+    "NO project IDs, NO email addresses, NO 'projects/' paths, NO '@' characters",
+    "NO people, faces, hands or characters",
+    "NO check marks, ticks, crosses, stars or progress percentages",
+    "NO arrows, NO connecting lines between segments",
+    "NO text that is not listed in text_exact",
+    "NO seventh segment",
+    "NO property word other than the six listed",
+    "NO hyphen character in any segment label (never 'Least-' or 'Access-')",
+    "NO red, amber or coloured outline on any segment",
+    "NO red anywhere in the image",
+    "NO 'Gap found' text anywhere",
+    "NO second marker"
+  ],
+  "source_refs": [
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-context.md:146",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-context.md:235",
+    "labs/ce428-build-with-google-track-2/terraform/lab_material/m1-instructions.md:114",
+    ".lavi-working/labbench/review/guides/m1/BRIEF.md section 4"
+  ],
+  "alt_text": "The title reads: Where your estate stands after Module 1. A row of six tall segments, left to right: Visible, Attributable, Least privileged, Access controlled, Screened, Measured, tagged M1, M1, M1, M2, M3 and M4 · optional. Visible and Attributable are green; the other four are gray. Least privileged carries a small amber marker above it reading Two agents only."
+}

@@ -179,4 +179,4 @@ Be careful what you claim beyond that. This screens one agent, not the estate, a
 
 There is one question left, and it is the one that should make you uneasy. Every module so far has made this system more restricted. You have four hand-run tests telling you that ordinary customers are still fine — four, out of the thousands of conversations your agents will have this week. A price match agent that refuses a legitimate customer is as broken as one that green-lights a fraud, and you would currently have no idea.
 
-Measuring that properly, against a full scenario set, before any of this reaches every store, is M5 · Evaluate and Decide.
+Measuring that properly, against a full scenario set, before any of this reaches every store, is M4 · Evaluate and Decide (Optional Module).
