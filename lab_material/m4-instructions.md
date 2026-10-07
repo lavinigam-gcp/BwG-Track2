@@ -1,111 +1,148 @@
 # M4 · Evaluate and Decide (Optional Module) — Instructions
 
-This is the last module, and the first one since M0 that changes nothing in your estate. You have spent the lab locking things down. Here you find out whether the agent you locked down still does its job, and then you make the launch call. The module is optional and is not scored, so the Governance Scorecard page from earlier modules does not change; in this module "scorecard" means the evaluation results.
+You test whether the price-match agent still does its job, then make the launch call. This module changes nothing in your estate and is not scored; "scorecard" here means the evaluation results.
 
 ## Key objective
 
-This module scores the price-match agent's actual behavior against the price-match policy you already hold, using Google Cloud's Gen AI evaluation service: it puts each case to the agent, and a judge model, separate from the agent's own model, marks each case and writes down why.
+Score the price-match agent against its policy with the Gen AI evaluation service, using a judge model separate from the agent's own.
 
-- Run NovaSmart's existing scenario set against the agent and read a scorecard: case by case, what was asked, what the agent did, whether that matched policy, and why.
-- Have the tooling write a tougher set, including the awkward cases nobody thought to write by hand, and score a local copy of the agent against that too.
-- See a proposed change to the agent's written instructions before anything is changed.
-- Run the same set again after the change, and compare the two runs case by case.
-- Decide whether this goes live, on what the scorecard shows rather than on how much work it took.
+- Run the existing scenario set and read the scorecard, case by case.
+- Have the tooling write a tougher set and score a local copy against it.
+- See a proposed change to the agent's instructions before anything changes.
+- Run the same set again after the change and compare both runs.
 
-Why it matters: a scored, per-scenario record with the reasoning attached is something you can hand to risk and compliance, instead of an opinion about how the agent seems to behave.
+Why it matters: a per-scenario record with reasons is evidence you can hand to risk and compliance, not an opinion.
 
 ## Where we left off
 
-Every agent signs in as itself. The back-office margin agent names the price-match agent as its one permitted caller, though broad project-wide roles can still call it, and it sits behind NovaSmart's outbound gateway with read-only rights on the pricing data. If you ran M3, the price-match agent sits behind the inbound gateway, and messages arriving at it are screened for manipulation. That screen covers that one agent, and it is fail-open: if it cannot run, traffic passes. The attack on customer records through the Customer Personalization Agent is not behind any screen.
-
-Each of those is a control, and none of them tells you whether the agent still gives a store associate a useful answer. Nobody will report it if it does not — a shopper refused a legitimate match just leaves. So before this rolls out to every store, you test it against realistic requests where you already know the right answer.
+- Every agent signs in as itself. The back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside) and can read but not change pricing data.
+- If you ran M3, a fail-open screen sits in front of the price-match agent only; the customer-record attack is not screened.
+- None of this shows whether the agent still gives associates useful answers.
 
 ## Step 1 · Run the evaluation and read the scorecard
 
-NovaSmart already has a scenario set for exactly this: price-match requests written the way an associate would type them, each paired with the outcome the policy says is correct. Matches up to 10% off, the agent settles on the spot. Anything larger goes to the back office. Anyone trying to talk it into a discount it should not give is refused. Ask agy:
+<!-- FIGURE:K4S1 BEGIN -->
+
+![Map of the NovaSmart agent estate, M4 Step 1. 1: the Gen AI evaluation service sends the scenario set through the Inbound gateway, with Model Armor in front, to the deployed Price Match Agent. 2: a judge model in that service, separate from the agent's own model, scores each reply. Nothing in the estate changes. Architecture-and-workflow map.](images/K4S1_map.webp)
+
+<!-- FIGURE:K4S1 END -->
+
+**Goal:** Score the deployed agent on NovaSmart's scenarios: up to 10% settled on the spot, more goes to the back office, manipulation refused.
+
+Ask agy:
 
 ```
 Evaluate our price-match agent against our scenario set, and walk me through the failures and near-misses.
 ```
 
-What to expect: a scorecard with one row per scenario — what was asked, what the agent did, whether that matched policy, and why — then a walk through anything that failed and anything that passed for the wrong reason. agy runs the scenarios through the Gen AI evaluation service and names the judge model that marked the cases, which is not the model the agent runs on; if the judge could not run, it says the verdicts are its own reading of the replies. Only the 15% case goes on to the back office. If you ran M3, a request stopped by the screen comes back as an error rather than an answer, and agy quotes its words, which are what tell a blocked request from a broken agent. If you skipped M3, there is no screen, and agy should say so rather than mention one. It takes a few minutes, nothing in your estate is changed, and there is nothing to undo.
+**What to expect:**
 
-If anything in the run refers to a limit other than 10%, the running agent is out of step with the written policy, and that is worth knowing before launch, not after.
+- One row per scenario: what was asked, what the agent did, whether it matched policy, and why; then failures and right-for-the-wrong-reason passes.
+- agy names the judge model and the agent's model, which differ; if no judge ran, it says the verdicts are its own reading. Under the policy, only the 15% case should go to the back office.
+- If a screen is attached and stops a request, agy quotes its message and says the agent was never asked; with no screen, it says so. Any limit other than 10% means drift.
+- It takes a few minutes. Nothing in your estate changes.
 
 More background: Reference Guide tab, Run the evaluation and read the scorecard
 
 ## Step 2 · Build a tougher set and run it
 
-Four scenarios can catch an agent behaving badly and cannot sign off one that appears to be behaving well. So stop hand-writing tests and have the tooling write them, by reading the agent itself. Ask agy:
+<!-- FIGURE:K4S2 BEGIN -->
+
+![Map of the NovaSmart agent estate, M4 Step 2. 1: agy has a tougher set of cases written into one saved case file. 2: the cases run on the local copy of the Price Match Agent in a folder on your workstation. 3: the Gen AI evaluation service's judge model scores the replies. A dashed grey line marks that the local copy cannot read the competitor data. The deployed agent is not touched. Architecture-and-workflow map.](images/K4S2_map.webp)
+
+<!-- FIGURE:K4S2 END -->
+
+**Goal:** Have the tooling write a bigger set than four hand-written cases.
+
+Ask agy:
 
 ```
 Four cases is not enough. Build me a tougher set including the edge cases, then run it and show me the scorecard.
 ```
 
-What to expect: agy sets up a folder on this workstation, puts a copy of the real price-match agent into it, and has the tooling write a set of cases grounded in your own catalog and competitor pricing — usually at least eight, and if it comes back with fewer, agy says how many short. It saves the cases to one file, so Step 4 can run exactly the same set again, then runs them against the copy and scores them. Expect a few minutes, a longer and less tidy scorecard, and failures.
+**What to expect:**
 
-From here on, the agent being measured is that local copy, not the one serving your stores, and it differs in three ways that agy should state. It does not hand off to the back office. It has no screen in front of it. And it cannot read competitor prices, because the workstation's login has no read access to that table, so a local run cannot verify a match the way the deployed agent does.
+- agy copies the real agent into a folder on this workstation; the tooling writes cases from your catalog and competitor pricing: at least eight, or agy says how many short.
+- The cases go to one file so Step 4 runs the same set. Expect a few minutes, a longer scorecard, and likely failures.
+- The local copy differs in three ways agy states: no hand-off to the back office, no screen, and it cannot read competitor prices.
+- Nothing in your estate changes; the copy is not deployed.
 
 More background: Reference Guide tab, Build a tougher set and run it
 
 ## Step 3 · See the fix before you make it
 
-You now have more than one thing to worry about, so pick the worst one. And before anything changes, look at the change. Ask agy:
+<!-- FIGURE:K4S3 BEGIN -->
+
+![Map of the NovaSmart agent estate, M4 Step 3. 1: agy takes the worst case from the saved case file's run on the local copy. 2: it reads the rule in the local copy and drafts a one-line change, shown in amber with a dashed outline because nothing is applied. The deployed estate is untouched.](images/K4S3_map.webp)
+
+<!-- FIGURE:K4S3 END -->
+
+**Goal:** Pick the worst failure and review the proposed change before anything is applied.
+
+Ask agy:
 
 ```
 Take the worst one and show me the fix before you change anything.
 ```
 
-What to expect: agy explains what went wrong in the worst case and shows the proposed fix as a before-and-after of the agent's written instructions — the old wording next to the new wording. Nothing is applied. Not to the deployed agent, and not yet to the local copy either.
+**What to expect:**
+
+- agy explains what went wrong in the worst case.
+- It shows the fix as the old instruction wording next to the new.
+- Nothing is applied, not to the deployed agent and not yet to the local copy.
 
 More background: Reference Guide tab, See the fix before you make it
 
 ## Step 4 · Make the change and see what is actually running
 
-A fix nobody measured is a hope with a version number on it. Apply it, run the same set again, put the two runs side by side, and then ask the only question that matters to a customer standing at the register. Ask agy:
+<!-- FIGURE:K4S4 BEGIN -->
+
+![Map of the NovaSmart agent estate, M4 Step 4. 1: agy applies the one-line change to the local copy, now green. 2: the same case file is replayed on it. 3: the Gen AI evaluation service's judge model scores the replies. 4: the two runs are compared. The deployed Price Match Agent is unchanged and carries a red 'no fix' marker.](images/K4S4_map.webp)
+
+<!-- FIGURE:K4S4 END -->
+
+**Goal:** Apply the fix to the local copy, measure it on the same set, and compare with what your stores run.
+
+Ask agy:
 
 ```
 Make that change, measure it again, and tell me what is still broken in what is actually running.
 ```
 
-What to expect: agy applies the change to the local copy only, runs the cases saved in Step 2 again rather than writing new ones, and compares the two runs case by case. Expect movement rather than a clean sweep. Then it puts the local copy next to what is actually deployed and tells you what is still true in production: the deployed agent does not have the fix, and anything M3 left open, such as the exposed discount code, is still open. Expect an uncomfortable answer, and treat it as the point of this module rather than a failure of it.
+**What to expect:**
+
+- agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep.
+- Then what is still true in production: the deployed agent lacks the fix, and the rule that reveals the discount code is still in its source.
+- Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed.
 
 More background: Reference Guide tab, Make the change and see what is actually running
 
 ## Decide whether to launch
 
-Nothing to type here. You have the evidence. The judgment is yours, and there are three questions to answer.
+**Goal:** Make the launch call yourself; agy gives input but does not decide.
 
-- Does this go live? Decide on what the scorecard shows, not on how much work it took to get here.
-- What would you fix first? Pick the single failure or weakness that worries you most, and be able to say why it is that one and not another.
-- What would you monitor after launch? Name the thing you would want to be told about on the day it starts going wrong.
+- Does this go live? Decide on what the scorecard shows, not on how much work it took.
+- What would you fix first, and why that one?
+- What would you monitor after launch, so you hear the day it starts going wrong?
 
 ## What you built
 
-At the start of this lab you could not say what you were running.
+- Found: a marketing agent missing from the catalog, two agents sharing one login.
+- Fixed: one identity per agent, least access, every customer-data read traceable to one agent.
+- Controlled: the back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside), sits behind the outbound gateway, and reads but cannot change pricing data.
+- Screened (if you ran M3): a fail-open screen in front of the price-match agent only.
+- Measured: a per-scenario record with reasons, and a fix measured on a local copy, the deployed agent untouched.
 
-- You found what was actually there: a marketing agent missing from the catalog, and two agents sharing one login.
-- You fixed it: one identity per agent, access cut back to what each job genuinely needs, and every read of customer data traceable to exactly one agent.
-- You controlled the connections: the back-office margin agent names the price-match agent as its one permitted caller, and the rogue login that used to reach it is refused. It sits behind the outbound gateway and can read the pricing data but no longer change it. Broad project-wide roles can still call it, and cleaning those up is a wider job than this lab.
-- You screened the content: manipulation aimed at the price-match agent is stopped at the door, in front of that one agent and no other, and the screen is fail-open.
-- You measured it: a scored, per-scenario record of how the agent actually behaves, with the reasoning behind every verdict.
-- You improved a copy, and you know it is a copy: a change to the agent's instructions, measured on the same set before and after, with the deployed agent untouched.
-
-Visible, attributable, access-controlled, screened at the price-match agent's door and measured — and you got there by describing what you wanted in plain English.
-
-What carries back to your own estate is not the commands. It is the habit: ask what is actually running, insist on evidence rather than assurance, and measure the thing before you trust it.
+The habit to take home: ask what is running, insist on evidence, measure before you trust.
 
 ## See it in the console
 
-There is nothing new to find here, and that is this module's point. If the console asks you to accept its terms the first time you open it, do that and carry on.
-
-- Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region (the Region shown in the lab panel), then find Price Match Agent, the one you have spent this module measuring. Its description still says it approves up to 10% directly.
-- Its entry is the one the earlier modules left. Nothing here changed it: not the scorecards, not the tougher set, and not the wording change, which exists only in the folder on this workstation. The scorecards themselves are in agy's evidence files in the `novasmart-evidence` folder on your Desktop: agy asks the evaluation service to mark each reply and keeps the results itself, so no saved evaluation run appears in the console.
-- Getting that change in front of a customer means a deployment, and that is a separate decision with a separate owner.
+- Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.
+- Scorecards live in the `novasmart-evidence` folder on your Desktop, not the console; the wording change exists only in the folder on this workstation. Deploying it is a separate decision.
 
 ## Try this too — optional
 
-These are not steps, and the module is complete without them. Each is a question a real leader would ask at this point. Type any that interest you, in any order, or skip them all.
+*Optional.* Ask any of these, in any order, or skip them.
 
 Ask agy:
 
@@ -113,7 +150,7 @@ Ask agy:
 Which of these did the agent actually answer, and which never got to it?
 ```
 
-This splits a run into the cases the agent actually answered and the cases something stopped before it, which is the difference between a verdict on the agent and a verdict on everything standing in front of it.
+This shows you which verdicts are on the agent and which are on something standing in front of it.
 
 Ask agy:
 
@@ -121,7 +158,7 @@ Ask agy:
 Would this set of tests have caught any of the problems we found earlier this week?
 ```
 
-This shows you how narrow a scorecard really is: it speaks to one agent's pricing decisions, and most of what you found earlier in the lab sits outside it.
+This shows you how narrow a scorecard is: one agent's pricing decisions.
 
 Ask agy:
 
@@ -129,40 +166,42 @@ Ask agy:
 Who is allowed to change these test cases?
 ```
 
-Whoever can change an expected answer can change every verdict the scorecard will ever produce, so this tells you who that currently is — possibly including the assistant doing the measuring.
+This shows you who can change every verdict by changing an expected answer, including agy itself.
 
 ## Step 5 · Show what you measured
 
-Turn what you measured into something you can show other people. Pick any of these, in any order; the first is a good place to start. Each one takes agy a few minutes.
+*Optional.* You can skip this, or open the **What did we learn?** tab.
 
-The results, case by case:
+Pick any of these, in any order. Each takes agy a few minutes.
 
 ```
 Build me a page where I can read our evaluation results case by case.
 ```
 
-Who refused each case:
+The results, case by case.
 
 ```
 Build me an explainer of who actually refused each case: the screen or the agent.
 ```
 
-The fix, and what is still running:
+Who refused each case: the screen or the agent.
 
 ```
 Build me a before-and-after of the fix, and what is still running in production.
 ```
 
-A game for your team:
+The fix, and what is still running.
 
 ```
 Build me a game called Judge the Judge from our evaluation, for my team to play.
 ```
 
-An evidence pack for the launch review:
+A game for your team.
 
 ```
 Turn what I measured into a one-page evidence pack for the launch review.
 ```
 
-What to expect: each page saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Each is built only from what agy recorded in Steps 1 to 4, and agy checks it and looks at it before it answers. None of it changes the estate, and none of it makes the launch call for you.
+An evidence pack for the launch review.
+
+Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome, built only from what agy recorded in Steps 1 to 4. Nothing in your estate changes, and no page makes the launch call for you.

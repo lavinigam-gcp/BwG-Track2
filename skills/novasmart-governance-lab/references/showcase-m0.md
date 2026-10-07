@@ -2,7 +2,7 @@
 
 > Read with `showcase.md`, which holds the workflow, the build bar, the check and the answer shape. This
 > file holds Module 0's facts rules and one recipe per demo. Source: the fact sheet from
-> `show_facts.py 0` (Steps 1–4). Save every page in `/config/Desktop/novasmart-showcase/`.
+> `show_facts.py 0 <demo letter>` (Steps 1–4). Save every page in `/config/Desktop/novasmart-showcase/`.
 
 ## 1. What an M0 page may say
 
@@ -26,9 +26,12 @@ M0 was a look. These rules come from `m0.md` and bind every page.
 - **The shadow** (`promo-agent-shadow`): running, no catalog entry, no owner — the module's headline, in
   red. It is unlisted because it was deployed as an ordinary service on a shared login; **never say it is
   unlisted because it runs on Cloud Run.**
-- **Who signs in as what (Step 4 re-reads):** the two workloads on `novasmart-customer-sa`, and the two
-  agents that each have their own badge. Nothing about what the login is *allowed* to do: M0 never read its
-  permissions.
+- **Who signs in as what:** the two workloads on `novasmart-customer-sa` (Step 4 re-reads), and the agents
+  whose catalog record names their own identity. That comes from Step 2's sheet lines
+  `runtimeIdentity: its own agent identity` (or `service account <name>`), one per registry record: it is
+  *from configuration, not a test* (dashed). Draw *own badge* only for an agent with such a line, cite that
+  line, and never for a workload with none (the agent on Cloud Run has no registry record). Nothing about
+  what any login is *allowed* to do: M0 never read permissions.
 - **Reads (Step 4):** count as the shared login's reads only the rows whose principal is
   `novasmart-customer-sa`. Which runtime each came through is read from the service agent that acted for
   it: the Cloud Run robot (`serverless-robot-prod`) means *came through Cloud Run*; the Agent Runtime
@@ -77,7 +80,8 @@ M0 was a look. These rules come from `m0.md` and bind every page.
    **empty dashed slot** in the catalog column, labelled *no catalog entry* — never a line to another
    entry. Catalog-only entries carry their verdict. A toggle shows each location's listing.
 4. **Who signs in as what** (SVG): the two workloads → `novasmart-customer-sa` (yellow, *shared*) → the
-   customer table, with the arrow labelled *read, from the log*; the other two agents → *own badge*.
+   customer table, with the arrow labelled *read, from the log*; each agent whose Step 2 line says *its own
+   agent identity* → *own badge (from the catalog record)*, citing that line.
 5. **Reads under the shared login** — a time strip of those rows: time, *came through Cloud Run / Agent
    Runtime*, number of columns. Tap a read to see its column names and source line. Play replays them in
    order. The *post-mark rows* result is stated beside it.
@@ -158,7 +162,8 @@ Speaker notes on every slide (`N`), the timer (`T`), print layout (`showcase.md`
 
 *"Make a one-page poster of what I found that I can share."*
 
-**Answers:** the whole module on one shareable picture. Run the check with `--poster`.
+**Answers:** the whole module on one shareable picture. The check renders `*_poster.html` as a poster by
+itself.
 
 **Must show** on one 1600 × 900 canvas (fixed size, no scrolling): the title and takeaway; three panels —
 catalog vs what runs, one login and two agents, what the log can and cannot tell — each a diagram with at

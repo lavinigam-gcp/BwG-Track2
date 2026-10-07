@@ -2,7 +2,7 @@
 
 > Read with `showcase.md`, which holds the workflow, the build bar, the check and the answer shape. This
 > file holds Module 2's facts rules and one recipe per demo. Source: the fact sheet from
-> `show_facts.py 2` (Steps 1–5). Save every page in `/config/Desktop/novasmart-showcase/`.
+> `show_facts.py 2 <demo letter>` (Steps 1–5). Save every page in `/config/Desktop/novasmart-showcase/`.
 
 ## 1. What an M2 page may say
 
@@ -230,6 +230,7 @@ project, not "the organization"; a test request, not a customer's; no "remediati
 **Done when:** no slide says or implies "only the front desk"; the notes carry the detail; every slide has
 a source line.
 
-**Asked for a poster or picture instead:** build `m2_poster.html` and run the check with `--poster` — the
+**Asked for a poster or picture instead** (run `show_facts.py 2 E`, which prints this too): build
+`m2_poster.html`; the check renders it as a poster by itself — the
 before-and-after caller map and the two-controls pair on one 1600 × 900 canvas, with the takeaway, the
 "Still open" line and the footer.

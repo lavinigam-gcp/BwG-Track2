@@ -71,7 +71,7 @@ ENTRY 4 - M0 Step 4 - Who's reading customer data
 (nothing changed in this step)
 ```
 
-The first `principalEmail` is the shared login. The second, under `serviceAccountDelegationInfo`, is Cloud Run's service agent (Google's own account that acts for a login; in a log it names the runtime, not the agent), so this read came through Cloud Run. A shared-login row like this names a login and a runtime, never an agent.
+The first `principalEmail` is the shared login. The second, under `serviceAccountDelegationInfo`, is Cloud Run's service agent (Google's own account that acts for a login; in a log it names the runtime, not the agent), so this read came through Cloud Run. A shared-login row like this names a login and a runtime, never an agent. On screen, the skill has agy say "Cloud Run's service agent" and never print its address, which carries the project number.
 
 agy's headline: "Customer data reads are recorded under a shared login (`novasmart-customer-sa`), which names no individual agent." It said its own requests added no new entry and that the reads it showed were earlier ones.
 
@@ -79,7 +79,7 @@ Why the rules mattered: the older `bigquery_resource` filter returns zero rows h
 
 ## Key commands from the run
 
-These and the rest are in your evidence files under COMMANDS, so you can paste and rerun them.
+These and the rest are in your evidence files under COMMANDS, so you can paste and rerun them. The "Try this too" prompts are answered directly, bold answer first, naming the step each builds on; their commands go to `m0_other.txt`.
 
 | Step | What it asks | Command |
 |---|---|---|
@@ -88,7 +88,7 @@ These and the rest are in your evidence files under COMMANDS, so you can paste a
 | 3 | Agent Runtime deployments (no `gcloud` commands) | `curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" "https://<REGION>-aiplatform.googleapis.com/v1/projects/<PROJECT>/locations/<REGION>/reasoningEngines"` |
 | 3 | Cloud Run services | `gcloud run services list` |
 | 4 | Which login a workload uses | `gcloud run services describe <SERVICE> --region=<REGION> --format="value(spec.template.spec.serviceAccountName)"` |
-| 7 | Show what you found (no cloud commands): the facts, then the page check | `python3 .agents/skills/novasmart-governance-lab/scripts/show_facts.py 0`, then `scripts/show_check.py <page>` |
+| 7 | Show what you found (no cloud commands): the facts and that page's recipe, the page check, then the evidence entry | `python3 .agents/skills/novasmart-governance-lab/scripts/show_facts.py 0 <demo>`, then `scripts/show_check.py <page>`, then `scripts/show_record.py 0 <page> "<your words>"` |
 
 ## Who agy is, and which record to trust
 
@@ -112,11 +112,12 @@ A skill is guidance that a model follows most of the time. Each item was checked
 
 | What slipped | Lesson |
 |---|---|
-| Step 4's entry left out two earlier rounds of portal requests (the skill allows one retry), extra log queries and the direct promo call, and listed as separate commands what ran inside one Python script. | An agent's own log is useful; check it against an independent capture. |
+| Step 4's entry left out two earlier rounds of portal requests (the skill allows one retry), extra log queries and the direct promo call, and listed as separate commands what ran inside one Python script. | An agent's own log is useful; check it against an independent capture. The skill now requires every trigger and every log read in COMMANDS. |
 | The skill requires the number of log rows in the Step 4 answer. The answer gave none. | Required details slip. Check answers against a short list. |
 | The Step 4 query also returned rows from earlier test runs, written under the Customer Personalization Agent's own identity rather than the shared login. agy did not mention them. | "The live result wins" works only if the model reports it. Read the raw output, not just the answer. |
 | Step 2 printed full `urn:agent:projects-…` IDs. The skill's draft check searches for `projects/`, so it missed them. | Text checks are brittle. Test them on real output. |
 | Step 3's close mentioned "what credentials it operates under", Step 4's topic. A closing question in Step 4's answer called one read "the promotional workload", stating the inference as fact. | Holding facts back leaks at the edges. |
+| In a later run on October 6, agy printed the service agent's full address on screen twice, one follow-up entry listed a log query it never ran, and Show entries left out failed page checks. | The skill now bans the address and has `show_record.py` write Show entries from a log of every run. Check the screen and the entries anyway. |
 | agy opened old entries and an M1 evidence file left by earlier test runs. Its new entries still came from live commands. | Start each review in a clean folder. |
 
 ## Use this at your company

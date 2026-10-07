@@ -104,7 +104,7 @@ Module 1 made the first two true. Least privileged holds only for the two agents
 | Screened | Attempts to talk an agent out of its rules are stopped at the door | M3 |
 | Measured | The agent's answers are tested against known cases before you trust it | M4 (optional) |
 
-M2 · Control the Connections is where you decide who may call whom, starting with who is allowed to call the back-office Markdown Strategy Agent, which reads NovaSmart's confidential cost and margin data.
+Still open: which agents may talk to each other. The back-office Markdown Strategy Agent reads confidential margin data and should only be called by another agent; nothing enforces that. M2 · Control the Connections is where you decide who may call whom, starting with who is allowed to call that back-office margin agent.
 
 ## Questions to take back to your team
 

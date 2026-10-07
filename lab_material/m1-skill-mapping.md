@@ -173,14 +173,14 @@ The read at 19:23:22 UTC has a blank `principalEmail` and the badge in `principa
 | | |
 |---|---|
 | Skill read | `showcase.md` and `showcase-m1.md`, at each Show prompt |
-| What it required | Run `scripts/show_facts.py 1`, build the page only from that fact sheet, run `scripts/show_check.py` until it reports clean, then open the screenshots |
+| What it required | Run `scripts/show_facts.py 1 <demo>`, which prints the fact sheet and that page's recipe; build only from the sheet; run `scripts/show_check.py` until clean (a poster is checked as one by itself); open the screenshots; then run `scripts/show_record.py`, which writes the evidence entry from a log of every run, failed checks included |
 | Google Cloud | None |
 | Guardrail | No change; no identifiers, project ID, email address or customer value on the page |
-| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m1_identity_map.html` |
+| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m1_identity_map.html`; one entry per page in `m1_step7.txt` |
 
-**Why it matters:** an evidence file can be too long to re-read in one command, so the fact sheet copies the latest entry of each step with its line numbers, and the check renders the page so agy looks at it before answering. In a later run on October 5, agy built all five pages, 27 to 44 KB each, and each passed the check.
+**Why it matters:** an evidence file can be too long to re-read in one command, so the fact sheet copies the latest entry of each step with its line numbers, and the check renders the page so agy looks at it before answering. In a later run on October 5, agy built all five pages, 27 to 44 KB each, and each passed the check as it stood then.
 
-*Optional prompts:* the three "Try this too" questions were answered read-only and logged to `m1_other.txt`; nothing changed.
+*Try this too:* the skill has agy answer each prompt directly, bold answer first, naming the step it builds on, never calling it optional; commands go to `m1_other.txt`; answering is in scope, acting on the answer is not. In the October 3 run, all three were answered read-only and nothing changed.
 
 ## Who agy is, and which record to trust
 

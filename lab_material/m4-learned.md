@@ -12,7 +12,7 @@
 
 <!-- FIGURE:L4_01 END -->
 
-M4 changed nothing in your estate. It measured the front desk (the Price Match Agent) against NovaSmart's written policy: settle up to 10% on the spot, send larger matches to the back office, refuse manipulation.
+M4 changed nothing in your estate. It measured the front desk (the Price Match Agent) against NovaSmart's written policy: settle up to 10% on the spot, send larger matches to the back office, refuse manipulation. Your own run is your evidence; this page uses what the Instructions say to expect.
 
 - **Step 1** put NovaSmart's four cases to the deployed agent through Google Cloud's Gen AI evaluation service. A judge, a second AI model separate from the agent's own, marks each answer and writes down why. If the judge could not run, agy says the verdicts are its own reading.
 - **Step 2** had the tooling write a tougher set, usually at least eight cases grounded in your catalog, saved to one file and run on a local copy of the agent in a folder on this workstation.
@@ -67,7 +67,7 @@ Open `/config/Desktop/novasmart-evidence/m4/m4_step4.txt` and find row 17, the s
 
 <!-- FIGURE:L4_05 END -->
 
-Swap the price-match policy for your own rules and the pattern holds. Three made-up scenarios:
+Three made-up scenarios:
 
 - **Scenario: the loan desk.** A bank scores its loan assistant against past applications with known decisions. The near-misses get read first.
 - **Scenario: the measured fix.** An insurer improves its claims bot's wording and measures it on a test copy. Production runs the old wording until someone deploys.
@@ -107,7 +107,7 @@ Module 4 left your estate as Module 3 left it. It added a record: the deployed a
 | Screened | Attempts to talk an agent out of its rules are stopped at the door | M3 |
 | Measured | The agent's answers are tested against known cases before you trust it | M4 (optional) |
 
-This is the last module. What carries back is the habit: ask what is actually running, insist on evidence rather than assurance, and measure the thing before you trust it.
+This is the last module. The habit to take home: ask what is running, insist on evidence, measure before you trust.
 
 ## Questions to take back to your team
 

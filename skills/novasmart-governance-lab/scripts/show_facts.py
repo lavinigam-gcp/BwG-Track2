@@ -17,17 +17,23 @@ names only.
 It also writes .build/mN_private.txt: values a page must never contain (the project id and number,
 every email address, customer record values). show_check.py reads it.
 
-Usage:   python3 show_facts.py 0     (Module 0: Steps 1-4)
-         python3 show_facts.py 1     (Module 1: Steps 1-5)
-         python3 show_facts.py 2     (Module 2: Steps 1-5)
-         python3 show_facts.py 3     (Module 3: Steps 1-5; Step 6 What's next has no file)
-         python3 show_facts.py 4     (Module 4: Steps 1-4)
-Reads only files under /config/Desktop/novasmart-evidence/. Runs no cloud command, changes nothing.
+Usage:   python3 show_facts.py N DEMO
+         N:    0 (Module 0: Steps 1-4) · 1, 2, 3 (Modules 1-3: Steps 1-5) · 4 (Module 4: Steps 1-4)
+         DEMO: the page's recipe in showcase-mN.md, by letter (A-E) or file name (m0_dashboard);
+               its Must show and Done when are printed at the end, so this run is the recipe re-read.
+               Leave it out only for a format with no recipe of its own; the demos are then listed.
+A registry record's runtime identity is kept as one line (runtimeIdentity: its own agent identity, or
+the service account's short name); the identifier itself is withheld.
+Each run is appended, verbatim, to .build/mN_runs.log for show_record.py.
+Reads only files under /config/Desktop/novasmart-evidence/ and the skill's references/. Runs no cloud
+command, changes nothing in the estate.
 """
 
 import json
 import os
 import re
+import shlex
+import shutil
 import sys
 from datetime import datetime, timezone
 
@@ -36,7 +42,13 @@ HOME_DIR = os.environ.get("NOVASMART_SHOW_HOME", "/config")
 EVIDENCE_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-evidence")
 BUILD_DIR = os.path.join(HOME_DIR, "Desktop", "novasmart-showcase", ".build")
 
-STEPS = {0: [1, 2, 3, 4], 1: [1, 2, 3, 4, 5], 2: [1, 2, 3, 4, 5], 3: [1, 2, 3, 4, 5], 4: [1, 2, 3, 4]}
+STEPS = {
+    0: [1, 2, 3, 4],
+    1: [1, 2, 3, 4, 5],
+    2: [1, 2, 3, 4, 5],
+    3: [1, 2, 3, 4, 5],
+    4: [1, 2, 3, 4],
+}
 STEP_TITLES = {
     0: {
         1: "Check your environment",
@@ -212,7 +224,9 @@ EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-
 PROJECT_ID = re.compile(r"qwiklabs-gcp-[0-9a-z-]+[0-9a-z]")
 PROJECT_NUM = re.compile(r"projects/(\d{10,14})\b")
 CUST_ID = re.compile(r"\bCUST-\d+\b")
-SECRET_CODE = re.compile(r"\bNVST-[A-Z]+-\d+\b")  # the exposed discount code (M3, M4): never on a page
+SECRET_CODE = re.compile(
+    r"\bNVST-[A-Z]+-\d+\b"
+)  # the exposed discount code (M3, M4): never on a page
 
 private = set()
 
@@ -289,6 +303,16 @@ def short(v, n=160):
     return s if len(s) <= n else s[: n - 1] + "…"
 
 
+def runtime_identity(v):
+    """A registry record's RuntimeIdentity principal, without the identifier (no page may show it)."""
+    if v.startswith("principal://"):
+        return "its own agent identity (an agent badge; identifier withheld)"
+    m = re.match(r"sa://([^@]+)@", v)
+    if m:
+        return f"service account {m.group(1)} (address withheld)"
+    return short(v)
+
+
 def flatten(node, path=()):
     """Yield (display_key, value) for kept leaves; customer records collapse to their column names."""
     if is_customer_record(node):
@@ -303,6 +327,14 @@ def flatten(node, path=()):
         for k, v in node.items():
             p = path + (k,)
             if k in SKIP:
+                continue
+            if (
+                k == "principal"
+                and path
+                and path[-1].endswith("RuntimeIdentity")
+                and isinstance(v, str)
+            ):
+                yield "runtimeIdentity", runtime_identity(v)
                 continue
             keep = k in KEEP or "Runtime" in k or "lastModifier" in k or "creator" in k
             if keep and not isinstance(v, (dict, list)):
@@ -368,7 +400,10 @@ def try_json(block, i):
         except ValueError:
             one = None
         if has_customer_record(one):
-            return one, i  # a one-line JSON value holding customer records: withhold their values
+            return (
+                one,
+                i,
+            )  # a one-line JSON value holding customer records: withhold their values
     indent = len(block[i][1]) - len(block[i][1].lstrip())
     for j in range(i, len(block)):
         t = block[j][1]
@@ -493,10 +528,77 @@ def render_entry(lines, first_no, out, brief=False):
         close_block()
 
 
+RECIPE_HEAD = re.compile(r"^### ([A-Z]) · (.+?) — `(m\d_\w+)\.html`.*$")
+
+
+def recipes(mod):
+    """[(letter, title, stem, section lines)] from references/showcase-mN.md."""
+    f = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..",
+        "references",
+        f"showcase-m{mod}.md",
+    )
+    if not os.path.isfile(f):
+        return []
+    lines = open(f, encoding="utf-8").read().splitlines()
+    found, cur = [], None
+    for ln in lines:
+        m = RECIPE_HEAD.match(ln)
+        if m or ln.startswith(("## ", "### ")):
+            cur = None
+        if m:
+            cur = [m.group(1), m.group(2), m.group(3), [ln]]
+            found.append(cur)
+        elif cur is not None:
+            cur[3].append(ln)
+    for r in found:
+        while r[3] and not r[3][-1].strip():
+            r[3].pop()
+    return found
+
+
+def pick_recipe(mod, demo):
+    """(recipe or None, lines to print)."""
+    rs = recipes(mod)
+    listing = [f"    {r[0]} · {r[1]} — {r[2]}.html" for r in rs]
+    if demo is None:
+        return None, [
+            f"No demo given. Run it again with the page's demo, e.g. show_facts.py {mod} A, so its "
+            "recipe is printed here. The demos:"
+        ] + listing + [
+            "  For a format with no recipe of its own, pass the closest one."
+        ]
+    d = demo.strip().lower().removesuffix(".html")
+    hits = [
+        r for r in rs if d == r[0].lower() or d == r[2].lower() or d == r[2].lower()[3:]
+    ]
+    if not hits:
+        hits = [
+            r for r in rs if len(d) > 2 and (d in r[1].lower() or d in r[2].lower())
+        ]
+    if len(hits) != 1:
+        why = "matches more than one demo" if hits else "matches no demo"
+        return None, [
+            f"{demo!r} {why} in showcase-m{mod}.md. Run it again with the letter. The demos:"
+        ] + listing
+    return hits[0], []
+
+
+def command_line():
+    py = sys.executable
+    if sys.prefix == sys.base_prefix and os.path.realpath(
+        shutil.which("python3") or ""
+    ) == os.path.realpath(py):
+        py = "python3"
+    return " ".join([py] + [shlex.quote(a) for a in sys.argv])
+
+
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in [str(k) for k in STEPS]:
+    if len(sys.argv) not in (2, 3) or sys.argv[1] not in [str(k) for k in STEPS]:
         sys.exit(__doc__)
     mod = int(sys.argv[1])
+    recipe, recipe_note = pick_recipe(mod, sys.argv[2] if len(sys.argv) == 3 else None)
     KEEP.update(KEEP_EXTRA.get(mod, ()))
     edir = os.path.join(EVIDENCE_DIR, f"m{mod}")
     os.makedirs(BUILD_DIR, exist_ok=True)
@@ -553,32 +655,48 @@ def main():
     with open(priv, "w", encoding="utf-8") as f:
         f.write("\n".join(sorted(private)) + "\n")
 
-    print(f"Module {mod} fact sheet")
-    for line in index:
-        print("  " + line)
+    say = [f"Module {mod} fact sheet"]
+    say += ["  " + line for line in index]
     size = os.path.getsize(facts)
     nlines = len(out)
-    print(
+    say.append(
         f"Fact sheet: {facts} ({size:,} bytes, {nlines} lines) - read it whole with view_file"
     )
     if size > 45000 or nlines > 780:
         half = nlines // 2
-        print(
+        say.append(
             f"  Too long for one read: view lines 1-{half}, then {half + 1}-{nlines}, and check "
             "that both parts came back."
         )
-    print(
+    say.append(
         f"Never on a page: {len(private)} values (project id and number, email addresses, customer "
         f"record values, the exposed discount code) in {priv}; show_check.py checks the page against them."
     )
-    print(
-        "\nThis turn, before you build (showcase.md):\n"
-        f"  - Read showcase.md and showcase-m{mod}.md whole, even if you read them earlier.\n"
-        "  - Data block first; write the page with write_to_file; run show_check.py until RESULT: clean;\n"
-        "    then open every screenshot it lists and fix what looks wrong.\n"
-        "  - Nothing beyond the files on the page or in the answer, and no recommendation of your own.\n"
-        f"  - Still open, on the page and in the answer, in these words only: {STILL_OPEN[mod].rstrip('.')}."
-    )
+    say += [
+        "",
+        "This turn, before you build (showcase.md):",
+        f"  - Read showcase.md and showcase-m{mod}.md whole, even if you read them earlier.",
+        "  - Data block first; write the page with write_to_file; run show_check.py until RESULT: clean;",
+        "    then open every screenshot it lists and fix what looks wrong; then run show_record.py.",
+        "  - Nothing beyond the files on the page or in the answer, and no recommendation of your own.",
+        f"  - Still open, on the page and in the answer, in these words only: {STILL_OPEN[mod].rstrip('.')}.",
+    ]
+    if recipe:
+        say += [
+            "",
+            f"The recipe for this page (showcase-m{mod}.md, demo {recipe[0]}) - build to its Must show, "
+            "and check its Done when against the screenshots:",
+            "",
+        ] + recipe[3]
+    else:
+        say += [""] + recipe_note
+    print("\n".join(say))
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    with open(os.path.join(BUILD_DIR, f"m{mod}_runs.log"), "a", encoding="utf-8") as f:
+        f.write(
+            f"#### RUN {now} show_facts {recipe[2] + '.html' if recipe else '-'}\n$ {command_line()}\n"
+            "exit 0\n" + "\n".join(say) + "\n#### END\n"
+        )
 
 
 if __name__ == "__main__":

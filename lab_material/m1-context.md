@@ -15,7 +15,7 @@ The rhythm is the same as before, with one difference that matters.
 - It leaves a record of exactly what changed and how to undo it. You can say "undo that" or "roll that back" at any point, including after the fact.
 - Longer jobs run in the background and it keeps you posted. Normal store traffic keeps flowing throughout.
 
-That combination — very capable, very fast, no pause — is worth sitting with, because it is how these assistants behave in a real organisation. An assistant that can reshape your cloud from a single plain-English sentence is only as safe as your habit of looking at what it is about to do.
+That combination — very capable, very fast, no pause — is worth sitting with, because it is how these assistants behave in a real organization. An assistant that can reshape your cloud from a single plain-English sentence is only as safe as your habit of looking at what it is about to do.
 
 Which means the pause is yours to create. You create it by asking a question that only reads, before you ask for anything that writes. That is exactly what Step 2 is for, and it is the most transferable thing in this module. Everything else here is mechanics. That habit is the skill.
 
@@ -23,7 +23,7 @@ One last thing before you start: order matters here. The three fixes run in a de
 
 ### The three surfaces you are working with
 
-Everything you touch in this lab runs on the Gemini Enterprise Agent Platform, and three of its parts carry the governance you are putting in place. Agent Registry is the catalog — what you run, and who owns it. Agent Identity is the per-agent badge — who acted. Agent Gateway governs the connections — which agent may reach which agent or tool. M1 is the first two. The third is M2.
+Three parts of Gemini Enterprise Agent Platform carry the governance you are putting in place. Agent Registry is the catalog — what you run, and who owns it. Agent Identity is the per-agent badge — who acted. Agent Gateway governs the connections — which agent may reach which agent or tool. M1 is the first two. The third is M2.
 
 ## Step 1 · Register the shadow agent
 
@@ -47,7 +47,7 @@ Registering the promo agent writes it into the Agent Registry — the official c
 
 The catalog has no separate fields for an owner or a risk tier, so both are recorded as text in the entry's description.
 
-Its one tool is described on the entry too, which matters more than it sounds. The promo agent has exactly one tool, and that tool extracts customer records. The tool is part of the agent's own code rather than a separate service, so it is recorded as a note on the entry, not as an entry of its own. Cataloguing the agent without recording what it can reach would leave you with a tidy list and the same blind spot.
+Its one tool is described on the entry too, which matters more than it sounds. The promo agent has exactly one tool, and that tool extracts customer records. The tool is part of the agent's own code rather than a separate service, so it is recorded as a note on the entry, not as an entry of its own. Cataloging the agent without recording what it can reach would leave you with a tidy list and the same blind spot.
 
 ### What registering does not do
 
@@ -58,9 +58,9 @@ This is the part people skip, so it is worth being blunt about.
 - It is still signing in with the shared login it was using when you found it.
 - It can still read your customer database.
 
-Registration closes exactly one of the two gaps you identified in M0. Visibility: something is running that nobody catalogued and nobody owns. That gap is now closed. Accountability — a legitimate agent and this one sharing a single identity, so their actions are recorded under that login and never as either agent — is completely untouched, and so is the over-reach.
+Registration closes exactly one of the two gaps you identified in M0. Visibility: something is running that nobody cataloged and nobody owns. That gap is now closed. Accountability — a legitimate agent and this one sharing a single identity, so their actions are recorded under that login and never as either agent — is completely untouched, and so is the over-reach.
 
-That is not a failure of the step; it is the honest shape of it. Cataloguing a rogue workload is the first move, not the fix — and it comes first because everything after it depends on having a named, owned thing to change.
+That is not a failure of the step; it is the honest shape of it. Cataloging a rogue workload is the first move, not the fix — and it comes first because everything after it depends on having a named, owned thing to change.
 
 ## Step 2 · See what that shared login can do
 
@@ -89,7 +89,7 @@ Neither of those jobs needs to change a customer record. Neither needs to delete
 
 ### Blast radius, in plain terms
 
-Blast radius is how much can go wrong if one agent is later tricked, misconfigured or breached. Access granted to a login is inherited by everything running under it, so today the blast radius of either agent is identical: the whole project. A prompt-injection attack on the promo agent, or an ordinary bug in the personalization agent, reaches as far as the login does — and the login reaches everywhere.
+Blast radius is how much can go wrong if one agent is later tricked, misconfigured or breached. Access granted to a login is inherited by everything running under it, so today the blast radius of either agent is identical: every database and every stored file in the project. A prompt-injection attack on the promo agent, or an ordinary bug in the personalization agent, reaches as far as the login does — and the login reaches all of that.
 
 Nobody did this maliciously. A broad grant is the fastest way to make something work, and it never fails in testing. It is the same speed-over-governance shortcut that produced the shadow agent, which is why the two problems showed up together.
 
@@ -147,7 +147,7 @@ Price Match and Markdown Strategy still hold broad data access of their own. Tha
 
 Re-issuing identities takes a few minutes, including the time for new access to take effect. agy keeps you posted while it runs, and the work from Step 1 holds. If anything looks wrong, tell agy to roll it back.
 
-Notice what happens to the shared login itself. Both workloads that were using it have moved off, so it is left with no users at all. It has not merely been narrowed, it has been vacated, and an account nobody uses is an account nobody can abuse.
+Notice what happens to the shared login itself. Only once both workloads have moved off it does agy remove its broad database role, and it adds nothing in its place. Its few other roles stay, and it is left with no users at all: vacated, not deleted.
 
 The payoff is quiet but real: from here on, every read by the two agents names exactly one of them. In M0 you had to work out who did what by hand, cross-referencing the log against the running services. That inference is now far narrower: the personalization agent is named directly, and the promo agent's login is used by nothing else.
 
@@ -175,7 +175,7 @@ The lesson is the same either way, and it is worth stating in those terms. What 
 
 Be clear about what this step did and did not achieve. It did not shut the promo agent down, and it does not reduce your cloud bill. What changed is that the agent is owned, named, and its own identity no longer opens the door to data it never needed. That is the claim that will hold up when somebody asks — that precise claim, and not a broader one.
 
-Say what is still open, too. The agents do not reach the customer database on their own; they go through a shared tool layer that all of them call. That layer holds broad access of its own, and it does not yet check which agent is calling it, so narrowing one agent's identity does not narrow the layer underneath. This module does not close that. Deciding who may call what is a different control, and it is the subject of the next module.
+Say what is still open, too. The two agents that read customer data do not reach the database on their own; they go through a shared tool layer. That layer accepts calls from anyone and holds broad access of its own. It passes on the caller's own login when the caller sends one, but a caller that sends none gets the layer's broad access instead, so narrowing one agent's identity does not narrow the layer underneath. This module does not close that. Deciding who may call what is a different control; the next module applies it to the back-office agent.
 
 ## Step 5 · Prove it worked
 
@@ -185,9 +185,9 @@ You have agy's word for all of this. That is not evidence. So you go back to the
 
 The log has the same shape it always had — when it happened, what was accessed, and the login that did it — plus whether the request succeeded. Your timestamps will differ.
 
-| Time | What happened | Login that did it | Outcome |
+| Time | What happened | Who the log names | Outcome |
 | :---- | :---- | :---- | :---- |
-| 14:02:11 | Read a customer profile: name, email, loyalty tier, lifetime value | Customer Personalization Agent's own agent identity | Allowed |
+| 14:02:11 | Read customer records to answer a question about a customer | Customer Personalization Agent's own agent identity | Allowed |
 | 14:03:35 | Attempted to read customer records for a promo campaign | Demand and Promotion Agent's own service account | Denied: not allowed to run a query in this project |
 
 Compare that to the log in M0. There, two entirely different workloads — a legitimate personalization request and a marketing bulk extract — signed in with the same login, so the record named that login and never an agent. You could work out which one it was only from where each happens to run. Here they are the same two workloads, and every row names exactly one agent's own login.
@@ -210,8 +210,8 @@ The last row is the interesting one. The promo agent tried to read customer reco
 
 Two things happen when that occurs, and only one of them is evidence.
 
-- The application does not even return an error. The promo agent reports the campaign as launched, with zero records analysed, so a caller reading only that reply would conclude nothing had gone wrong. An application's own account of itself is not evidence, and here it is not even accurate.
-- The platform writes a denied entry into the access log. That entry is written by the platform, not the app, cannot be edited, and can be exported to your compliance team. It is the authoritative record that the control fired.
+- The application does not even return an error. The promo agent reports the campaign as launched, with zero records analyzed, so a caller reading only that reply would conclude nothing had gone wrong. An application's own account of itself is not evidence, and here it is not even accurate.
+- The platform writes a denied entry into the access log. That entry is written by the platform, not the app, and can be exported to your compliance team. It is the authoritative record that the control fired.
 
 So the thing to look at is the log, not the app. A denial sitting in an audit trail is a good outcome: it is your policy working, in the open, where an auditor can see it.
 
@@ -219,7 +219,7 @@ It also matters that this denial was triggered deliberately. An empty log proves
 
 ### The checks worth making
 
-- The promo agent is now in the catalog with the marketing team named against it, so nothing is running uncatalogued any more.
+- The promo agent is now in the catalog with the marketing team named against it, so the uncataloged agent M0 found is on the record.
 - Each agent signs in as itself, and each log line names exactly one of them.
 - The promo agent's attempt to read customer data appears in the log as denied.
 - The personalization agent and the price-match co-pilot are still doing their jobs. For personalization, the evidence is the agent's own read in the log, not the store app's card.
@@ -232,11 +232,11 @@ Three fixes, in an order that mattered.
 
 You registered a hidden workload in the catalog, so it has a name and an owner. You gave the two agents that were sharing a login one identity each, so every action traces to exactly one of them. And you cut access back to what each job actually needs — read-only on customer data for the agent that genuinely uses it, none for the agent that never should have had it.
 
-Put together, the estate is now visible, attributable and, for the two agents you changed, least-privileged. Every entry in the inventory has an owner, every grant you changed is sized to a job you can describe, and Security and Compliance can answer the first question anyone asks after an incident — who read this record — with a name rather than "we don't know".
+Put together, the estate is now visible, attributable and, for the two agents you changed, least-privileged. The agent nobody owned has a named owner, every grant you changed is sized to a job you can describe, and for those two agents Security and Compliance can answer the first question anyone asks after an incident — who read the customer data — with an agent's name rather than a shared login.
 
 Be careful what you claim beyond that. The promo agent was not shut down, it is still running, and none of this reduced your cloud spend. You removed the risk, not the workload. Claiming more than you did is how governance work loses credibility.
 
-The skill you just practised is not typing commands. It is knowing what to ask, and reading what comes back before it becomes permanent — and, when the assistant does not pause on its own, deliberately creating the moment where you look.
+The skill you just practiced is not typing commands. It is knowing what to ask, and reading what comes back before it becomes permanent — and, when the assistant does not pause on its own, deliberately creating the moment where you look.
 
 One thing you still cannot answer. You know which agent did something and what data each may touch. You do not yet control which agent may call which other agent. The Markdown Strategy Agent, sitting on NovaSmart's confidential cost and margin data, should only ever be reachable by another agent — never by a customer, never directly by a store associate. Nothing you have done so far enforces that.
 

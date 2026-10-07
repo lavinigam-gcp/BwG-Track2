@@ -18,7 +18,7 @@ Step 1 confirmed your environment was ready. After that, each prompt asked one q
 
 - **Step 2** asked the official catalog, Agent Registry. It lists what was registered: agents on Agent Runtime and Google's built-in agents are added automatically, but an agent on Cloud Run is added only if its team opts in. Three of the six agents listed are Google's built-ins.
 - **Step 3** asked what is actually running, on Agent Runtime (Google Cloud's managed service for running agents) and Cloud Run (Google Cloud's service for running any container — a website, a tool, or an agent). One agent was running that no central list knows about: a shadow agent.
-- **Step 4** asked the audit log, the platform's own record of who did what, which we cannot edit. It named one login: a service account, which is a login for a program rather than a person. Re-reading each agent's settings showed that two agents use that login.
+- **Step 4** asked the audit log, the platform's own record of who did what, which we cannot edit. Apart from the lab's own setup account, it named one login: a service account, which is a login for a program rather than a person. Re-reading each agent's settings showed that two agents use that login.
 
 ## Two gaps: seeing versus proving
 
@@ -48,11 +48,11 @@ Today you can still tell them apart, because the log notes which service used th
 
 <!-- FIGURE:L0_05 BEGIN -->
 
-![The title reads: What the log can tell. Two log rows: 22:34:10, Cloud Run, 5 columns, names and emails; and 22:34:23, Agent Runtime, 7 columns. Both rows connect to one amber login, novasmart-customer-sa. Below, a blue box reads Log can tell: Login, time, service, columns. A red box reads Log cannot tell: Which agent, which customer.](images/L0_05_what_the_log_can_tell.webp)
+![The title reads: What the log can tell. One log row: 16:47:37, Cloud Run, 5 columns, names and emails, connected to one amber login, novasmart-customer-sa. Below, a blue box reads Log can tell: Login, time, service, columns. A red box reads Log cannot tell: Which agent, which customer.](images/L0_05_what_the_log_can_tell.webp)
 
 <!-- FIGURE:L0_05 END -->
 
-These are two earlier reads of the customer table, recorded on October 2, 2026 (UTC) and found by our October 3 test run. Your times will differ. The 22:34:10 read came through Cloud Run, where, by the lab's setup, the promo agent is the only service on that login. So the most likely reader of those names and emails is the agent with no owner. Most likely, not proven.
+In our October 6 test run, agy sent each of the two agents a test request, then read the log. One new read of the customer table appeared under the shared login, at 16:47:37 UTC (your times will differ); the other request added no row, most likely because BigQuery answered it from its cache. The read came through Cloud Run, where, by the lab's setup, the promo agent is the only service on that login. So the most likely reader of those names and emails is the agent with no owner. Most likely, not proven.
 
 Could you answer a regulator who asked who read a particular customer's record? Only partly. You could hand over the login, the time, the service and the columns. You could not name the agent or the customer, because no field in those log rows names either.
 
@@ -66,7 +66,7 @@ Check it yourself: open `/config/Desktop/novasmart-evidence/m0/m0_step4.txt` and
 
 <!-- FIGURE:L0_07 END -->
 
-Swap "customer records" for your own sensitive data and the pattern holds. Three scenarios, made up to illustrate it:
+Swap "customer records" for your own sensitive data. Three made-up scenarios:
 
 - **Scenario: the auditor's list.** An auditor asks for every AI agent you run, with an owner. You export the catalog, and the agent a team shipped on the side is not on it.
 - **Scenario: the 2 a.m. call.** Security sees a bulk read of customer names and emails under one shared login. You can't switch off the bad reader without also breaking the good agent.
@@ -106,7 +106,7 @@ The lab builds toward six properties for your estate. None of them is true yet. 
 | Screened | Attempts to talk an agent out of its rules are stopped at the door | M3 |
 | Measured | The agent's answers are tested against known cases before you trust it | M4 (optional) |
 
-M1 · Take Action is where you fix it: register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs.
+M1 · Take Action is where you fix it — register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs.
 
 ## Questions to take back to your team
 

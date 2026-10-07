@@ -54,7 +54,7 @@ Decide whether to launch has no prompt. `$W` and `$L` are the skill's work and l
 | Guardrail | No total before every row has a reply or `not run`; no fix and no bigger set; a screen named only if its attachment was read; the judge never the agent's model |
 | May change | Nothing |
 | Saved | `m4_step1.txt` with checks 1-9; the set copy, `m4_eval.py`, the results file and snapshots in `work/` |
-| What to expect (Instructions) | "a scorecard with one row per scenario — what was asked, what the agent did, whether that matched policy, and why — then a walk through anything that failed and anything that passed for the wrong reason. agy runs the scenarios through the Gen AI evaluation service and names the judge model that marked the cases, which is not the model the agent runs on; if the judge could not run, it says the verdicts are its own reading of the replies. Only the 15% case goes on to the back office. If you ran M3, a request stopped by the screen comes back as an error rather than an answer, and agy quotes its words, which are what tell a blocked request from a broken agent. If you skipped M3, there is no screen, and agy should say so rather than mention one. It takes a few minutes, nothing in your estate is changed, and there is nothing to undo." |
+| What to expect (Instructions) | "One row per scenario: what was asked, what the agent did, whether it matched policy, and why; then failures and right-for-the-wrong-reason passes. agy names the judge model, not the agent's; if no judge ran, it says the verdicts are its own reading. Only the 15% case goes to the back office. With M3, a screened request returns an error agy quotes; without M3, agy says there is no screen. Any limit other than 10% means drift. It takes a few minutes. Nothing in your estate changes." |
 
 ```bash
 JUDGE="projects/${PROJECT}/locations/global/publishers/google/models/gemini-3.8-flash"
@@ -77,7 +77,7 @@ python3 "$W/m4_eval.py" "$W/step1_cases.csv" "$W/step1_results.jsonl" --project 
 | Guardrail | Never call the deployed agent or touch the shipped set; no verdict before the frozen file has run; no comparison with Step 1; never top up the cases by hand |
 | May change | Nothing in the estate; it creates the folder and its files |
 | Saved | `m4_step2.txt` with checks 10-14; `cases.json`, `cases.sha256` and `results_step2.jsonl` in the local folder |
-| What to expect (Instructions) | "agy sets up a folder on this workstation, puts a copy of the real price-match agent into it, and has the tooling write a set of cases grounded in your own catalog and competitor pricing — usually at least eight, and if it comes back with fewer, agy says how many short. It saves the cases to one file, so Step 4 can run exactly the same set again, then runs them against the copy and scores them. Expect a few minutes, a longer and less tidy scorecard, and failures." |
+| What to expect (Instructions) | "agy copies the real agent into a folder on this workstation; the tooling writes cases from your catalog and competitor pricing: at least eight, or agy says how many short. The cases go to one file so Step 4 runs the same set. Expect a few minutes, a longer scorecard, and failures. The local copy differs in three ways agy states: no hand-off to the back office, no screen, and it cannot read competitor prices. Nothing in your estate changes; the copy is not deployed." |
 
 ```bash
 cd "$L/m4-local" && agents-cli eval dataset synthesize -n 8 --max-turns 3 \
@@ -101,7 +101,7 @@ sha256sum "$L/cases.json" | tee "$L/cases.sha256" | tee -a "$L/step2_ids.txt"
 | Guardrail | Apply nothing; predict no result; never touch or propose touching the deployed agent; one line, not a rewrite |
 | May change | Nothing; the one write is the proposal file |
 | Saved | `m4_step3.txt` with check 15; `step3_change.json` in the local folder |
-| What to expect (Instructions) | "agy explains what went wrong in the worst case and shows the proposed fix as a before-and-after of the agent's written instructions — the old wording next to the new wording. Nothing is applied. Not to the deployed agent, and not yet to the local copy either." |
+| What to expect (Instructions) | "agy explains what went wrong in the worst case. It shows the fix as the old instruction wording next to the new. Nothing is applied, not to the deployed agent and not yet to the local copy." |
 
 ```bash
 python3 -c 'import json,sys; L=open(sys.argv[1]).read().split("\n"); n=int(sys.argv[2]); new=sys.stdin.read().rstrip("\n"); json.dump({"line":n,"old":L[n-1],"new":new},open(sys.argv[3],"w")); print("- "+L[n-1]); print("+ "+new)' "$L/m4-local/app/agent.py" "<LINE>" "$L/step3_change.json" <<'NEW'
@@ -123,7 +123,7 @@ NEW
 | Guardrail | No new cases; no score or delta; never "fixed"; never deploy or offer to; the discount code stays in the file |
 | May change | One line of the local copy; nothing in the estate |
 | Saved | `m4_step4.txt` with checks 1-22 and the local edit and backup named; `results_step4.jsonl` |
-| What to expect (Instructions) | "agy applies the change to the local copy only, runs the cases saved in Step 2 again rather than writing new ones, and compares the two runs case by case. Expect movement rather than a clean sweep. Then it puts the local copy next to what is actually deployed and tells you what is still true in production: the deployed agent does not have the fix, and anything M3 left open, such as the exposed discount code, is still open. Expect an uncomfortable answer, and treat it as the point of this module rather than a failure of it." |
+| What to expect (Instructions) | "agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep. Then what is still true in production: the deployed agent lacks the fix, and anything M3 left open, such as the exposed discount code, is still open. Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed." |
 
 <!-- FIGURE:S4_04 BEGIN -->
 
@@ -147,23 +147,23 @@ grep -h 'M4EVAL script sha256\|judge model' "$L/step2_ids.txt" "$L/step4_ids.txt
 | | |
 |---|---|
 | Skill read | `showcase.md` and `showcase-m4.md`, at every Show prompt |
-| What it required | Run `scripts/show_facts.py 4` and build only from that fact sheet; keep the three runs apart (deployed agent, local copy, local copy after the change), each shown whole on its own `N`; run `scripts/show_check.py` until clean, then look at the screenshots |
+| What it required | Run `scripts/show_facts.py 4 <demo>` (fact sheet plus that page's recipe) and build only from the sheet; keep the three runs apart (deployed agent, local copy, local copy after the change), each shown whole on its own `N`; run `scripts/show_check.py` until clean, look at the screenshots, then run `scripts/show_record.py`, which writes the evidence entry from a log of every run, failed checks included |
 | Google Cloud | None: no `gcloud`, `curl` or `bq` |
 | Guardrail | No single score; never say the deployed agent is fixed; the discount code is shown as "[code withheld]"; the leader's three launch questions stay unanswered unless the leader answered them |
 | May change | Nothing |
-| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m4_case_explorer.html`; `m4_step5.txt` |
-| What to expect (Instructions) | "each page saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Each is built only from what agy recorded in Steps 1 to 4, and agy checks it and looks at it before it answers. None of it changes the estate, and none of it makes the launch call for you." |
+| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m4_case_explorer.html`; one entry per page in `m4_step5.txt` |
+| What to expect (Instructions) | "Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome, built only from what agy recorded in Steps 1 to 4. Nothing in your estate changes, and no page makes the launch call for you." |
 
 ```bash
-python3 /config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts/show_facts.py 4
-PLAYWRIGHT_BROWSERS_PATH=/ms-playwright /opt/venv/bin/python3 \
-  /config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts/show_check.py \
-  /config/Desktop/novasmart-showcase/<file>.html
+S=/config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts; P=/config/Desktop/novasmart-showcase/<file>.html
+python3 $S/show_facts.py 4 <demo>
+PLAYWRIGHT_BROWSERS_PATH=/ms-playwright /opt/venv/bin/python3 $S/show_check.py "$P"
+python3 $S/show_record.py 4 "$P" "<your words>"
 ```
 
 **Why it matters:** a page can only show what Steps 1-4 recorded. Every page carries the footer "Nothing in the estate was changed in this module."
 
-*Optional prompts:* answered read-only and logged to `m4_other.txt`; nothing is changed, and the local fix is never deployed.
+*Try this too:* the skill has agy answer each prompt directly, bold answer first, naming the step it builds on, never calling it optional; commands go to `m4_other.txt`; reads and analysis only, and the local fix is never deployed.
 
 ## Who agy is, and which record to trust
 

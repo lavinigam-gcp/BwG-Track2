@@ -8,15 +8,15 @@ The rhythm is the one you learned in M1. You brief agy in plain English, it does
 
 Three things about this module are worth flagging before you start.
 
-First, only two of the five working steps change anything. Steps 1 and 2 read, Step 4 tests, and Steps 3 and 5 write. That ratio is deliberate, and it is the honest shape of most governance work: each change is a single sentence, and everything around it is knowing what to change and being able to show afterwards that it worked.
+First, only two of the five working steps change anything. Steps 1 and 2 read, Step 4 tests, and Steps 3 and 5 write. That ratio is deliberate, and it is the honest shape of most governance work: each change is a single sentence, and everything around it is knowing what to change and being able to show afterward that it worked.
 
 Second, agy still does not pause. If your next sentence is "lock it down", the lock exists a moment later. In M1 you learned to create the pause yourself, by asking a question that only reads before you ask for anything that writes. Step 2 is that pause, and here it is doing real work: cutting a caller list down to one name is exactly the kind of change that can quietly break a working part of the business.
 
-Third, access changes do not take effect the instant they are saved. They propagate through the platform over a few minutes, so a test run immediately afterwards can still show the old behavior and tell you nothing at all. agy waits before it tests. If you test by hand, wait too.
+Third, access changes do not take effect the instant they are saved. They propagate through the platform over a few minutes, so a test run immediately afterward can still show the old behavior and tell you nothing at all. agy waits before it tests. If you test by hand, wait too.
 
 One framing helps throughout. M1 governed identity and access — who is acting, and what data may they touch. M2 governs connection — who may call whom. These are separate controls and neither implies the other. An agent can hold no data access whatsoever and still be able to reach an agent that holds all of it.
 
-A word on the product you might expect to see doing this job. Agent Gateway is the Agent Platform's networking control: it sits between agents and polices which of them may reach which agent, tool or endpoint. NovaSmart has two gateways provisioned and has never attached an agent to either, so nothing is routed through them today. You will change that in Step 5. But notice what it governs. The gateway this module uses is NovaSmart's outbound gateway. It controls where the agent may go. It does not decide who may call the agent (that is the agent's own list) or what the agent may do with the data (that is the database's permissions). NovaSmart's other gateway faces inward and comes up in M3. Those are three different questions, and this module answers all three with three different controls. Keeping them apart is most of the skill.
+A word on the product you might expect to see doing this job. Agent Gateway is the Agent Platform's networking control: it sits between agents and polices which of them may reach which agent, tool or endpoint. NovaSmart has two gateways provisioned and no agent attached to either, so nothing is routed through them today. You will change that in Step 5. But notice what it governs. The gateway this module uses is NovaSmart's outbound gateway. It controls where the agent may go. It does not decide who may call the agent (that is the agent's own list) or what the agent may do with the data (that is the database's permissions). NovaSmart's other gateway faces inward and comes up in M3. Those are three different questions, and this module answers all three with three different controls. Keeping them apart is most of the skill.
 
 ## Step 1 · See who can call the back office
 
@@ -30,7 +30,7 @@ The Price Match Agent is the front desk. It works the store floor alongside asso
 
 That escalation is the one agent-to-agent conversation the business genuinely needs. Both of these agents have carried their own Agent Identity from the start — identity was never the problem here. The problem is that nothing states the front desk is the only caller.
 
-Then there is `test-agent-caller`: a service account sitting in the project with no owner, holding a grant made directly on the back-office agent. It can call it. It is otherwise unprivileged and it has no legitimate reason to be on that list at all. Treat it as the stand-in for the thing you will find in your own estate — a caller left over from a test, a migration or a favour, granted once and never taken away.
+Then there is `test-agent-caller`: a service account sitting in the project with no owner, holding a grant made directly on the back-office agent. It can call it. It is otherwise unprivileged and it has no legitimate reason to be on that list at all. Treat it as the stand-in for the thing you will find in your own estate — a caller left over from a test, a migration or a favor, granted once and never taken away.
 
 ### What the list says today
 
@@ -81,7 +81,7 @@ Doing this in the other order is how governance work earns a bad reputation. A l
 | The store application calling the back office directly | Nothing. That route is written into the application's code, not into an access list |
 | Broad project-wide roles that include the right to call any agent | Nothing. They sit above the agent's list rather than on it |
 
-Two of those four rows are the honest limits of this module. They are covered below and in Step 3, and neither is a reason to skip the change — closing the one route you can close is still worth doing, provided you describe it accurately afterwards.
+Two of those four rows are the honest limits of this module. They are covered below and in Step 3, and neither is a reason to skip the change — closing the one route you can close is still worth doing, provided you describe it accurately afterward.
 
 ### What matters in the readout
 
@@ -119,7 +119,7 @@ Or you can name the callers you do want and let everything else fall outside by 
 
 ### It takes a minute or two to settle
 
-Access changes propagate, usually within a few minutes. For a short period after the change is saved, the old behavior can still be observed — which means a test run immediately afterwards can show a rogue call succeeding and cause an entirely unnecessary panic. agy waits before it tests. The lesson generalizes beyond this lab: with access control, "it did not work" and "it has not landed yet" look identical for the first few minutes.
+Access changes propagate, usually within a few minutes. For a short period after the change is saved, the old behavior can still be observed — which means a test run immediately afterward can show a rogue call succeeding and cause an entirely unnecessary panic. agy waits before it tests. The lesson generalizes beyond this lab: with access control, "it did not work" and "it has not landed yet" look identical for the first few minutes.
 
 ### What this locks, and what it does not
 
@@ -172,7 +172,7 @@ The strongest by a distance is the call agy made itself. It sent the request as 
 
 The rewritten caller list is the second record, and it is a different kind of thing altogether. It shows what you intended — the back office now names one caller — but a settings page cannot tell you that anybody was actually stopped. It is evidence of the rule, not of the rule firing.
 
-Cloud Audit Logs supply a third record, independent of both: this identity attempted this call at this time, and it was refused. The platform writes that entry by default for a call to an agent, refused or not, so agy should find it and show it to you. It is genuinely useful, because it is system-generated, timestamped, exportable to your compliance team, and it comes from somewhere other than the tool that made the call.
+Cloud Audit Logs supply a third record, independent of both: this identity attempted this call at this time, and it was refused. The platform writes that entry by default for a refused call to an agent, so agy should find it and show it to you. It is genuinely useful, because it is system-generated, timestamped, exportable to your compliance team, and it comes from somewhere other than the tool that made the call.
 
 Whatever made the call, meanwhile, simply receives an error. In the store app a refused call can show up looking like a security block or a generic error, and some panels fill gaps with plausible-sounding text of their own. An error could be a bug, a timeout, a bad address, or a service that happens to be down. It is a symptom at best, and it is not proof in either direction.
 
@@ -223,7 +223,7 @@ When one of these controls refuses something, the agent does not return an error
 
 So the proof lives outside the conversation. To produce it, agy calls the back office directly, which it can do through a broad project-wide role, and it says so. It asks for one read of the pricing data and one change to it. Then it reads three records the agent cannot write:
 
-- the gateway's own log, which shows its verdict on the back office's traffic to BigQuery after the attach
+- the gateway's own log, which shows its verdict on the back office's traffic to BigQuery after the attach, when those entries arrive in time
 - the BigQuery audit log, which shows the attempted change refused under the back office's identity
 - the pricing table's last-modified time, which has not moved
 
@@ -233,13 +233,13 @@ agy writes the full check-by-check table to `m2_step5.txt` in the `novasmart-evi
 
 ### What this locks, and what it does not
 
-The back office can now reach only the destinations the gateway permits, and it can read the pricing data without being able to change it.
+The back office's outbound traffic now passes through the gateway and its access check, and it can read the pricing data without being able to change it. The access it is granted behind that check covers the whole agent registry, where Google's managed services such as BigQuery's tool endpoint are listed, so this is a route control, not a short list of destinations.
 
 What is not true is that every agent in the estate is now constrained this way. Only the back office was put behind the gateway. The others are unchanged, and doing the same for them is a larger piece of work that belongs on the plan rather than in this module.
 
 The pricing tables are not read-only for everyone, either. The front desk's own login still holds the same broad database role the back office just gave up, and the project's editors can still change the tables. Only the back office was narrowed. Narrowing the front desk is the same job, not done here.
 
-One setting on the gateway is worth knowing. If the access check behind it cannot answer within a second, the gateway lets the request through rather than refusing it. That keeps the agent working when the check is slow, at the cost of a gap while it is.
+One setting on the gateway is worth knowing. If the access check behind it fails or cannot answer within a second, the gateway lets the request through rather than refusing it. That keeps the agent working when the check is slow, at the cost of a gap while it is.
 
 It is also worth saying plainly that the gateway was not set up to tell reads from changes here. It governed the route; the database permissions did the rest. If somebody later asks you whether the gateway stopped the write, the honest answer is no, and the reason is a useful thing to know.
 
@@ -247,7 +247,7 @@ It is also worth saying plainly that the gateway was not set up to tell reads fr
 
 You read the list of callers on the most sensitive agent in the estate, found an unowned leftover login sitting on it, checked what a lockdown would cost before you ordered one, rewrote the list so it names a single caller, and then proved both halves of the outcome — the rogue refused, the legitimate escalation still working. Then you turned to the other direction: the back office now sits behind the outbound gateway, and it can read the pricing data but no longer change it.
 
-Set against M1, the estate has gained a third property. It was already visible, because everything running is catalogued and owned. It was already attributable and least-privileged, because every agent signs in as itself and customer data is limited to the agents that need it. Now the connection between your two most important agents is governed as well: the back office names one permitted caller instead of accepting whoever happens to hold a grant on it, and what it can reach and change on its way out is narrowed too.
+Set against M1, the estate has gained a third property. It was already more visible, because the shadow agent M0 found is cataloged and owned. It was already more attributable, because every agent signs in as itself, and the promo agent's route to customer data is gone. Now the connection between your two most important agents is governed as well: the back office names one permitted caller instead of accepting whoever happens to hold a grant on it, and what it can reach and change on its way out is narrowed too.
 
 None of that was written in code. It was directed in plain English, and every change is on the record.
 

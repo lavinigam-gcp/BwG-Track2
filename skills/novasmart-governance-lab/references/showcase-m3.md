@@ -2,7 +2,7 @@
 
 > Read with `showcase.md`, which holds the workflow, the build bar, the check and the answer shape. This
 > file holds Module 3's facts rules and one recipe per demo. Source: the fact sheet from
-> `show_facts.py 3` (Steps 1–5; Step 6 · What's next has no evidence file). Save every page in
+> `show_facts.py 3 <demo letter>` (Steps 1–5; Step 6 · What's next has no evidence file). Save every page in
 > `/config/Desktop/novasmart-showcase/`.
 
 ## 1. What an M3 page may say
@@ -213,6 +213,7 @@ not "our agents"; refused only with its quote; no "secure", "protected", "remedi
 **Done when:** no slide says or implies both attacks are blocked or every agent is screened; the notes
 carry the detail; every slide has a source line.
 
-**Asked for a poster or picture instead:** build `m3_poster.html` and run the check with `--poster` — the
+**Asked for a poster or picture instead** (run `show_facts.py 3 E`, which prints this too): build
+`m3_poster.html`; the check renders it as a poster by itself — the
 coverage map and the two attack lanes on one 1600 × 900 canvas, with the takeaway, the "Still open" line
 and the footer.

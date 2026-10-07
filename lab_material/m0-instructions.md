@@ -1,18 +1,16 @@
 # M0 · See Everything — Instructions
 
-In this module you find out what your AI estate actually looks like — what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step here is read-only: you change nothing, and you fix nothing. Fixing is M1.
-
-This tab is what you do — the prompt to type and a one-line check that it worked. The story, the background and the sample results live on the Reference Guide tab.
+In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step is read-only: you change nothing and fix nothing. Fixing is M1.
 
 <!-- FIGURE:I01 BEGIN -->
 
-![As Head of AI Platform and Security at NovaSmart, a read-only monitoring module observes official catalog records, actual running workloads, and customer data audit trails while maintaining Changes made: 0.](images/I01_objective.jpg)
+![See everything, change nothing. You are the Head of AI Platform and Security at NovaSmart. Three questions, still unanswered: what do we officially have (the catalog), what is actually running (every workload, wherever it runs), and who has been reading customer data (the audit trail). Changes made: 0; this module only looks.](images/I01_objective.webp)
 
 <!-- FIGURE:I01 END -->
 
 ## Step 1 · Check your environment
 
-Before you look at anything, make sure the machine you are working on is ready.
+**Goal:** Make sure your workstation and cloud project are ready before you look at anything.
 
 Ask agy:
 
@@ -20,13 +18,22 @@ Ask agy:
 Check my environment is ready.
 ```
 
-What to expect: agy checks its own toolkit and your cloud project. It opens by telling you plainly whether you are ready to start, then shows a short table — one row per check, how it verified it, the result, and anything it safely fixed along the way.
+**What to expect:**
 
-If anything comes back not ready, ask agy to fix it before you move on.
+- agy checks its own toolkit and your cloud project, then opens by saying plainly whether you are ready to start.
+- A short table follows: one row per check, how agy verified it, the result, and anything it safely fixed.
+- If anything comes back not ready, ask agy to fix it before you move on.
+- Nothing in your environment changes; any safe fix agy makes is named in the table.
 
 ## Step 2 · Meet your estate
 
-Start with the official record — the catalog of agents NovaSmart says it has.
+<!-- FIGURE:K0S2 BEGIN -->
+
+![Map of the NovaSmart agent estate, M0 Step 2. Through the Google Cloud management APIs, agy (1) reads the Agent Registry catalog's region listing, (2) reads its global listing, and (3) counts the distinct entries. Only Agent Registry is highlighted; the login box is grey, marked not checked yet, and connects to nothing. Nothing changes.](images/K0S2_map.webp)
+
+<!-- FIGURE:K0S2 END -->
+
+**Goal:** See the official record: the catalog of agents NovaSmart says it has.
 
 Ask agy:
 
@@ -34,13 +41,24 @@ Ask agy:
 What AI agents do we officially have?
 ```
 
-What to expect: a catalog of six entries across two locations. Three are NovaSmart's own, though only one is listed under a readable name: Price Match Agent, and then markdown-strategy-agent and customer-personalization-agent in lowercase, the names those two give themselves on their self-description cards. The other three are Google's own built-in agents, which the catalog lists automatically: Workspace Agent, which Google publishes, and Gemini Enterprise Core Assistant and Deep Research, which come with the Gemini Enterprise app set up in this project. None of those three is a NovaSmart workload. Nothing in it looks wrong.
+**What to expect:**
+
+- Six distinct agents across the catalog's two locations. agy counts each location (four and three), because Workspace Agent is listed in both.
+- Three are NovaSmart's: Price Match Agent, then markdown-strategy-agent and customer-personalization-agent in lowercase, the names those two give themselves.
+- Three are Google's own built-in agents, listed automatically: Workspace Agent, Gemini Enterprise Core Assistant and Deep Research. None is a NovaSmart workload.
+- Nothing looks wrong. Nothing in your environment changes.
 
 More background: Reference Guide tab, Meet your estate
 
 ## Step 3 · Widen the net
 
-A catalog only lists what someone remembered to register. Ask what is actually running.
+<!-- FIGURE:K0S3 BEGIN -->
+
+![Map of the NovaSmart agent estate, M0 Step 3. agy (1) reads the Agent Registry catalog, (2) lists what runs on Agent Runtime and on Cloud Run, and (3) compares the two. The Promo agent on Cloud Run is red, tagged not in catalog; the store portal and novasmart-mcp are grey, marked infrastructure; the login box is grey, not checked yet. Nothing changes.](images/K0S3_map.webp)
+
+<!-- FIGURE:K0S3 END -->
+
+**Goal:** A catalog only lists what someone remembered to register. Find out what is actually running.
 
 Ask agy:
 
@@ -48,13 +66,24 @@ Ask agy:
 Now show me everything that's actually running. Is anything running that isn't on that list?
 ```
 
-What to expect: everything running across both Agent Runtime (Google Cloud's managed service for running agents) and Cloud Run, including exactly one workload the catalog has never heard of — the marketing team's promo agent, `promo-agent-shadow`, with no owner and no record. The running list uses the readable names, and agy matches them to the lowercase catalog entries. The list also holds the store's own services and `remote-browser-vm1`, the workstation this lab runs on. Those are infrastructure, not agents.
+**What to expect:**
+
+- Everything running on Agent Runtime (Google Cloud's managed service for running agents) and Cloud Run, matched against the catalog.
+- Exactly one workload the catalog has never heard of: the marketing team's promo agent, `promo-agent-shadow`, with no owner and no record.
+- Google's three built-in agents show as in the catalog with nothing of yours running; that is expected. The store's own services and `remote-browser-vm1`, this lab's workstation, are infrastructure, left out of the comparison.
+- Nothing in your environment changes.
 
 More background: Reference Guide tab, Widen the net
 
 ## Step 4 · Who's reading customer data
 
-Your customer database holds 20 customer records — names, emails, loyalty tier, lifetime value and purchase history. Find out who has been reading it.
+<!-- FIGURE:K0S4 BEGIN -->
+
+![Map of the NovaSmart agent estate, M0 Step 4. (1) agy sends a test request through the store portal to the Promo agent, still red from Step 3. (2) The read runs in amber from the Promo agent through novasmart-mcp to Customer data; the amber shared login is joined to both the Promo agent and the Customer Personalization Agent. (3) agy reads Cloud Audit Logs, which records the login. Nothing changes.](images/K0S4_map.webp)
+
+<!-- FIGURE:K0S4 END -->
+
+**Goal:** Your customer database holds 20 customer records. Find out who has been reading it.
 
 Ask agy:
 
@@ -62,13 +91,24 @@ Ask agy:
 Who's been reading our customer database?
 ```
 
-What to expect: a Cloud Audit Logs record of who has read the customer table — a list of logins, not a list of agents. One line is the lab's own setup account, which loaded the sample records when your project was built; that is housekeeping, not a finding. What matters is a read under the login the promo agent and the Customer Personalization Agent share. It names the login, not an agent. The entry also records which Google service used that login — Cloud Run or Agent Runtime — and here each runtime hosts only one of the two agents, so you can work out which one it was. That is where they happen to be deployed, not who they are: the record names neither agent, and that stops working the day a second workload on either runtime picks up the same login. If more than one read shows up under that login, compare which fields of the customer table each one touched. The project's default compute account may appear too, because the store portal runs as it. Price Match and Markdown Strategy do not appear here at all; they work from pricing and competitor data and never touch customer records.
+**What to expect:**
+
+- A Cloud Audit Logs record of customer-table reads: logins, not agents. The lab's setup account is housekeeping; the default compute account (the store portal) may appear.
+- What matters: a read under the login the promo agent and the Customer Personalization Agent share, and which service used it, Cloud Run or Agent Runtime.
+- Each runtime hosts one of the two, so you can infer the agent from where it runs, not who it is. That breaks once another workload shares the login.
+- Price Match and Markdown Strategy do not appear. Nothing in your environment changes.
 
 More background: Reference Guide tab, Who's reading customer data
 
 ## Step 5 · Decide
 
-No prompt for this step. This is the leadership call, and it is yours to make before you go on. Three questions:
+<!-- FIGURE:K0S5 BEGIN -->
+
+![Map of the NovaSmart agent estate, M0 Step 5. No workflow arrows: the Promo agent stays red from Step 3 with an amber decision marker beside it, the shared login stays amber from Step 4, and everything else is as found. Nothing changes.](images/K0S5_map.webp)
+
+<!-- FIGURE:K0S5 END -->
+
+**Goal:** Make the leadership call yourself before you go on. There is no prompt for this step.
 
 - Own it or kill it? Do you shut the promo agent down, or bring it under a named owner — and why?
 - Does a marketing agent need the whole customer database, or any of it?
@@ -78,20 +118,21 @@ More background: Reference Guide tab, Decide
 
 ## Step 6 · What's next
 
-You now know three things you did not know an hour ago: what is officially registered, what is really running, and who is reading customer data under a shared login. None of it is fixed.
+<!-- FIGURE:K0S6 BEGIN -->
 
-M1 · Take Action is where you fix it — register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs. You will also find out whether your answer to the first question above matches the leadership call.
+![Map of the NovaSmart agent estate after M0, with nothing fixed. Three findings are marked: the Promo agent in red, not in catalog; the shared login in amber, two agents, one login; Cloud Audit Logs in amber, login, not agent. Dashed blue outlines mark M1's targets: Agent Registry, the shared login and Customer data.](images/K0S6_map.webp)
 
-<!-- FIGURE:I02 BEGIN -->
+<!-- FIGURE:K0S6 END -->
 
-![Audit findings: six official catalog entries, one unrecorded workload named promo-agent-shadow, and two agents sharing the novasmart-customer-sa login, so their reads are recorded under that login and never as either agent. Changes made: zero. The decision to own it or shut it down remains open.](images/I02_accomplished.jpg)
+*Optional.* You can go straight to M1, or open the **What did we learn?** tab.
 
-<!-- FIGURE:I02 END -->
+- You now know what is officially registered, what is really running, and who reads customer data under a shared login. None of it is fixed.
+- M1 · Take Action is where you fix it — register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs.
+- In M1 you also find out whether your answer to the first question above matches the leadership call.
 
 ## Try this too — optional
 
-These are not steps, and the module is complete without them. Each one is a question a real leader
-would ask at this point. Type any that interest you, in any order, or skip them all.
+*Optional.* Ask any of these, in any order, or skip them.
 
 Ask agy:
 
@@ -99,7 +140,7 @@ Ask agy:
 Could something be running somewhere we didn't look?
 ```
 
-This shows you which places were actually searched and which were not, so you can judge how much a clean comparison of two lists is really worth.
+This shows you which places were searched and which were not, so you can judge what a clean comparison is worth.
 
 Ask agy:
 
@@ -107,7 +148,7 @@ Ask agy:
 Would anything have told us about that agent if we hadn't gone looking?
 ```
 
-This shows you whether anything in your estate would have raised its hand on its own, or whether finding that agent depended entirely on someone deciding to look.
+This shows you whether anything would have flagged that agent on its own, or whether finding it depended on someone looking.
 
 Ask agy:
 
@@ -115,40 +156,42 @@ Ask agy:
 If a regulator asked who read a particular customer's record, what could we actually give them?
 ```
 
-This shows you which half of that question your audit trail can answer and which half it cannot, which is a far better thing to learn now than during an incident.
+This shows you which half of that question your audit trail can answer and which half it cannot.
 
 ## Step 7 · Show what you found
 
-Turn what you found into something you can show other people. Pick any of these, in any order; the first is a good place to start. Each one takes agy a few minutes.
+*Optional.* You can skip this and go to M1, or open the **What did we learn?** tab.
 
-An executive dashboard of your estate:
+Pick any of these, in any order. Each takes agy a few minutes.
 
 ```
 Build me an executive dashboard of the agent estate I found in this module.
 ```
 
-An investigation board on the shared login:
+An executive dashboard of your estate. A good place to start.
 
 ```
 Build me an investigation board that answers: who touched our customer data?
 ```
 
-A game for your team:
+An investigation board on the shared login: what the log proves about who read customer data, and what it cannot.
 
 ```
 Build me a game called Shadow Hunt from what I found, for my team to play.
 ```
 
-A briefing for your board:
+A three-round game for your team to spot the gaps you found.
 
 ```
 Turn what I found into a two-minute briefing I can present to the board.
 ```
 
-A poster to share:
+A short slide briefing for your board.
 
 ```
 Make a one-page poster of what I found that I can share.
 ```
 
-What to expect: each page saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Each is built only from what agy recorded in Steps 1 to 4, and agy checks it and looks at it before it answers. None of it changes the estate, and none of it fixes anything: that is still M1.
+A one-page poster to share.
+
+Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Pages use only what agy recorded in Steps 1 to 4. Nothing in your environment changes.

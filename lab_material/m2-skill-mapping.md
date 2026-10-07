@@ -113,7 +113,7 @@ The recorded undo reads the policy again for its new etag, then writes back the 
 
 | | |
 |---|---|
-| Skill read | `m2-step4.md` |
+| Skill read | `m2-step4.md`, and `m2-step1.md` again |
 | What it required | Wait at least 5 minutes after the write; replay Step 1's call with a fresh token; find the refusal in the audit log; one escalation through the front desk, counted only if the back office's decision comes back; checks 1-13, no scorecard |
 | Google Cloud | Agent Runtime (one agent calling another), Cloud Audit Logs |
 | Guardrail | "Refused" only for a 403 quoted this turn; dollar values stay in the file |
@@ -190,15 +190,15 @@ Step 4 writes checks 1-13; Step 5 writes all 26 and puts one line on screen: "26
 | | |
 |---|---|
 | Skill read | `showcase.md` and `showcase-m2.md`, required at each Show prompt (this run read them at the first ones only) |
-| What it required | Run `scripts/show_facts.py 2` and build only from that fact sheet; never merge the two lists; draw project-wide holders unchanged on both sides; run `scripts/show_check.py` until clean |
+| What it required | Run `scripts/show_facts.py 2 <demo>` (fact sheet plus that page's recipe) and build only from the sheet; never merge the two lists; draw project-wide holders unchanged on both sides; run `scripts/show_check.py` until clean; then run `scripts/show_record.py`, which writes the evidence entry from a log of every run, failed checks included |
 | Google Cloud | None |
 | Guardrail | No change; the "only the front desk can call it" sentence appears only as an overclaim a Gatekeeper player must catch |
 | May change | Nothing |
-| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m2_caller_map.html` |
+| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m2_caller_map.html`; one entry per page in `m2_step7.txt` |
 
 **Why it matters:** every page passed the check, yet four of the five were rebuilt from the previous run's pages (see What slipped).
 
-*Optional prompts:* answered read-only and logged to `m2_other.txt`; nothing changed.
+*Try this too:* the skill has agy answer each prompt directly, bold answer first, naming the step it builds on, never calling it optional; commands go to `m2_other.txt`; answering is in scope, acting on the answer is not.
 
 ## Who agy is, and which record to trust
 

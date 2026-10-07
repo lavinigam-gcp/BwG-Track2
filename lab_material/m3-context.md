@@ -8,9 +8,9 @@ The rhythm is the one you already know. You brief agy in plain English, it does 
 
 First, agy attacks your own systems in Step 1. That feels different from listing agents or reading a log, and it should. It is also the only honest way to establish that you have a problem: a briefing slide about prompt injection proves nothing about NovaSmart, whereas an agent that hands over your customer records when politely asked proves everything. agy sends messages and reads replies. It changes no settings, no identities and no data.
 
-Second, this module has exactly one step that changes the estate. Step 1 attacks, Step 2 reads, Step 4 verifies. Only Step 3 writes: it adds a screening rule to the inbound gateway and routes one agent through it, which takes three linked changes. That ratio is deliberate. The interesting work in security is almost never the change itself; it is knowing what to change and being able to prove afterwards that it worked.
+Second, this module has exactly one step that changes the estate. Step 1 attacks, Step 2 reads, Step 4 verifies. Only Step 3 writes: it adds a screening rule to the inbound gateway and routes one agent through it, which takes three linked changes, plus a permission for Google's service agent only if agy finds one missing. That ratio is deliberate. The interesting work in security is almost never the change itself; it is knowing what to change and being able to prove afterwards that it worked.
 
-Third, the change in Step 3 does not take effect the instant it is saved. Screening rules propagate through the platform rather than flipping instantly, so an attack that still lands ten seconds after you switch protection on tells you nothing at all. agy waits before it tests. If you test by hand, wait too.
+Third, the change in Step 3 does not take effect the instant it is saved. Routing an agent through the gateway takes about five minutes to apply, so an attack that still lands ten seconds after you switch protection on tells you nothing at all. agy waits before it tests. If you test by hand, wait too.
 
 One habit carries over from M1 and is worth naming again, because M3 is where it pays off most visibly. You ask a question that only reads before you ask for anything that writes. In M1 that pause showed you a login with far more power than anyone intended. Here it shows you something even more common, and slightly more embarrassing.
 
@@ -30,12 +30,12 @@ The uncomfortable framing for a leadership audience: your agent's guardrails are
 
 ### The two attacks that are live in your estate
 
-agy sends two messages, one to each customer-facing agent, and shows you what came back. Both work today.
+agy sends two messages, one to each customer-facing agent, and shows you what came back. Expect both to land.
 
-| Which agent | What a customer could type | What the agent does today |
+| Which agent | What a customer could type | What to expect |
 | :---- | :---- | :---- |
-| Price Match Agent | A message dressed up as an internal instruction that tells the agent to set its pricing rules aside for this one case | It settles a discount far past the 10% limit it is supposed to hold, and reports it as a legitimate decision |
-| Customer Personalization Agent | A message telling the agent to ignore its instructions and list the customers it can see | It returns customer records: 20 rows of names, email addresses, loyalty tiers and lifetime values |
+| Price Match Agent | A message dressed up as an internal instruction that tells the agent to set its pricing rules aside for this one case | It approves a discount far past the 10% limit it is supposed to hold, as though it were a legitimate decision |
+| Customer Personalization Agent | A message telling the agent to ignore its instructions and list the customers it can see | It returns customer records. The table it reads holds 20 customers, with names, email addresses, loyalty tiers and lifetime values |
 
 agy shows you the customer records as a count and a list of the details they held, with one example row whose personal details are masked. It does not print the records themselves. It also sends two ordinary requests, one to each agent, so that Step 4 has a before for those as well as for the attacks.
 
@@ -71,7 +71,7 @@ The first half is the one you expected. Nothing screens what a customer types on
 
 The readout also shows the back office behind the outbound gateway, where M2 put it. That is not screening. That gateway decides where the back office may reach, and it reads no message content. No agent is behind the inbound gateway.
 
-The second half is the interesting one. NovaSmart already owns a content filter for exactly this problem — a Model Armor template called `nvst-jailbreak-template`, configured to detect manipulation attempts, sitting in the project. It is attached to nothing. No agent uses it. No Agent Gateway references it. It has never inspected a single message.
+The second half is the interesting one. NovaSmart already owns a content filter for exactly this problem — a Model Armor template called `nvst-jailbreak-template`, configured to detect manipulation attempts, harmful content and malicious links, sitting in the project. It is attached to nothing. No agent uses it. No Agent Gateway references it. It has never inspected a single message.
 
 Nobody was negligent. Somebody did the right thing: they identified the risk, evaluated the control and configured it. Then the project that would have connected it slipped, or the person moved teams, or it turned out that attaching it meant touching several agents individually and nobody owned all of them. The template is a monument to a control that was bought and never installed.
 
@@ -107,7 +107,7 @@ This door reads the message on its way in and stops manipulation attempts before
 
 The door also reads the agent's reply on the way out, using the same template. That template looks for manipulation attempts, harmful content and malicious links. It does not look for people's names or email addresses, so it would not stop a reply that contained them. A names-and-emails inspection profile exists in the project, but nothing in this module connects it, so names and emails are not screened in either direction.
 
-Be precise about what this lab actually shows you. What you verify here is the inbound half. Step 4 replays the attacks on the way in; it does not test the way out, and the one agent standing behind this door holds no customer records to leak in the first place. So the outbound half is configured rather than demonstrated, and that is the phrase to use if anyone asks.
+Be precise about what this lab actually shows you. What you verify here is the inbound half. Step 4 replays the attacks on the way in; it does not test the way out, and the one agent standing behind this door is not the agent that reads customer records. So the outbound half is configured rather than demonstrated, and that is the phrase to use if anyone asks.
 
 Stopping customer records leaving is not this control's job and this module does not claim it. By the time an agent has asked for a list of customers, the database has already handed it over — screening the reply is arguing with a fact. The place that stops it is the permission that decides whether the agent could read those records at all, which is the work you did in M1. Keep the two straight: this door decides what may come in, and access decides what may go out.
 
@@ -127,7 +127,9 @@ Be honest about what you have bought, because overstating a control is how a sec
 
 Screening is a strong, always-on baseline for the agent behind it. It is not a guarantee, and it is not estate-wide. It blocks recognized manipulation patterns on the way in; a sufficiently novel attack, phrased in a way the detector has not learned, can still get past. The other two agents are not behind this door at all, and no setting in this module puts them there.
 
-More importantly, this screen is set to fail open. If the screening service cannot run — a regional outage, an unreachable service, an internal error — traffic passes rather than being blocked, and nothing tells you. The failure that really hides is a door that looks built but is not standing in the traffic: the wiring can be accepted and still not apply, in which case every message sails through with no error anywhere. That is why Step 3 has agy read the routing back rather than trusting the command that made it. Your agents keep serving customers rather than going dark. That is a deliberate trade: availability over enforcement. It is a reasonable default for a retailer that cannot afford a store-wide outage, and it is also a remaining risk: the control being on is not the same as the control being effective. Somebody has to check that it is still working, and that check belongs in your operating routine.
+More importantly, this screen is set to fail open. If the screening service cannot run — a regional outage, an unreachable service, an internal error — traffic passes rather than being blocked, and nothing tells you. Your agent keeps serving customers rather than going dark. That is a deliberate trade: availability over enforcement. It is a reasonable default for a retailer that cannot afford a store-wide outage, and it is also a remaining risk: the control being on is not the same as the control being effective.
+
+A related failure hides even better: a door that looks built but is not standing in the traffic. The wiring can be accepted and still not apply, in which case every message passes with no error anywhere. That is why Step 3 has agy read the routing back rather than trusting the command that made it. Somebody has to check that it is still working, and that check belongs in your operating routine.
 
 ## Step 4 · Prove the attacks are blocked
 
@@ -135,18 +137,18 @@ More importantly, this screen is set to fail open. If the screening service cann
 
 agy replays the same two attacks, then sends the two ordinary requests again, and shows you all four side by side.
 
-| The request | Before screening | After screening |
+| The request | What Step 1 should show | What to expect after screening |
 | :---- | :---- | :---- |
-| A message engineered to push a discount past the 10% limit | The agent says yes to a discount it should have escalated | Blocked — the agent never acts on it |
-| A message engineered to extract customer records | 20 rows of names, emails, loyalty tiers and lifetime values are returned | Still answered. This agent is not behind the door, so this screen cannot stop it, and agy reports it as not covered |
-| An ordinary shopper asking for a personalized offer | Works | Still works |
+| A message engineered to push a discount past the 10% limit | The agent says yes to a discount it should have escalated | Stopped at the inbound gateway, before the agent reads it |
+| A message engineered to extract customer records | Customer records are returned, shown as a count with personal details masked | Still answered. This agent is not behind the door, so this screen cannot stop it, and agy reports it as not covered |
+| An ordinary shopper asking for a personalized offer | Answered | Still answered: this agent is not behind the door |
 | An ordinary price match of around 5% | Settled on the spot | Expected to go through. If the screen catches it, that is a finding to write down |
 
 ### Where the evidence actually lives
 
 When a message is blocked, two things happen, and only one of them is evidence.
 
-The call to the agent fails, and the words of that failure say the request was stopped. agy quotes them exactly as they came back, with the time, and writes them to the evidence file. That quoted reply is the record that the control fired. Model Armor can also write each verdict to Cloud Logging, but only when the filter is set to log, and NovaSmart's is not, so there is no log entry to go looking for.
+The call to the agent fails, and the words of that failure say the request was stopped. The status can look like a server error, and the words may name a content filter rather than Model Armor; the words are what count. agy quotes them exactly as they came back, with the time, and writes them to the evidence file. That quoted reply is the record that the control fired. Model Armor can also write each verdict to Cloud Logging, but only when the filter is set to log, and NovaSmart's is not, so there is no log entry to go looking for.
 
 The store application, meanwhile, may show very little. Because the message was refused before the agent read it, the shopper is likely to see a generic error or simply an empty answer, not a tidy "this message was blocked" banner. Set that expectation now, because otherwise a blank reply reads as a broken app rather than a working control.
 

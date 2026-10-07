@@ -2,7 +2,7 @@
 
 > Read with `showcase.md`, which holds the workflow, the build bar, the check and the answer shape. This
 > file holds Module 1's facts rules and one recipe per demo. Source: the fact sheet from
-> `show_facts.py 1` (Steps 1–5). Save every page in `/config/Desktop/novasmart-showcase/`.
+> `show_facts.py 1 <demo letter>` (Steps 1–5). Save every page in `/config/Desktop/novasmart-showcase/`.
 
 ## 1. What an M1 page may say
 
@@ -167,6 +167,7 @@ Speaker notes (`N`), the timer (`T`), print layout (`showcase.md` §4).
 
 **Done when:** the slides stay sparse and the notes carry the detail; every slide has a source line.
 
-**Asked for a poster or picture instead:** build `m1_poster.html` and run the check with `--poster` — the
+**Asked for a poster or picture instead** (run `show_facts.py 1 E`, which prints this too): build
+`m1_poster.html`; the check renders it as a poster by itself — the
 before-and-after map and the app-vs-log pair on one 1600 × 900 canvas, with the takeaway, the "Still open"
 line and the footer.

@@ -106,7 +106,7 @@ Module 2 built Access controlled for one agent, the back office. Still open: pro
 | Screened | Attempts to talk an agent out of its rules are stopped at the door | M3 |
 | Measured | The agent's answers are tested against known cases before you trust it | M4 (optional) |
 
-Two agents face customers and hand whatever a shopper types to the AI. M3 · Protect the Content is where you screen what customers can talk your agents into.
+M3 · Protect the Content is where you screen what customers can talk your agents into.
 
 ## Questions to take back to your team
 

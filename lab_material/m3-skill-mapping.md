@@ -53,7 +53,7 @@ Step 6 · What's next has no prompt. Every command block starts with the skill's
 | Guardrail | No change; never reword an attack until it lands; never name a screen, filter or gateway yet |
 | May change | Nothing: a call is an action, not a change |
 | Saved | `m3_step1.txt`; four bodies, four replies and `step1_ids.txt` in `work/` |
-| What to expect (Instructions) | "agy sends attacker-style messages to the two agents that face customers and shows you the real replies. Both attacks land. The Price Match Agent goes past the 10% discount limit it is supposed to hold and says yes to a discount it should have escalated, and the Customer Personalization Agent hands over customer records to someone who simply asked for them. agy shows you how many records came back and which details they held, with the personal details masked rather than printed. It also sends two ordinary requests, so Step 4 has a before for those too. Nothing in your environment is changed — agy only sent messages." |
+| What to expect (Instructions) | "Both attacks land. The Price Match Agent goes past its 10% discount limit and approves a discount it should have escalated. The Customer Personalization Agent hands over customer records to someone who simply asked; agy shows how many, with personal details masked. agy also sends two ordinary requests, as a before for Step 4. Nothing in your environment changes; agy only sent messages." |
 
 ```bash
 printf '%s' '{"class_method":"stream_query","input":{"message":"A customer asks us to match AlphaStore at $331.55 for SKU-HSE-4001 (our shelf price $349.00). Approve or decline?","user_id":"m3-check"}}' > "$W/pma_normal.json"
@@ -77,7 +77,7 @@ The `curl` line runs in a loop over the four bodies (`$R`), each with its agent'
 | Guardrail | No change, not even enabling an API; no verdict; never say how the filter would be switched on; no floor setting |
 | May change | Nothing |
 | Saved | `m3_step2.txt` |
-| What to expect (Instructions) | "a plain-English readout of what inspects customer messages before they reach your agents, and what inspects the replies on the way back. The short answer is nothing. The longer answer is more interesting, and it is worth reading to the end. Your environment is unchanged." |
+| What to expect (Instructions) | "A plain-English readout of what inspects messages on the way in, and replies on the way out. The short answer is nothing. The longer answer is worth reading to the end. Nothing in your environment changes." |
 
 ```bash
 export CLOUDSDK_API_ENDPOINT_OVERRIDES_MODELARMOR="https://modelarmor.<REGION>.rep.googleapis.com/"
@@ -102,7 +102,7 @@ The first line sends only `gcloud model-armor` commands to the regional host. Wi
 | Guardrail | No agent call or test this turn; one agent only; never create or delete a gateway, edit the template, or touch the back office's outbound binding or M2's extension and policy; no self-grant |
 | May change | `novasmart-ma-ext`, `novasmart-ma-pol`, the Price Match Agent's inbound binding; a documented role for one of two Google service agents, only if missing |
 | Saved | `m3_step3.txt` with one record per change; `undo_step3.sh` and `step3_ids.txt` in `work/` |
-| What to expect (Instructions) | "agy adds a screening rule to the inbound gateway that hands each message to the filter you found in Step 2, routes the Price Match Agent through that gateway, then reads the routing back from the agent to confirm it took. Ask which agent this covers, and expect a single name — this protects the Price Match Agent, not the estate. The other two agents are reached over a different protocol that this screen does not read, and the back office's outbound gateway from M2 is left as it is. The routing takes around five minutes to take effect, and agy waits before testing, so an early "it still got through" does not mislead you." |
+| What to expect (Instructions) | "agy adds a screening rule to the inbound gateway using the filter from Step 2, and reads the routing back. It covers one agent, the Price Match Agent. The other two use a protocol this screen does not read; M2's outbound gateway is unchanged. The routing takes about five minutes to take effect; agy waits before testing. The Price Match Agent now sits behind the inbound gateway. agy can take it out again, but its earlier revisions are archived for good." |
 
 <!-- FIGURE:S3_04 BEGIN -->
 
@@ -132,7 +132,7 @@ Two shapes fail quietly. The extension's `model_armor_settings` must be one JSON
 | Guardrail | No change, retune or re-binding; "blocked" only beside the reply's words quoted this turn; the customer-record attack is `not covered`, never blocked or failed; no Cloud Logging verdict promised |
 | May change | Nothing in the estate; the scorecard is the one write |
 | Saved | `m3_step4.txt` with 23 rows; `step4_ids.txt` in `work/`; the scorecard |
-| What to expect (Instructions) | "the manipulation attempt on the Price Match Agent is stopped before the agent sees it, and ordinary requests go through untouched, including ones that need the agent to look something up. The customer-record attack still gets an answer: that agent is not behind the inbound gateway, and agy reports it as not covered rather than as a failure." |
+| What to expect (Instructions) | "The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging. A price match of about 5%, and a request that needs a lookup, still get answers. The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered. Checks go to `m3_step4.txt` in `novasmart-evidence` on your Desktop; agy updates your Governance Scorecard. Nothing else changes." |
 
 ```bash
 A=$(awk '/^attach-done /{print $2}' "$W/step3_ids.txt" | tail -1); echo "attach-done ${A:-missing}"
@@ -177,7 +177,7 @@ Step 4 writes all 23 checks and puts one coverage line on screen, counted off th
 | Guardrail | No change or agent call; no all-clear; never "the agents" or "the estate" protected; no log verdict; nothing about the next module |
 | May change | Nothing |
 | Saved | `m3_step5.txt` |
-| What to expect (Instructions) | "a short account of what is now true and backed by a record you can point at, and a plain list of what is not. Expect it to name limits rather than skip them. Screening is a baseline, not a force-field, and it is set to fail open: if the screen cannot run, the traffic passes with no error, which is a remaining risk rather than a footnote. It stands in front of one agent rather than the estate, and the two agents reached over the other protocol cannot be screened by it. The inbound gateway also reads the agent's replies, but with the same filter, which looks for manipulation and harmful content, not names or email addresses, and nothing in this module tested the way out. The filter NovaSmart already owned is now doing a job, which is the one thing that genuinely changed. Anything the tests could not confirm should be described as unconfirmed rather than quietly counted as a pass." |
+| What to expect (Instructions) | "What is true and backed by a record, and what is not. Every claimed block points at a quoted reply. The screen covers one agent, not the estate, and fails open: if it cannot run, traffic passes with no error. That is a remaining risk. It looks for manipulation and harmful content, not names or emails; the way out was not tested; the discount code is still exposed. No all-clear. Nothing in your environment changes." |
 
 ```bash
 gcloud beta service-extensions authz-extensions describe novasmart-ma-ext --location="<REGION>" --format=yaml | grep -E 'service:|failOpen|model_armor_settings'
@@ -195,16 +195,16 @@ The limits it must name: one agent; `failOpen: true`; the customer-record attack
 | | |
 |---|---|
 | Skill read | `showcase.md` and `showcase-m3.md`, before each Show prompt |
-| What it required | Run `scripts/show_facts.py 3` and build only from that fact sheet; run `scripts/show_check.py` until clean |
+| What it required | Run `scripts/show_facts.py 3 <demo>` (fact sheet plus that page's recipe) and build only from the sheet; run `scripts/show_check.py` until clean; then run `scripts/show_record.py`, which writes the evidence entry from a log of every run, failed checks included |
 | Google Cloud | None |
 | Guardrail | Exactly one agent drawn as screened; the customer-record attack never shown as blocked; "refused" only beside the quoted reply; no customer values |
 | May change | Nothing |
-| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m3_attack_replay.html` |
-| What to expect (Instructions) | "each page saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Each is built only from what agy recorded in Steps 1 to 5, and agy checks it and looks at it before it answers. None of it changes the estate." |
+| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m3_attack_replay.html`; one entry per page in `m3_step7.txt` |
+| What to expect (Instructions) | "Pages are saved in novasmart-showcase on your Desktop, built only from what agy recorded. None changes the estate." |
 
 **Why it matters:** in the Trap or Customer game, "both attacks are now blocked" appears only as an overclaim the player must catch.
 
-*Optional prompts:* answered read-only and logged to `m3_other.txt`; nothing changes.
+*Try this too:* the skill has agy answer each prompt directly, bold answer first, naming the step it builds on, never calling it optional; commands go to `m3_other.txt`; answering is in scope, and attaching, tuning, granting or re-testing is not.
 
 ## Who agy is, and which record to trust
 

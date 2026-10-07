@@ -3,7 +3,7 @@
 > Read with `showcase.md`, which holds the workflow, the build bar, the check and the answer shape. This
 > file holds Module 4's facts rules and one recipe per demo. In `showcase.md`, read "Step 7" as **Step 5**
 > for this module: the evidence entry goes in `m4_step5.txt`, slot `M4 Step 5`. Source: the fact sheet from
-> `show_facts.py 4` (Steps 1–4). Save every page in `/config/Desktop/novasmart-showcase/`.
+> `show_facts.py 4 <demo letter>` (Steps 1–4). Save every page in `/config/Desktop/novasmart-showcase/`.
 
 ## 1. What an M4 page may say
 
@@ -191,6 +191,7 @@ for the leader to decide?
 **Done when:** it fits one printed page; nothing recommends launching or not; no score; the three questions
 are verbatim.
 
-**Asked for a poster or picture instead:** build `m4_poster.html` and run the check with `--poster` — the
+**Asked for a poster or picture instead** (run `show_facts.py 4 E`, which prints this too): build
+`m4_poster.html`; the check renders it as a poster by itself — the
 three runs' partitions and the fix-vs-production columns on one 1600 × 900 canvas, with the takeaway, the
 "Still open" line and the footer.

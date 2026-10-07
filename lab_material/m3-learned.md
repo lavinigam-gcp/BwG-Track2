@@ -109,7 +109,7 @@ Module 3 built Screened for one agent, the Price Match Agent. Still open: the tw
 | Screened | Attempts to talk an agent out of its rules are stopped at the door | M3 |
 | Measured | The agent's answers are tested against known cases before you trust it | M4 (optional) |
 
-M4 · Evaluate and Decide (Optional Module) is where you stop spot-checking and start measuring: run the agent against a full scenario set (deals to settle, escalate or refuse, and traps to catch) and read the score before every store gets it.
+M4 · Evaluate and Decide (Optional Module) measures, against a full scenario set, whether the agent got worse at its job.
 
 ## Questions to take back to your team
 

@@ -289,7 +289,7 @@ questions come out of this gap.
 3. **Never a later step's prompt or title**, from any module. The reference author owns that check.
 4. **Under each prompt, one plain sentence about the answer they would get** — never "then I could…".
 5. **Nothing is conditional on it.** Never wait for it, follow it up, or mention later whether it was used.
-6. **If they type one, it is off-script; say so**, answer inside the scope fence, then say where that
+6. **If they type one, answer it** in the scope fence, never calling it optional, then say where that
    leaves the module. Answering is in scope; acting on your own answer is not.
 
 The block opens with this line, verbatim:
