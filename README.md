@@ -1,6 +1,6 @@
-# Build with Google — Track 2: Govern Your AI Estate (NovaSmart Lab)
+# Build with Gemini — Track 2: Govern Your AI Estate (NovaSmart Lab)
 
-Take-home lab materials, agent steering skills, architecture guides, and local no-VM environment setup for **Build with Google — Track 2: Govern Your AI Estate**.
+Take-home lab materials, agent steering skills, architecture guides, and local no-VM environment setup for **Build with Gemini — Track 2: Govern Your AI Estate**.
 
 In this lab, you step into the role of **Head of AI Platform and Security** at **NovaSmart**, a consumer-electronics retailer whose rapid "AI-first" push left behind unmanaged agent sprawl. Working alongside **Antigravity (`agy`)**, you take an unmapped, over-privileged multi-agent estate on Google Cloud and make it **visible, attributable, least-privileged, access-controlled, content-screened, and measured**—without writing application code by hand, and with every finding and change backed by verifiable platform evidence.
 
