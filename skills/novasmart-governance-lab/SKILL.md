@@ -33,8 +33,8 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
     result in one plain sentence (§3g).
 12. ⛔ **No browser opens from your shell** (here `xdg-open` only logs the URL). Never say you opened or
     launched a page: give its file name or link, and say the leader opens it in Chrome.
-13. ⛔ **Pictures use Gemini 3.1 Flash Image** (`gemini-3.1-flash-image`), the image model this lab has
-    provisioned throughput for, in every module. Never Gemini 3 Pro Image (§3b).
+13. ⛔ **Draw every picture with `scripts/draw_picture.py`** (Gemini 3.1 Flash Image, which this lab has
+    provisioned throughput for), in every module. **Never call `generate_image`**: it uses 3 Pro (§3b).
 14. ⛔ **Embed every picture you generate** in the answer, or the leader sees nothing (§3b).
 
 ## 1. First moves — freshness & tools (every session, before anything else)
@@ -165,19 +165,17 @@ only inside commands. "Agent Identity" is only the per-agent badge.
 ### 3b. The picture is generated, and it is an addition
 Make the picture **and** write the paragraph; it sits after `### Why this matters`.
 
-**Tool.** Call **`generate_image`** with **`gemini-3.1-flash-image`** (§0 rule 13). ⛔ **Then embed it**
-under `### The picture`, with the saved path the tool returned:
-`![<caption>](file:///config/.gemini/antigravity/brain/<conversation-id>/<file>.png)`. The app shows a
-picture only through this line; ignore the tool's "do not output the path" note.
+**Tool.** Write what to draw to a file, then run, from the workspace folder:
+`python3 .agents/skills/novasmart-governance-lab/scripts/draw_picture.py --name mN_stepK_<topic> --prompt-file <file>`.
+It adds the style, draws with Gemini 3.1 Flash Image and prints `saved:`, `embed:` and `model:` lines.
+It takes about 10 s: run it with `WaitMsBeforeAsync` 10000; if it goes to the background, wait for its
+result. ⛔ **Then embed it** under `### The picture`: the `embed:` line, with your caption. The app shows a
+picture only through this line. The script is plumbing: never in COMMANDS, never counted. If it prints `error:`,
+say *"No picture: <that error>"* in one line; never fall back to `generate_image` or a text sketch.
 
-**Style — pin it in the prompt every time.** Ask for: a **clean architectural workflow diagram** · a
-**plain white background** · **Google brand colors** (blue, red, yellow and green on white) · **flat and
-diagrammatic** · rectangular boxes with plain labels and simple straight arrows · generous whitespace ·
-legible sans-serif text · no decoration that is not a box, an arrow or a word. **And ban the opposite in
-the prompt itself: no neon, no glow, no dark background, no "cyberpunk", no isometric or 3-D perspective,
-no circuit boards or motherboards, no HUD panels, no lens flare, no photorealism.** Ask for **landscape,
-roughly 16:9**, wide enough that the longest name fits on one line. **One picture per answer**, unless
-the step's row names more.
+**Style — the script adds it** (white background, Google brand colors, flat boxes, plain labels, straight
+arrows; no neon, dark, 3-D or photorealism). Your prompt says only what to draw. **One picture per
+answer**, unless the step's row names more.
 
 **Grounding — this outranks everything else here.** Every box, label, number and arrow corresponds to
 something a command returned **this step**; figure parity (§3g) applies to the picture too, counts
@@ -219,11 +217,8 @@ one line beneath naming the command that would settle it.
 - **One diagram, one question.** Where a step's row names several panels, draw exactly those, in order,
   each with its own caption.
 - **Never draw ahead of the step gate.**
-- **Plain-English labels:** no role names, API names or paths; draw what the role lets you do (`read` ·
-  `change` · `DELETE`). Agent and login names stay verbatim.
-
-**`generate_image` 429 / `RESOURCE_EXHAUSTED`** is transient: wait a few seconds and **retry once**; if
-that fails, say *"No picture: the image tool was rate limited this turn."* Never substitute a text sketch.
+- **Plain-English labels:** no role names, API names, paths, IDs, URNs or project numbers; draw what the
+  role lets you do (`read` · `change` · `DELETE`). Agent and login names stay verbatim.
 
 ### 3c. Explain everything — there is no maximum
 Length is not the failure mode; repetition and vagueness are.
