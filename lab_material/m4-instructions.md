@@ -139,7 +139,7 @@ More background: Reference Guide tab, Make the change and see what is actually r
 
 The habit to take home: ask what is running, insist on evidence, measure before you trust.
 
-> **That's the lab.** See the **Wrap-up** tab at the top for what you built and what is still open.
+> **That's the lab.** Open the [Wrap-up](#goto:WRAP-UP) to see what you built and what is still open.
 
 ## See it in the console
 
@@ -212,4 +212,4 @@ An evidence pack for the launch review.
 
 Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your estate changes, and no page makes the launch call for you.
 
-> **That's the lab.** See the **Wrap-up** tab at the top for what you built and what is still open.
+> **That's the lab.** Open the [Wrap-up](#goto:WRAP-UP) to see what you built and what is still open.

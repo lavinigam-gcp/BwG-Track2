@@ -606,7 +606,8 @@ table.log tr.deny td { background: var(--red-050); }
 .prose p, .prose li { overflow-wrap: break-word; }
 .prose p.more-bg:first-child { margin-top: 0; }
 .prose .module-subtitle { margin-bottom: 16px; }
-.main-footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border-2); }
+.main-footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border-2); flex-wrap: wrap; row-gap: 10px; }
+.main-footer .btn, .main-footer .footer-count { white-space: nowrap; }
 .ctxdoc .section.is-active + .section.is-active { margin-top: 18px; }
 @media (max-width: 680px) {
   .section.is-active { padding: 22px 18px 18px; }
@@ -1400,7 +1401,7 @@ MISSIONS.M3.steps.push({
   meta:{kind:"optional"},
   nextLabel:"Next: Step 7 · Show what you screened",
   blocks:[
-    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img154\" alt=\"M3 Step 6 map, what's next: Model Armor on the inbound gateway now screens what the store side sends the Price Match Agent. Outlined for M4: measuring the Price Match Agent against a scenario set.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M4, or open the <strong>What did we learn?</strong> tab.</p><div class=\"note\"><p><strong>That's the core lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.</p></div><ul><li>The discount attack is turned away at the inbound gateway; ordinary requests still get answers.</li><li>Still open: the customer-record attack, fail-open, and the plain-text discount code.</li><li>M4 · Evaluate and Decide (Optional Module) measures, against a full scenario set, whether the agent got worse at its job.</li></ul><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/security/modelarmor/templates\" target=\"_blank\" rel=\"noopener\">Model Armor</a> — nvst-jailbreak-template, created at lab setup; it does not show where it is used.</li><li><a href=\"https://console.cloud.google.com/agent-platform/gateways\" target=\"_blank\" rel=\"noopener\">Agent Gateway</a> — novasmart-ingress-gateway (inbound) and novasmart-egress-gateway (outbound, from M2).</li><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; the Price Match Agent is Non A2A, the other two A2A.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img154\" alt=\"M3 Step 6 map, what's next: Model Armor on the inbound gateway now screens what the store side sends the Price Match Agent. Outlined for M4: measuring the Price Match Agent against a scenario set.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M4, or open the <strong>What did we learn?</strong> tab.</p><div class=\"note\"><p><strong>That's the core lab.</strong> Open the <a href=\"#\" class=\"goto-link\" data-goto=\"WRAP-UP\">Wrap-up</a> to see what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.</p></div><ul><li>The discount attack is turned away at the inbound gateway; ordinary requests still get answers.</li><li>Still open: the customer-record attack, fail-open, and the plain-text discount code.</li><li>M4 · Evaluate and Decide (Optional Module) measures, against a full scenario set, whether the agent got worse at its job.</li></ul><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/security/modelarmor/templates\" target=\"_blank\" rel=\"noopener\">Model Armor</a> — nvst-jailbreak-template, created at lab setup; it does not show where it is used.</li><li><a href=\"https://console.cloud.google.com/agent-platform/gateways\" target=\"_blank\" rel=\"noopener\">Agent Gateway</a> — novasmart-ingress-gateway (inbound) and novasmart-egress-gateway (outbound, from M2).</li><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; the Price Match Agent is Non A2A, the other two A2A.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"We owned that filter and never switched it on. What else have we paid for and never switched on?"},
     {type:"prose",html:"<p>This shows you which controls you own but have not switched on.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"How would we know if this screening quietly stopped working?"},
@@ -1431,7 +1432,7 @@ MISSIONS.M3.steps.push({
     {type:"prompt",text:"Build me a game called Trap or Customer from what I screened, for my team to play."},
     {type:"prose",html:"<p>A game: spot the attack among real customers.</p>"},
     {type:"prompt",text:"Turn what I screened into a two-minute update I can present to the board."},
-    {type:"prose",html:"<p>What is screened, for which agent, and what is open.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your environment changes.</p><div class=\"note\"><p><strong>That's the core lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.</p></div>"}
+    {type:"prose",html:"<p>What is screened, for which agent, and what is open.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your environment changes.</p><div class=\"note\"><p><strong>That's the core lab.</strong> Open the <a href=\"#\" class=\"goto-link\" data-goto=\"WRAP-UP\">Wrap-up</a> to see what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.</p></div>"}
   ]
 });
 
@@ -1489,7 +1490,7 @@ MISSIONS.M4.steps.push({
   blocks:[
     {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img158\" alt=\"Map of the NovaSmart agent estate, M4 Step 4. 1: agy applies the one-line change to the local copy, now green. 2: the same case file is replayed on it. 3: the Gen AI evaluation service's judge model scores the replies. 4: the two runs are compared. The deployed Price Match Agent is unchanged and carries a red 'no fix' marker.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Apply the fix to the local copy, measure it on the same set, and compare with what your stores run.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Make that change, measure it again, and tell me what is still broken in what is actually running."},
-    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep.</li><li>Then what is still true in production: the deployed agent lacks the fix, and the rule that reveals the discount code is still in its source.</li><li>Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Make the change and see what is actually running</p><h3>Decide whether to launch</h3><p><strong>Goal:</strong> Make the launch call yourself; agy gives input but does not decide.</p><ul><li>Does this go live? Decide on what the scorecard shows, not on how much work it took.</li><li>What would you fix first, and why that one?</li><li>What would you monitor after launch, so you hear the day it starts going wrong?</li></ul><h3>What you built</h3><ul><li>Found: a marketing agent missing from the catalog, two agents sharing one login.</li><li>Fixed: one identity per agent, least access, every customer-data read traceable to one agent.</li><li>Controlled: the back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside), sits behind the outbound gateway, and reads but cannot change pricing data.</li><li>Screened (if you ran M3): a fail-open screen in front of the price-match agent only.</li><li>Measured: a per-scenario record with reasons, and a fix measured on a local copy, the deployed agent untouched.</li></ul><p>The habit to take home: ask what is running, insist on evidence, measure before you trust.</p><div class=\"note\"><p><strong>That's the lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open.</p></div><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.</li><li>Scorecards live in the <code>novasmart-evidence</code> folder on your Desktop, not the console; the wording change exists only in the folder on this workstation. Deploying it is a separate decision.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep.</li><li>Then what is still true in production: the deployed agent lacks the fix, and the rule that reveals the discount code is still in its source.</li><li>Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Make the change and see what is actually running</p><h3>Decide whether to launch</h3><p><strong>Goal:</strong> Make the launch call yourself; agy gives input but does not decide.</p><ul><li>Does this go live? Decide on what the scorecard shows, not on how much work it took.</li><li>What would you fix first, and why that one?</li><li>What would you monitor after launch, so you hear the day it starts going wrong?</li></ul><h3>What you built</h3><ul><li>Found: a marketing agent missing from the catalog, two agents sharing one login.</li><li>Fixed: one identity per agent, least access, every customer-data read traceable to one agent.</li><li>Controlled: the back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside), sits behind the outbound gateway, and reads but cannot change pricing data.</li><li>Screened (if you ran M3): a fail-open screen in front of the price-match agent only.</li><li>Measured: a per-scenario record with reasons, and a fix measured on a local copy, the deployed agent untouched.</li></ul><p>The habit to take home: ask what is running, insist on evidence, measure before you trust.</p><div class=\"note\"><p><strong>That's the lab.</strong> Open the <a href=\"#\" class=\"goto-link\" data-goto=\"WRAP-UP\">Wrap-up</a> to see what you built and what is still open.</p></div><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.</li><li>Scorecards live in the <code>novasmart-evidence</code> folder on your Desktop, not the console; the wording change exists only in the folder on this workstation. Deploying it is a separate decision.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Which of these did the agent actually answer, and which never got to it?"},
     {type:"prose",html:"<p>This shows you which verdicts are on the agent and which are on something standing in front of it.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Would this set of tests have caught any of the problems we found earlier this week?"},
@@ -1518,7 +1519,7 @@ MISSIONS.M4.steps.push({
     {type:"prompt",text:"Build me a game called Judge the Judge from our evaluation, for my team to play."},
     {type:"prose",html:"<p>A game for your team.</p>"},
     {type:"prompt",text:"Turn what I measured into a one-page evidence pack for the launch review."},
-    {type:"prose",html:"<p>An evidence pack for the launch review.</p><p>Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your estate changes, and no page makes the launch call for you.</p><div class=\"note\"><p><strong>That's the lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open.</p></div>"}
+    {type:"prose",html:"<p>An evidence pack for the launch review.</p><p>Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your estate changes, and no page makes the launch call for you.</p><div class=\"note\"><p><strong>That's the lab.</strong> Open the <a href=\"#\" class=\"goto-link\" data-goto=\"WRAP-UP\">Wrap-up</a> to see what you built and what is still open.</p></div>"}
   ]
 });
 
@@ -2230,7 +2231,10 @@ function sectionHTML(step, idx, total, isPlaceholder){
     if (!step.noRestart && !isPlaceholder) h += '<button class="btn" type="button" data-restart>Restart '+esc(CURRENT_CODE())+' '+ico("refresh")+'</button>';
     if (_nxt){
       var _nm = MISSIONS[_nxt] || {};
-      h += '<button class="btn primary" type="button" data-goto="'+_nxt+'">Next: '+esc(_nxt+' · '+(_nm.name||_nxt))+' '+ico("arrowR")+'</button>';
+      var _skipTo = LAB.missions.some(function(m){ return m.code === _nxt && m.optional; }) ? nextMissionCode(_nxt) : null;
+      if (_skipTo) h += '<button class="btn" type="button" data-goto="'+_skipTo+'">Go to '+esc((MISSIONS[_skipTo]||{}).kicker || _skipTo)+'</button>';
+      var _nxtLabel = _skipTo ? _nxt+' (optional)' : (_nm.kicker || (_nxt+' · '+(_nm.name||_nxt)));   /* short label beside a skip button; the wrap-up uses its own name */
+      h += '<button class="btn primary" type="button" data-goto="'+_nxt+'">Next: '+esc(_nxtLabel)+' '+ico("arrowR")+'</button>';
     }
   } else if (idx < total - 1){
     h += '<button class="btn primary" type="button" data-next>'+esc(step.nextLabel||"Next")+' '+ico("arrowR")+'</button>';
@@ -2702,7 +2706,7 @@ document.addEventListener("click", function(e){
     state.earned[state.code]={}; state.moduleEarned[state.code]=false;  /* P8: actually restart */
     mount(state.code); return;
   }
-  var goto = t.closest("[data-goto]"); if (goto){ switchMission(goto.getAttribute("data-goto")); return; }
+  var goto = t.closest("[data-goto]"); if (goto){ e.preventDefault(); switchMission(goto.getAttribute("data-goto")); return; }
 });
 
 document.addEventListener("keydown", function(e){
@@ -3493,14 +3497,17 @@ var _figObs = null;
 function hydrateFigures(){
   var imgs = document.querySelectorAll("img[data-src]");   /* R2: figures AND the lazy Setup screenshots */
   if (!imgs.length) return;
+  /* returns false when the payload block is not parsed yet: the image keeps its
+     data-src and is retried once the page has finished loading */
   var swap = function(img){
-    var v = img.dataset.src; if (!v) return;
+    var v = img.dataset.src; if (!v) return true;
     /* R1: payloads live in inert text/plain script blocks; data-src holds a #token.
        (Tag spelled out in prose on purpose: a literal script tag inside generated
        JS is a parser hazard waiting for the next editor.) */
-    if (v.charCodeAt(0) === 35){ var n = document.getElementById(v.slice(1)); v = n ? n.textContent : ""; }
+    if (v.charCodeAt(0) === 35){ var n = document.getElementById(v.slice(1)); if (!n) return false; v = n.textContent; }
     img.src = v;
     delete img.dataset.src;
+    return true;
   };
   if (typeof IntersectionObserver !== "function"){
     Array.prototype.forEach.call(imgs, swap);   /* no observer: just load them */
@@ -3510,13 +3517,20 @@ function hydrateFigures(){
     _figObs = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if (!e.isIntersecting) return;
-        swap(e.target);
-        _figObs.unobserve(e.target);
+        if (swap(e.target)) _figObs.unobserve(e.target);
       });
     }, { rootMargin: "600px 0px" });   /* start a screen early so it feels instant */
   }
   Array.prototype.forEach.call(imgs, function(i){ _figObs.observe(i); });
 }
+/* The page streams in, and the image payloads sit at its end. The first module
+   mounts before they are parsed, so an image already on screen would get an empty
+   src. Once parsing is done, re-observe what is still pending (observe() reports
+   the current intersection again) so those images load. */
+document.addEventListener("DOMContentLoaded", function(){
+  if (!_figObs){ hydrateFigures(); return; }
+  Array.prototype.forEach.call(document.querySelectorAll("img[data-src]"), function(i){ _figObs.unobserve(i); _figObs.observe(i); });
+});
 /* == END FIGURE HYDRATION == */
 
 /* ---------- Init ---------- */

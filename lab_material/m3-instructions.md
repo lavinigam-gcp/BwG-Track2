@@ -158,7 +158,7 @@ More background: Reference Guide tab, What you just did
 
 *Optional.* You can go straight to M4, or open the **What did we learn?** tab.
 
-> **That's the core lab.** See the **Wrap-up** tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.
+> **That's the core lab.** Open the [Wrap-up](#goto:WRAP-UP) to see what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.
 
 - The discount attack is turned away at the inbound gateway; ordinary requests still get answers.
 - Still open: the customer-record attack, fail-open, and the plain-text discount code.
@@ -244,4 +244,4 @@ What is screened, for which agent, and what is open.
 
 Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your environment changes.
 
-> **That's the core lab.** See the **Wrap-up** tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.
+> **That's the core lab.** Open the [Wrap-up](#goto:WRAP-UP) to see what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.
