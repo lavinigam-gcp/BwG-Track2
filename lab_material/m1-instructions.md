@@ -2,6 +2,10 @@
 
 M1 fixes what M0 found, using Agent Registry (the catalog of what you run) and Agent Identity (each agent's own badge). agy acts without asking first and records every change with a way to undo it.
 
+> **Before you start**
+> - Start a new agy conversation for M1 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.
+> - If replies are slow, ask agy to skip the pictures; every step works the same without them.
+
 ## Key objective
 
 Give the promo agent a named owner and every agent its own login, so each customer-data read is recorded under the agent that made it.
@@ -138,7 +142,7 @@ Show me the customer data log again. Can you prove who did what now?
 - agy triggers a legitimate read and a promo agent attempt, checks Price Match answers, waits a few minutes for the log to catch up, then reads it.
 - Every read names exactly one agent. The personalization agent's email column is blank, as it should be; its identity is in another field.
 - The promo agent's attempt shows as denied, yet the store app reports the campaign launched with zero records: the log is the evidence, not the app.
-- agy saves the table to `m1_step5.txt` (`novasmart-evidence` folder on your Desktop), says how many of 16 checks it proved, and links your Governance Scorecard. Nothing in your environment changes.
+- agy saves the table to `m1_step5.txt` (`novasmart-evidence` folder on your Desktop), says how many of 16 checks it proved, and links your Governance Scorecard; open that link in Chrome yourself. Nothing in your environment changes.
 
 More background: Reference Guide tab, Prove it worked
 
@@ -152,15 +156,17 @@ More background: Reference Guide tab, Prove it worked
 
 *Optional.* You can go straight to M2, or open the **What did we learn?** tab.
 
+> **Going to M2?** Start a new agy conversation first, then ask M2's first prompt there.
+
 - You can now see every agent you run and prove which one touched customer data.
 - Still open: which agents may talk to each other. The back-office Markdown Strategy Agent reads confidential margin data and should only be called by another agent; nothing enforces that.
 - M2 · Control the Connections is where you decide who may call whom, starting with who is allowed to call that back-office margin agent.
 
 ## See it in the console
 
-- Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; Promo Agent is now one of five rows, owner in its description.
-- Agent Registry, at the same URL — Identity shows customer-personalization-agent's own agent identity; Promo Agent shows a dash (the catalog does not display a Cloud Run login).
-- Logs Explorer, at https://console.cloud.google.com/logs/query;query=logName%3A%22cloudaudit.googleapis.com%252Fdata_access%22%0A%28protoPayload.metadata.tableDataRead%3A%2A%20AND%20resource.labels.dataset_id%3D%22customer_data%22%29%0AOR%20%28protoPayload.status.code%3D7%20AND%20resource.type%3D%22bigquery_project%22%29;duration=P1D — personalization reads show an empty email (principalSubject names the identity); promo attempts show Access Denied under promo-agent-sa.
+- [Agent Registry](https://console.cloud.google.com/agent-platform/agent-registry/agents) — set Location to your lab's region; Promo Agent is now one of five rows, owner in its description.
+- The same Agent Registry page — Identity shows customer-personalization-agent's own agent identity; Promo Agent shows a dash (the catalog does not display a Cloud Run login).
+- [Logs Explorer](https://console.cloud.google.com/logs/query;query=logName%3A%22cloudaudit.googleapis.com%252Fdata_access%22%0A%28protoPayload.metadata.tableDataRead%3A%2A%20AND%20resource.labels.dataset_id%3D%22customer_data%22%29%0AOR%20%28protoPayload.status.code%3D7%20AND%20resource.type%3D%22bigquery_project%22%29;duration=P1D) — personalization reads show an empty email (principalSubject names the identity); promo attempts show Access Denied under promo-agent-sa.
 
 ## Try this too — optional
 
@@ -226,4 +232,6 @@ Turn what I changed into a two-minute update I can present to the board.
 
 A two-minute update for your board.
 
-Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. Nothing in your environment changes.
+Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your environment changes.
+
+> **Going to M2?** Start a new agy conversation first, then ask M2's first prompt there.

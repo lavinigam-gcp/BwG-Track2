@@ -21,7 +21,10 @@
 **(a) Flip.** Resolve the agent from the live Agent Runtime listing (match `displayName`, read `name` from the
 same record). Send the PATCH in `m1.md` §5 with both fields in the update mask. It returns a long-running
 operation: poll it to `done` (about 45 s), then GET the agent and read `spec.identityType` and
-`spec.effectiveIdentity`. A read while the operation runs returns the old value.
+`spec.effectiveIdentity`. A read while the operation runs returns the old value. **Poll in the
+foreground:** each poll is one short command (`sleep 10`, then one GET of the operation) run with
+`WaitMsBeforeAsync` 15000, repeated until `"done": true`; no timer, no background loop. (A run that sent
+the poll to the background had its raw `<SYSTEM_MESSAGE>` completion notice shown in the chat.)
 
 - **Refused or failed?** Record the response verbatim and report it in the §6·4 shape. Do not redeploy.
   Take the **fallback** in `m1.md` §5: the agent stays on the shared login, which gets project `jobUser` and

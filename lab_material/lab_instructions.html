@@ -650,6 +650,72 @@ table.log tr.deny td { background: var(--red-050); }
 .ss-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (max-width: 680px) { .stepstrip { margin-bottom: 18px; } .ss-chip { height: 30px; } }
 /* == END STEP STRIP CSS == */
+/* == REPO QR == take-home repo link under the left nav: quiet, never competes with the steps */
+.repo-box { background: var(--surface); border: 1px solid var(--border-2); border-radius: var(--radius); transition: border-color .15s ease, box-shadow .15s ease; }
+.repo-box[hidden] { display: none; }
+.repo-box:hover { border-color: var(--border); box-shadow: var(--elev-1); }
+.repo-card { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius) var(--radius) 0 0; text-decoration: none; color: var(--muted); }
+.repo-card:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.repo-ask { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-top: 1px solid var(--border-2); }
+.repo-ask-q { font-size: 11.5px; color: var(--muted); line-height: 1.3; }
+.repo-ask-btn { flex: 0 0 auto; height: 26px; padding: 0 10px; font-family: var(--font); font-size: 11.5px; font-weight: 600; color: var(--accent-ink); background: var(--surface); border: 1px solid var(--accent-border); border-radius: var(--radius-sm); cursor: pointer; }
+.repo-ask-btn:hover { border-color: var(--accent); box-shadow: var(--elev-1); }
+.repo-ask-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.repo-copy { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 9px 0 7px; font-family: var(--font); font-size: 11.5px; font-weight: 600; color: var(--accent-ink); background: var(--surface); border: 1px solid var(--accent-border); border-radius: var(--radius-sm); cursor: pointer; }
+.repo-copy:hover { border-color: var(--accent); box-shadow: var(--elev-1); }
+.repo-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.repo-copy svg { width: 13px; height: 13px; }
+.repo-copy .ok { display: none; color: var(--green); }
+.repo-copy.copied { color: var(--green); border-color: var(--green-100); }
+.repo-copy.copied .cp { display: none; }
+.repo-copy.copied .ok { display: inline-flex; }
+.repo-copy .cl::after { content: "Copy"; }
+.repo-copy.copied .cl::after { content: "Copied"; }
+/* the sticky left rail now holds the steps and this card; on short windows it scrolls on its own instead of hiding its bottom until the page ends */
+@media (min-width: 1025px) {
+  .rail-left { max-height: calc(100vh - 110px); overflow-y: auto; scrollbar-width: thin; padding: 2px 4px 4px; margin: -2px -4px -4px; }
+}
+/* "Ask agy" popup: a native modal dialog, so Esc, focus and the backdrop come from the browser */
+.repo-dlg { width: min(500px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--border-2); border-radius: 14px; background: var(--surface); color: var(--ink); box-shadow: var(--elev-3); }
+.repo-dlg::backdrop { background: rgba(32, 33, 36, .45); }
+.repo-dlg-in { padding: 18px 22px 20px; }
+.repo-dlg-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.repo-dlg-head h3 { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink); }
+.repo-dlg-x { width: 30px; height: 30px; display: grid; place-items: center; font-size: 20px; line-height: 1; color: var(--muted); background: transparent; border: 0; border-radius: 50%; cursor: pointer; }
+.repo-dlg-x:hover { background: var(--surface-2); color: var(--ink); }
+.repo-dlg-x:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.repo-dlg-steps { margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 1.55; color: var(--ink-2, #3c4043); }
+.repo-dlg-steps > li { margin-bottom: 10px; padding-left: 2px; }
+.repo-dlg-prompt { display: flex; align-items: flex-start; gap: 10px; margin-top: 6px; padding: 8px 10px; background: var(--surface-2); border-radius: 8px; }
+.repo-dlg-prompt code { flex: 1 1 auto; min-width: 0; font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--ink); overflow-wrap: anywhere; }
+.repo-dlg-ex { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+.repo-dlg-ex li { margin-bottom: 3px; font-style: italic; }
+.repo-dlg-foot { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.repo-qr { flex: 0 0 auto; width: 76px; height: 76px; padding: 4px; background: #fff; border: 1px solid var(--border-2); border-radius: 6px; }
+.repo-qr svg { display: block; width: 100%; height: 100%; }
+.repo-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.repo-t { font-size: 12px; font-weight: 600; color: var(--ink-2, #3c4043); }
+.repo-s { font-size: 11px; line-height: 1.35; color: var(--muted); }
+.repo-u { font-size: 10.5px; color: var(--muted-2); overflow-wrap: anywhere; }
+.repo-u .nowrap { white-space: nowrap; }
+/* == END REPO QR == */
+/* == NOTE BOX == "> " lines in the Instructions markdown: a short reminder that must not be missed, in the module's accent */
+.prose .note { margin: 4px 0 18px; padding: 12px 16px; background: var(--accent-050); border: 1px solid var(--accent-border); border-left: 4px solid var(--accent); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.55; color: var(--ink-2, #3c4043); }
+.prose .note p { margin: 0 0 6px; }
+.prose .note > :last-child { margin-bottom: 0; }
+.prose .note .note-t { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.prose .note ul { margin: 0; padding-left: 20px; }
+.prose .note li { margin-bottom: 4px; }
+.prose .note strong { color: var(--ink); }
+/* == END NOTE BOX == */
+/* == WRAP-UP TAB == tables whose cells wrap (no horizontal scroll), a sub-heading level, the completion popup */
+.table-wrap.wraps table { width: 100%; }
+.table-wrap.wraps td { vertical-align: top; line-height: 1.5; }
+.table-wrap.wraps td:first-child { font-weight: 600; color: var(--ink); }
+.prose h5 { font-size: 14px; font-weight: 600; color: var(--ink-2, #3c4043); margin: 20px 0 8px; }
+.done-dlg .repo-dlg-in > p { margin: 0 0 16px; font-size: 14px; line-height: 1.55; color: var(--ink-2, #3c4043); }
+.done-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+/* == END WRAP-UP TAB == */
 </style>
 </head>
 <body>
@@ -680,6 +746,18 @@ table.log tr.deny td { background: var(--red-050); }
       </div>
       <ul class="steps" id="steps"></ul>
     </nav>
+
+    <!-- == REPO QR == small link to the take-home repo (skills + lab materials), and an "Ask agy" popup for questions about it; shown on M0-M4 -->
+    <div class="repo-box" id="repoCard" hidden>
+    <a class="repo-card" href="https://github.com/lavinigam-gcp/BwG-Track2/tree/main" target="_blank" rel="noopener">
+      <span class="repo-qr"><svg role="img" aria-label="QR code for the GitHub repository" viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#202124" d="M0 0.5h7m1 0h4m1 0h1m2 0h2m1 0h3m1 0h1m2 0h7m-33 1h1m5 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m3 0h3m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m2 0h4m6 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1m3 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m2 0h4m1 0h1m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m3 0h1m3 0h1m2 0h6m1 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h2m7 0h1m2 0h1m3 0h1m-25 1h1m1 0h2m1 0h3m1 0h3m2 0h1m1 0h3m2 0h4m1 0h1m2 0h1m1 0h2m-33 1h1m1 0h2m3 0h3m8 0h4m1 0h1m2 0h2m1 0h2m-30 1h2m2 0h3m1 0h1m1 0h2m1 0h1m1 0h2m2 0h2m1 0h1m2 0h4m1 0h2m-30 1h2m5 0h1m1 0h3m4 0h2m1 0h1m2 0h3m1 0h1m2 0h1m-33 1h1m2 0h2m1 0h1m1 0h3m1 0h1m5 0h2m2 0h4m2 0h2m1 0h2m-33 1h2m2 0h2m1 0h1m1 0h4m3 0h1m2 0h1m1 0h1m5 0h1m1 0h1m1 0h1m-32 1h1m5 0h2m1 0h8m2 0h3m4 0h1m1 0h1m1 0h1m-31 1h3m1 0h1m3 0h1m3 0h3m1 0h1m4 0h1m1 0h4m2 0h2m-30 1h1m1 0h1m1 0h4m1 0h2m3 0h1m2 0h1m1 0h4m1 0h2m1 0h1m1 0h1m-31 1h1m1 0h1m4 0h2m3 0h1m2 0h1m1 0h1m2 0h1m1 0h5m1 0h2m1 0h2m-32 1h4m1 0h1m1 0h2m2 0h6m2 0h3m1 0h1m2 0h2m1 0h1m-31 1h5m2 0h2m1 0h2m1 0h2m4 0h1m2 0h5m1 0h1m3 0h1m-33 1h2m1 0h2m1 0h3m2 0h1m2 0h1m3 0h1m2 0h1m2 0h1m2 0h5m-32 1h1m1 0h1m1 0h1m3 0h4m2 0h2m1 0h5m1 0h2m1 0h1m2 0h2m1 0h1m-27 1h5m3 0h1m1 0h1m1 0h1m2 0h1m1 0h5m2 0h3m-32 1h1m1 0h1m4 0h2m2 0h2m2 0h1m2 0h2m2 0h1m2 0h2m1 0h1m-30 1h1m3 0h8m1 0h3m1 0h1m1 0h1m2 0h7m1 0h2m-24 1h1m2 0h1m3 0h3m1 0h2m3 0h1m3 0h2m1 0h1m-32 1h7m1 0h4m1 0h1m5 0h2m2 0h2m1 0h1m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h2m4 0h1m3 0h5m3 0h5m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m1 0h3m1 0h6m1 0h1m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m4 0h1m3 0h2m1 0h4m3 0h1m1 0h1m2 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h2m3 0h1m1 0h1m1 0h1m3 0h2m1 0h1m-30 1h1m5 0h1m5 0h1m1 0h6m2 0h3m1 0h4m2 0h1m-33 1h7m1 0h1m3 0h1m1 0h5m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1"/></svg></span>
+      <span class="repo-txt"><span class="repo-t">Skills and lab materials</span><span class="repo-s">Scan or click to open the GitHub repository</span><span class="repo-u">github.com/lavinigam-gcp/<wbr><span class="nowrap">BwG-Track2</span></span></span>
+    </a>
+    <div class="repo-ask">
+      <span class="repo-ask-q">Questions about the lab?</span>
+      <button class="repo-ask-btn" id="repoAskBtn" type="button" aria-haspopup="dialog" aria-controls="repoDialog">Ask agy</button>
+    </div>
+    </div>
 
   </aside>
 
@@ -718,6 +796,33 @@ table.log tr.deny td { background: var(--red-050); }
 </div>
 
 <div class="badge-pop" id="badgePop" role="status" aria-live="polite"></div>
+<dialog class="repo-dlg" id="repoDialog" aria-labelledby="repoDlgTitle">
+  <div class="repo-dlg-in">
+    <div class="repo-dlg-head"><h3 id="repoDlgTitle">Ask agy about this lab</h3><button class="repo-dlg-x" type="button" aria-label="Close">&times;</button></div>
+    <ol class="repo-dlg-steps">
+      <li>Start a new conversation in agy, so your lab conversation stays as it is.</li>
+      <li>Paste this first:
+        <div class="repo-dlg-prompt"><code id="repoPrompt">Use this repo to answer my questions about the lab: https://github.com/lavinigam-gcp/BwG-Track2</code><button class="repo-copy" type="button" aria-label="Copy the prompt to the clipboard"><span class="cp"></span><span class="ok"></span><span class="cl" aria-hidden="true"></span></button></div>
+      </li>
+      <li>Then ask what you like, for example:
+        <ul class="repo-dlg-ex">
+          <li>What did M1 change, and why does it matter?</li>
+          <li>How does the skill stop agy from revealing findings too early?</li>
+          <li>Which Google Cloud services does each module use?</li>
+          <li>How could I adapt this skill to check my own agents?</li>
+        </ul>
+      </li>
+    </ol>
+    <p class="repo-dlg-foot">The repo also holds the skill and every module's instructions and guides, so you keep them after the lab.</p>
+  </div>
+</dialog>
+<dialog class="repo-dlg done-dlg" id="doneDialog" aria-labelledby="doneDlgTitle">
+  <div class="repo-dlg-in">
+    <div class="repo-dlg-head"><h3 id="doneDlgTitle">Estate secured</h3><button class="repo-dlg-x" type="button" aria-label="Close">&times;</button></div>
+    <p>You finished the four core modules, M0 to M3. The wrap-up shows what you built and the concepts to take with you.</p>
+    <div class="done-actions"><button class="btn" type="button" data-goto="M4">Try M4 (optional)</button><button class="btn primary" type="button" data-goto="WRAP-UP">Open the wrap-up</button></div>
+  </div>
+</dialog>
 <div class="toast" id="toast"><span class="tic" aria-hidden="true"></span> <span id="toastText">Copied to clipboard</span></div>
 
 <script>
@@ -767,7 +872,8 @@ var ACCENTS = {
   M1:{main:"#1967d2",ink:"#174ea6",soft:"#e8f0fe",border:"#d2e3fc"},
   M2:{main:"#7b2cbf",ink:"#7b2cbf",soft:"#f3e8fd",border:"#e3ccf7"},
   M3:{main:"#34a853",ink:"#137333",soft:"#e6f4ea",border:"#b7e1c2"},
-  M4:{main:"#e37400",ink:"#b06000",soft:"#fef7e0",border:"#fde293"}
+  M4:{main:"#e37400",ink:"#b06000",soft:"#fef7e0",border:"#fde293"},
+  "WRAP-UP":{main:"#455a64",ink:"#37474f",soft:"#eceff1",border:"#cfd8dc"}
 };
 
 
@@ -782,6 +888,7 @@ var LAB = {
     { code:"M2", name:"Control the Connections", icon:"link",   accent:"--purple", minutes:35 },
     { code:"M3", name:"Protect the Content",     icon:"shield", accent:"--green",  minutes:30 },
     { code:"M4", name:"Evaluate and Decide (Optional Module)", icon:"bolt", accent:"#e37400", optional:true, minutes:20 },
+    { code:"WRAP-UP", name:"What you built and learned", icon:"trophy", accent:"#455a64", noTrophy:true },
     { code:"SETUP", name:"Lab Setup",            icon:"flag",   accent:"#0e8f9f", noTrophy:true }
   ],
   grand:{ icon:"trophy", name:"Estate Secured", blurb:"Clear all four core modules to secure the NovaSmart AI estate." }
@@ -882,7 +989,7 @@ MISSIONS.M0.steps.push({
   meta:{kind:"reads",min:3},
   nextLabel:"Next: Step 2 · Meet your estate",
   blocks:[
-    {type:"prose",html:"<p class=\"module-subtitle\">M0 · See Everything — Instructions</p><p>In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step is read-only: you change nothing and fix nothing. Fixing is M1.</p><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img130\" alt=\"See everything, change nothing. You are the Head of AI Platform and Security at NovaSmart. Three questions, still unanswered: what do we officially have (the catalog), what is actually running (every workload, wherever it runs), and who has been reading customer data (the audit trail). Changes made: 0; this module only looks.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Make sure your workstation and cloud project are ready before you look at anything.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p class=\"module-subtitle\">M0 · See Everything — Instructions</p><p>In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step is read-only: you change nothing and fix nothing. Fixing is M1.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Use a new agy conversation for each module, starting with this one. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>If replies are slow, ask agy to skip the pictures; every step works the same without them.</li></ul></div><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img130\" alt=\"See everything, change nothing. You are the Head of AI Platform and Security at NovaSmart. Three questions, still unanswered: what do we officially have (the catalog), what is actually running (every workload, wherever it runs), and who has been reading customer data (the audit trail). Changes made: 0; this module only looks.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Make sure your workstation and cloud project are ready before you look at anything.</p><p>First, check the model picker in the chat box reads Gemini 3.8 Flash Low. If it does not, open it and pick Gemini 3.8 Flash, then Low.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Check my environment is ready."},
     {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy checks its own toolkit and your cloud project, then opens by saying plainly whether you are ready to start.</li><li>A short table follows: one row per check, how agy verified it, the result, and anything it safely fixed.</li><li>If anything comes back not ready, ask agy to fix it before you move on.</li><li>Nothing in your environment changes; any safe fix agy makes is named in the table.</li></ul>"}
   ]
@@ -951,7 +1058,7 @@ MISSIONS.M0.steps.push({
   meta:{kind:"optional"},
   nextLabel:"Next: Step 7 · Show what you found",
   blocks:[
-    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img136\" alt=\"Map of the NovaSmart agent estate after M0, with nothing fixed. Three findings are marked: the Promo agent in red, not in catalog; the shared login in amber, two agents, one login; Cloud Audit Logs in amber, login, not agent. Dashed blue outlines mark M1's targets: Agent Registry, the shared login and Customer data.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M1, or open the <strong>What did we learn?</strong> tab.</p><ul><li>You now know what is officially registered, what is really running, and who reads customer data under a shared login. None of it is fixed.</li><li>M1 · Take Action is where you fix it — register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs.</li><li>In M1 you also find out whether your answer to the first question above matches the leadership call.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img136\" alt=\"Map of the NovaSmart agent estate after M0, with nothing fixed. Three findings are marked: the Promo agent in red, not in catalog; the shared login in amber, two agents, one login; Cloud Audit Logs in amber, login, not agent. Dashed blue outlines mark M1's targets: Agent Registry, the shared login and Customer data.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M1, or open the <strong>What did we learn?</strong> tab.</p><div class=\"note\"><p><strong>Going to M1?</strong> Start a new agy conversation first, then ask M1's first prompt there.</p></div><ul><li>You now know what is officially registered, what is really running, and who reads customer data under a shared login. None of it is fixed.</li><li>M1 · Take Action is where you fix it — register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs.</li><li>In M1 you also find out whether your answer to the first question above matches the leadership call.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Could something be running somewhere we didn't look?"},
     {type:"prose",html:"<p>This shows you which places were searched and which were not, so you can judge what a clean comparison is worth.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Would anything have told us about that agent if we hadn't gone looking?"},
@@ -980,7 +1087,7 @@ MISSIONS.M0.steps.push({
     {type:"prompt",text:"Turn what I found into a two-minute briefing I can present to the board."},
     {type:"prose",html:"<p>A short slide briefing for your board.</p>"},
     {type:"prompt",text:"Make a one-page poster of what I found that I can share."},
-    {type:"prose",html:"<p>A one-page poster to share.</p><p>Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Pages use only what agy recorded in Steps 1 to 4. Nothing in your environment changes.</p>"}
+    {type:"prose",html:"<p>A one-page poster to share.</p><p>Each page is saved in the novasmart-showcase folder on your Desktop. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Pages use only what agy recorded in Steps 1 to 4. Nothing in your environment changes.</p><div class=\"note\"><p><strong>Going to M1?</strong> Start a new agy conversation first, then ask M1's first prompt there.</p></div>"}
   ]
 });
 
@@ -994,7 +1101,7 @@ MISSIONS.M1.steps.push({
   meta:{kind:"changes",min:4},
   nextLabel:"Next: Step 2 · See what that shared login can do",
   blocks:[
-    {type:"prose",html:"<p class=\"module-subtitle\">M1 · Take Action — Instructions</p><p>M1 fixes what M0 found, using Agent Registry (the catalog of what you run) and Agent Identity (each agent's own badge). agy acts without asking first and records every change with a way to undo it.</p><h3>Key objective</h3><p>Give the promo agent a named owner and every agent its own login, so each customer-data read is recorded under the agent that made it.</p><ul><li>Register the promo agent under a named owner.</li><li>See what the shared login can do today, changing nothing.</li><li>Give each agent its own login, with only what its job needs.</li><li>Remove customer-data access from the agent that never needed it.</li><li>Read the audit log back and see each read named by one agent.</li></ul><p>Why it matters: while two agents share one login, the record never names the agent, and any access one needs, the other gets.</p><h3>Where we left off</h3><ul><li>One agent was running that nobody had catalogued: the marketing promo agent, <code>promo-agent-shadow</code>.</li><li>It shares one login with the Customer Personalization Agent, so the log names that login, never either agent. Price Match and Markdown Strategy already sign in as themselves.</li><li>The leadership call: own it, don't kill it.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img137\" alt=\"Map of the NovaSmart estate, M1 Step 1: agy (1) reads the running promo service on Cloud Run and (2) adds an entry for it in Agent Registry. The promo agent now shows a green 'cataloged · owner set' tag but stays amber, still on the shared login with the personalization agent.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Put the agent nobody knew about on the official record, under a team you can hold accountable.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p class=\"module-subtitle\">M1 · Take Action — Instructions</p><p>M1 fixes what M0 found, using Agent Registry (the catalog of what you run) and Agent Identity (each agent's own badge). agy acts without asking first and records every change with a way to undo it.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Start a new agy conversation for M1 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>If replies are slow, ask agy to skip the pictures; every step works the same without them.</li></ul></div><h3>Key objective</h3><p>Give the promo agent a named owner and every agent its own login, so each customer-data read is recorded under the agent that made it.</p><ul><li>Register the promo agent under a named owner.</li><li>See what the shared login can do today, changing nothing.</li><li>Give each agent its own login, with only what its job needs.</li><li>Remove customer-data access from the agent that never needed it.</li><li>Read the audit log back and see each read named by one agent.</li></ul><p>Why it matters: while two agents share one login, the record never names the agent, and any access one needs, the other gets.</p><h3>Where we left off</h3><ul><li>One agent was running that nobody had catalogued: the marketing promo agent, <code>promo-agent-shadow</code>.</li><li>It shares one login with the Customer Personalization Agent, so the log names that login, never either agent. Price Match and Markdown Strategy already sign in as themselves.</li><li>The leadership call: own it, don't kill it.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img137\" alt=\"Map of the NovaSmart estate, M1 Step 1: agy (1) reads the running promo service on Cloud Run and (2) adds an entry for it in Agent Registry. The promo agent now shows a green 'cataloged · owner set' tag but stays amber, still on the shared login with the personalization agent.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Put the agent nobody knew about on the official record, under a team you can hold accountable.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Register the promo agent in our catalog, owned by the marketing team."},
     {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy adds the running promo agent to Agent Registry with the marketing team as its owner and a risk tier, and shows you the entry.</li><li>This closes the visibility gap only: the agent is visible and owned, but still shares a login and still reads customer records.</li><li>One change: the new catalog entry, which can be undone.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Register the shadow agent</p>"}
   ]
@@ -1052,7 +1159,7 @@ MISSIONS.M1.steps.push({
   blocks:[
     {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img141\" alt=\"Map of the NovaSmart estate, M1 Step 5: agy (1) sends test calls through the personalization agent and the promo agent, then (2) reads Cloud Audit Logs, which is highlighted. Two dashed outcomes end at the log: (3, green) the customer-data read recorded under the personalization agent's own identity, and (4, red) the promo agent's attempt, denied. Nothing changes.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Check that the Cloud Audit Logs record you read in M0 can now say which agent read customer data.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Show me the customer data log again. Can you prove who did what now?"},
-    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy triggers a legitimate read and a promo agent attempt, checks Price Match answers, waits a few minutes for the log to catch up, then reads it.</li><li>Every read names exactly one agent. The personalization agent's email column is blank, as it should be; its identity is in another field.</li><li>The promo agent's attempt shows as denied, yet the store app reports the campaign launched with zero records: the log is the evidence, not the app.</li><li>agy saves the table to <code>m1_step5.txt</code> (<code>novasmart-evidence</code> folder on your Desktop), says how many of 16 checks it proved, and links your Governance Scorecard. Nothing in your environment changes.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Prove it worked</p>"}
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy triggers a legitimate read and a promo agent attempt, checks Price Match answers, waits a few minutes for the log to catch up, then reads it.</li><li>Every read names exactly one agent. The personalization agent's email column is blank, as it should be; its identity is in another field.</li><li>The promo agent's attempt shows as denied, yet the store app reports the campaign launched with zero records: the log is the evidence, not the app.</li><li>agy saves the table to <code>m1_step5.txt</code> (<code>novasmart-evidence</code> folder on your Desktop), says how many of 16 checks it proved, and links your Governance Scorecard; open that link in Chrome yourself. Nothing in your environment changes.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Prove it worked</p>"}
   ]
 });
 MISSIONS.M1.steps.push({
@@ -1065,7 +1172,7 @@ MISSIONS.M1.steps.push({
   meta:{kind:"optional"},
   nextLabel:"Next: Step 7 · Show what you changed",
   blocks:[
-    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img142\" alt=\"Map of the NovaSmart estate, M1 Step 6: what M1 put in place is green, the promo agent cataloged on its own login with no route to customer data, the personalization agent on its own identity with its read kept, and the shared login unused. The back-office Markdown Strategy Agent is outlined in amber with its two callers, the store portal and the Price Match Agent, tagged 'M2 · its callers'.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M2, or open the <strong>What did we learn?</strong> tab.</p><ul><li>You can now see every agent you run and prove which one touched customer data.</li><li>Still open: which agents may talk to each other. The back-office Markdown Strategy Agent reads confidential margin data and should only be called by another agent; nothing enforces that.</li><li>M2 · Control the Connections is where you decide who may call whom, starting with who is allowed to call that back-office margin agent.</li></ul><h3>See it in the console</h3><ul><li>Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; Promo Agent is now one of five rows, owner in its description.</li><li>Agent Registry, at the same URL — Identity shows customer-personalization-agent's own agent identity; Promo Agent shows a dash (the catalog does not display a Cloud Run login).</li><li>Logs Explorer, at https://console.cloud.google.com/logs/query;query=logName%3A%22cloudaudit.googleapis.com%252Fdata_access%22%0A%28protoPayload.metadata.tableDataRead%3A%2A%20AND%20resource.labels.dataset_id%3D%22customer_data%22%29%0AOR%20%28protoPayload.status.code%3D7%20AND%20resource.type%3D%22bigquery_project%22%29;duration=P1D — personalization reads show an empty email (principalSubject names the identity); promo attempts show Access Denied under promo-agent-sa.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img142\" alt=\"Map of the NovaSmart estate, M1 Step 6: what M1 put in place is green, the promo agent cataloged on its own login with no route to customer data, the personalization agent on its own identity with its read kept, and the shared login unused. The back-office Markdown Strategy Agent is outlined in amber with its two callers, the store portal and the Price Match Agent, tagged 'M2 · its callers'.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M2, or open the <strong>What did we learn?</strong> tab.</p><div class=\"note\"><p><strong>Going to M2?</strong> Start a new agy conversation first, then ask M2's first prompt there.</p></div><ul><li>You can now see every agent you run and prove which one touched customer data.</li><li>Still open: which agents may talk to each other. The back-office Markdown Strategy Agent reads confidential margin data and should only be called by another agent; nothing enforces that.</li><li>M2 · Control the Connections is where you decide who may call whom, starting with who is allowed to call that back-office margin agent.</li></ul><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; Promo Agent is now one of five rows, owner in its description.</li><li>The same Agent Registry page — Identity shows customer-personalization-agent's own agent identity; Promo Agent shows a dash (the catalog does not display a Cloud Run login).</li><li><a href=\"https://console.cloud.google.com/logs/query;query=logName%3A%22cloudaudit.googleapis.com%252Fdata_access%22%0A%28protoPayload.metadata.tableDataRead%3A%2A%20AND%20resource.labels.dataset_id%3D%22customer_data%22%29%0AOR%20%28protoPayload.status.code%3D7%20AND%20resource.type%3D%22bigquery_project%22%29;duration=P1D\" target=\"_blank\" rel=\"noopener\">Logs Explorer</a> — personalization reads show an empty email (principalSubject names the identity); promo attempts show Access Denied under promo-agent-sa.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Show me everything you changed today. Did you touch anything I didn't ask for?"},
     {type:"prose",html:"<p>This shows you every change agy made today, including ones you never asked for, and how to reverse each.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Is anyone else reading customer data, and did anything I did today change that?"},
@@ -1094,7 +1201,7 @@ MISSIONS.M1.steps.push({
     {type:"prompt",text:"Build me a game called Key Master from what I changed, for my team to play."},
     {type:"prose",html:"<p>A game for your team.</p>"},
     {type:"prompt",text:"Turn what I changed into a two-minute update I can present to the board."},
-    {type:"prose",html:"<p>A two-minute update for your board.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. Nothing in your environment changes.</p>"}
+    {type:"prose",html:"<p>A two-minute update for your board.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your environment changes.</p><div class=\"note\"><p><strong>Going to M2?</strong> Start a new agy conversation first, then ask M2's first prompt there.</p></div>"}
   ]
 });
 
@@ -1108,7 +1215,7 @@ MISSIONS.M2.steps.push({
   meta:{kind:"reads",min:6},
   nextLabel:"Next: Step 2 · See what locking it down would cost",
   blocks:[
-    {type:"prose",html:"<p class=\"module-subtitle\">M2 · Control the Connections — Instructions</p><p>M2 settles who may call your most sensitive agent, and what that agent may reach and change.</p><h3>Key objective</h3><p>Control who may call the back-office agent, using the caller list held on the agent itself.</p><ul><li>Read who can reach the back-office agent holding NovaSmart's cost and margin data.</li><li>See what a lockdown would cost before you order one.</li><li>Rewrite the agent's caller list so it names one caller: the Price Match Agent.</li><li>Watch the platform refuse the leftover test login; check the real escalation still works.</li><li>Put the back office behind the outbound gateway and stop it changing the pricing data.</li></ul><p>Why it matters: reading the margin data and asking the agent that holds it are two different permissions.</p><h3>Where we left off</h3><ul><li>Every agent signs in as itself, the shadow agent has an owner, and the marketing agent can no longer reach customer records.</li><li>Still open: which agent may call which. The Price Match Agent (the front desk) escalates discounts above 10% to the Markdown Strategy Agent (the back office), which holds the margin data.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img143\" alt=\"Map of the NovaSmart agent estate, M2 Step 1. 1: agy reads the Markdown Strategy Agent's own caller list. 2: the one login on it, test-agent-caller, a leftover test login marked amber, calls the back office and gets in. The project-wide roles, which reach any agent, are drawn alongside. No setting changes.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Find out who can reach the agent holding your margin data today.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p class=\"module-subtitle\">M2 · Control the Connections — Instructions</p><p>M2 settles who may call your most sensitive agent, and what that agent may reach and change.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Start a new agy conversation for M2 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>If replies are slow, ask agy to skip the pictures; every step works the same without them.</li></ul></div><h3>Key objective</h3><p>Control who may call the back-office agent, using the caller list held on the agent itself.</p><ul><li>Read who can reach the back-office agent holding NovaSmart's cost and margin data.</li><li>See what a lockdown would cost before you order one.</li><li>Rewrite the agent's caller list so it names one caller: the Price Match Agent.</li><li>Watch the platform refuse the leftover test login; check the real escalation still works.</li><li>Put the back office behind the outbound gateway and stop it changing the pricing data.</li></ul><p>Why it matters: reading the margin data and asking the agent that holds it are two different permissions.</p><h3>Where we left off</h3><ul><li>Every agent signs in as itself, the shadow agent has an owner, and the marketing agent can no longer reach customer records.</li><li>Still open: which agent may call which. The Price Match Agent (the front desk) escalates discounts above 10% to the Markdown Strategy Agent (the back office), which holds the margin data.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img143\" alt=\"Map of the NovaSmart agent estate, M2 Step 1. 1: agy reads the Markdown Strategy Agent's own caller list. 2: the one login on it, test-agent-caller, a leftover test login marked amber, calls the back office and gets in. The project-wide roles, which reach any agent, are drawn alongside. No setting changes.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Find out who can reach the agent holding your margin data today.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Who can call our back-office margin agent right now?"},
     {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy reads the back office's own list of permitted callers. It holds one name: test-agent-caller, an unowned leftover test login.</li><li>The front desk is not on that list, a first clue that the list is not the whole story.</li><li>agy makes one real call as that login and shows what came back, a before for Step 4.</li><li>Nothing in your environment changes.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, See who can call the back office</p>"}
   ]
@@ -1166,7 +1273,7 @@ MISSIONS.M2.steps.push({
   blocks:[
     {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img147\" alt=\"Map of the NovaSmart agent estate, M2 Step 5, with the M1 fixes in green and test-agent-caller still refused. 1: the outbound gateway is attached to the Markdown Strategy Agent, so its traffic to BigQuery MCP runs through it. 2: the back office's BigQuery access is narrowed to read. 3: reads of the pricing and competitor data are allowed, in green. 4: a change is refused by BigQuery, in red, and recorded in Cloud Audit Logs.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Limit where the back office can reach and stop it changing the pricing data. This is the longest step.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Make sure the back office can only reach what it needs, and can only read the pricing data, not change it."},
-    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>Two controls: the outbound gateway decides where the back office may reach; its database permissions now let it read the pricing tables, not change them.</li><li>Expect pauses: about four minutes for the gateway attach, three for permissions, three more before agy reads the records.</li><li>agy calls the back office directly through a broad project-wide role. A read answers; a change is refused, shown by the BigQuery audit log and the table's unchanged last-modified time, not by the gateway's allow.</li><li>The pricing data is read-only for the back office only; other accounts can still change it. agy writes <code>m2_step5.txt</code> and updates your Governance Scorecard; a FAIL names the step to revisit.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Lock down what the back office can reach and do</p>"}
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>Two controls: the outbound gateway decides where the back office may reach; its database permissions now let it read the pricing tables, not change them.</li><li>Expect pauses: about four minutes for the gateway attach, three for permissions, three more before agy reads the records.</li><li>agy calls the back office directly through a broad project-wide role. A read answers; a change is refused, shown by the BigQuery audit log and the table's unchanged last-modified time, not by the gateway's allow.</li><li>The pricing data is read-only for the back office only; other accounts can still change it. agy writes <code>m2_step5.txt</code> and updates your Governance Scorecard (open its link in Chrome yourself); a FAIL names the step to revisit.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Lock down what the back office can reach and do</p>"}
   ]
 });
 MISSIONS.M2.steps.push({
@@ -1179,7 +1286,7 @@ MISSIONS.M2.steps.push({
   meta:{kind:"optional"},
   nextLabel:"Next: Step 7 · Show what you controlled",
   blocks:[
-    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img148\" alt=\"Map of the NovaSmart agent estate, M2 Step 6. In place: the Price Match Agent is the listed caller, the outbound gateway is attached to the back office, which reads the pricing and competitor data while its changes are refused, and test-agent-caller is refused. Still open, in amber: the project-wide roles that reach any agent. Outlined in amber as M3's target: Model Armor and the inbound gateway, for screening what customers send the front desk.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M3, or open the <strong>What did we learn?</strong> tab.</p><ul><li>The back office's list names one caller, the leftover login is refused, the escalation gets the back office's answer if Step 4 recorded one, and the back office reads but cannot change the pricing data.</li><li>Still open: broad project-wide roles can still call any agent; agy's Step 5 call used one.</li><li>M3 · Protect the Content is where you screen what customers can talk your agents into.</li></ul><h3>See it in the console</h3><ul><li>Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; the back office is markdown-strategy-agent. Its caller list is not shown.</li><li>Agent Gateway, at https://console.cloud.google.com/agent-platform/gateways — novasmart-egress-gateway, the outbound one the back office now sits behind.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img148\" alt=\"Map of the NovaSmart agent estate, M2 Step 6. In place: the Price Match Agent is the listed caller, the outbound gateway is attached to the back office, which reads the pricing and competitor data while its changes are refused, and test-agent-caller is refused. Still open, in amber: the project-wide roles that reach any agent. Outlined in amber as M3's target: Model Armor and the inbound gateway, for screening what customers send the front desk.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M3, or open the <strong>What did we learn?</strong> tab.</p><div class=\"note\"><p><strong>Going to M3?</strong> Start a new agy conversation first, then ask M3's first prompt there.</p></div><ul><li>The back office's list names one caller, the leftover login is refused, the escalation gets the back office's answer if Step 4 recorded one, and the back office reads but cannot change the pricing data.</li><li>Still open: broad project-wide roles can still call any agent; agy's Step 5 call used one.</li><li>M3 · Protect the Content is where you screen what customers can talk your agents into.</li></ul><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; the back office is markdown-strategy-agent. Its caller list is not shown.</li><li><a href=\"https://console.cloud.google.com/agent-platform/gateways\" target=\"_blank\" rel=\"noopener\">Agent Gateway</a> — novasmart-egress-gateway, the outbound one the back office now sits behind.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Which of those broader permissions would you take away first, and what would break if we did?"},
     {type:"prose",html:"<p>This shows you which wider grants could be cut safely and which the agents depend on.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"We closed the door on that leftover login. Does anyone still have its keys?"},
@@ -1208,7 +1315,7 @@ MISSIONS.M2.steps.push({
     {type:"prompt",text:"Build me a game called Gatekeeper from what I controlled, for my team to play."},
     {type:"prose",html:"<p>A game built from your results.</p>"},
     {type:"prompt",text:"Turn what I controlled into a two-minute update I can present to the board."},
-    {type:"prose",html:"<p>A short board update.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. Nothing in your environment changes.</p>"}
+    {type:"prose",html:"<p>A short board update.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your environment changes.</p><div class=\"note\"><p><strong>Going to M3?</strong> Start a new agy conversation first, then ask M3's first prompt there.</p></div>"}
   ]
 });
 
@@ -1222,7 +1329,7 @@ MISSIONS.M3.steps.push({
   meta:{kind:"reads",min:6},
   nextLabel:"Next: Step 2 · See what is screening messages today",
   blocks:[
-    {type:"prose",html:"<p class=\"module-subtitle\">M3 · Protect the Content — Instructions</p><p>M2 settled who may call whom. M3 settles what customers may say: you test whether your agents can be talked out of their rules, then screen one of them.</p><h3>Key objective</h3><p>Put a Google Cloud Model Armor filter on the inbound gateway in front of the Price Match Agent, so manipulation attempts are stopped before that one agent ever reads them.</p><ul><li>Watch agy talk two customer-facing agents into breaking their rules.</li><li>Find what screens customer messages today, before you change anything.</li><li>Put the Price Match Agent behind the inbound gateway, with that filter.</li><li>Replay the attacks; the customer-record attack is not covered.</li><li>State what you can claim: one agent is screened, not the estate.</li></ul><p>Why it matters: an agent that reads whatever a shopper types, with nothing checking it first, can be talked into settling a discount it should have escalated, or into handing over customer records.</p><h3>Where we left off</h3><ul><li>The back office names one permitted caller, the Price Match Agent, and the leftover login is refused.</li><li>It sits behind the outbound gateway and can read pricing data but not change it.</li><li>Nothing checks what a shopper types to the Price Match Agent or the Customer Personalization Agent.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img149\" alt=\"M3 Step 1 map: agy, on your workstation, sends two attack messages straight to the Price Match Agent and the Customer Personalization Agent, with nothing in between; both agents are marked at risk. The inbound gateway is still not attached.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Find out whether your live agents can be talked out of their rules.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p class=\"module-subtitle\">M3 · Protect the Content — Instructions</p><p>M2 settled who may call whom. M3 settles what customers may say: you test whether your agents can be talked out of their rules, then screen one of them.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Start a new agy conversation for M3 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>If replies are slow, ask agy to skip the pictures; every step works the same without them.</li></ul></div><h3>Key objective</h3><p>Put a Google Cloud Model Armor filter on the inbound gateway in front of the Price Match Agent, so manipulation attempts are stopped before that one agent ever reads them.</p><ul><li>Watch agy talk two customer-facing agents into breaking their rules.</li><li>Find what screens customer messages today, before you change anything.</li><li>Put the Price Match Agent behind the inbound gateway, with that filter.</li><li>Replay the attacks; the customer-record attack is not covered.</li><li>State what you can claim: one agent is screened, not the estate.</li></ul><p>Why it matters: an agent that reads whatever a shopper types, with nothing checking it first, can be talked into settling a discount it should have escalated, or into handing over customer records.</p><h3>Where we left off</h3><ul><li>The back office names one permitted caller, the Price Match Agent, and the leftover login is refused.</li><li>It sits behind the outbound gateway and can read pricing data but not change it.</li><li>Nothing checks what a shopper types to the Price Match Agent or the Customer Personalization Agent.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img149\" alt=\"M3 Step 1 map: agy, on your workstation, sends two attack messages straight to the Price Match Agent and the Customer Personalization Agent, with nothing in between; both agents are marked at risk. The inbound gateway is still not attached.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Find out whether your live agents can be talked out of their rules.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Can a customer talk our agents into breaking their own rules? Try it and show me."},
     {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>Both attacks land. The Price Match Agent goes past its 10% discount limit and approves a discount it should have escalated.</li><li>The Customer Personalization Agent hands over customer records to someone who simply asked; agy shows how many, with personal details masked.</li><li>agy also sends two ordinary requests, as a before for Step 4.</li><li>Nothing in your environment changes; agy only sent messages.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, See if the agents can be talked into breaking their rules</p>"}
   ]
@@ -1266,7 +1373,7 @@ MISSIONS.M3.steps.push({
   blocks:[
     {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img152\" alt=\"M3 Step 4 map: agy, on your workstation, sends the same messages again. The discount attack enters the inbound gateway and is refused there, before the Price Match Agent; the ordinary price match passes through the gateway and is answered; the ordinary personalization request goes straight to the Customer Personalization Agent and is answered; the customer-record attack also goes straight there and is still answered, because that agent is not covered.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Confirm the screen stops the attacks without stopping real customers.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Run those attacks again. Are they blocked now, and do normal requests still work?"},
-    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging.</li><li>The 5% price match still gets an answer, and so does the ordinary request to the Customer Personalization Agent.</li><li>The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered.</li><li>Checks go to <code>m3_step4.txt</code> in <code>novasmart-evidence</code> on your Desktop; agy updates your Governance Scorecard. Nothing else changes.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Prove the attacks are blocked</p>"}
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging.</li><li>The 5% price match still gets an answer, and so does the ordinary request to the Customer Personalization Agent.</li><li>The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered.</li><li>Checks go to <code>m3_step4.txt</code> in <code>novasmart-evidence</code> on your Desktop; agy updates your Governance Scorecard (open its link in Chrome yourself). Nothing else changes.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Prove the attacks are blocked</p>"}
   ]
 });
 MISSIONS.M3.steps.push({
@@ -1293,7 +1400,7 @@ MISSIONS.M3.steps.push({
   meta:{kind:"optional"},
   nextLabel:"Next: Step 7 · Show what you screened",
   blocks:[
-    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img154\" alt=\"M3 Step 6 map, what's next: Model Armor on the inbound gateway now screens what the store side sends the Price Match Agent. Outlined for M4: measuring the Price Match Agent against a scenario set.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M4, or open the <strong>What did we learn?</strong> tab.</p><ul><li>The discount attack is turned away at the inbound gateway; ordinary requests still get answers.</li><li>Still open: the customer-record attack, fail-open, and the plain-text discount code.</li><li>M4 · Evaluate and Decide (Optional Module) measures, against a full scenario set, whether the agent got worse at its job.</li></ul><h3>See it in the console</h3><ul><li>Model Armor, at https://console.cloud.google.com/security/modelarmor/templates — nvst-jailbreak-template, created at lab setup; it does not show where it is used.</li><li>Agent Gateway, at https://console.cloud.google.com/agent-platform/gateways — novasmart-ingress-gateway (inbound) and novasmart-egress-gateway (outbound, from M2).</li><li>Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; the Price Match Agent is Non A2A, the other two A2A.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img154\" alt=\"M3 Step 6 map, what's next: Model Armor on the inbound gateway now screens what the store side sends the Price Match Agent. Outlined for M4: measuring the Price Match Agent against a scenario set.\" width=\"1120\" height=\"625\" /></figure><p><em>Optional.</em> You can go straight to M4, or open the <strong>What did we learn?</strong> tab.</p><div class=\"note\"><p><strong>That's the core lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.</p></div><ul><li>The discount attack is turned away at the inbound gateway; ordinary requests still get answers.</li><li>Still open: the customer-record attack, fail-open, and the plain-text discount code.</li><li>M4 · Evaluate and Decide (Optional Module) measures, against a full scenario set, whether the agent got worse at its job.</li></ul><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/security/modelarmor/templates\" target=\"_blank\" rel=\"noopener\">Model Armor</a> — nvst-jailbreak-template, created at lab setup; it does not show where it is used.</li><li><a href=\"https://console.cloud.google.com/agent-platform/gateways\" target=\"_blank\" rel=\"noopener\">Agent Gateway</a> — novasmart-ingress-gateway (inbound) and novasmart-egress-gateway (outbound, from M2).</li><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; the Price Match Agent is Non A2A, the other two A2A.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"We owned that filter and never switched it on. What else have we paid for and never switched on?"},
     {type:"prose",html:"<p>This shows you which controls you own but have not switched on.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"How would we know if this screening quietly stopped working?"},
@@ -1324,7 +1431,7 @@ MISSIONS.M3.steps.push({
     {type:"prompt",text:"Build me a game called Trap or Customer from what I screened, for my team to play."},
     {type:"prose",html:"<p>A game: spot the attack among real customers.</p>"},
     {type:"prompt",text:"Turn what I screened into a two-minute update I can present to the board."},
-    {type:"prose",html:"<p>What is screened, for which agent, and what is open.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. Nothing in your environment changes.</p>"}
+    {type:"prose",html:"<p>What is screened, for which agent, and what is open.</p><p>Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your environment changes.</p><div class=\"note\"><p><strong>That's the core lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.</p></div>"}
   ]
 });
 
@@ -1338,7 +1445,7 @@ MISSIONS.M4.steps.push({
   meta:{kind:"reads",min:4},
   nextLabel:"Next: Step 2 · Build a tougher set and run it",
   blocks:[
-    {type:"prose",html:"<p class=\"module-subtitle\">M4 · Evaluate and Decide (Optional Module) — Instructions</p><p>You test whether the price-match agent still does its job, then make the launch call. This module changes nothing in your estate and is not scored; \"scorecard\" here means the evaluation results.</p><h3>Key objective</h3><p>Score the price-match agent against its policy with the Gen AI evaluation service, using a judge model separate from the agent's own.</p><ul><li>Run the existing scenario set and read the scorecard, case by case.</li><li>Have the tooling write a tougher set and score a local copy against it.</li><li>See a proposed change to the agent's instructions before anything changes.</li><li>Run the same set again after the change and compare both runs.</li></ul><p>Why it matters: a per-scenario record with reasons is evidence you can hand to risk and compliance, not an opinion.</p><h3>Where we left off</h3><ul><li>Every agent signs in as itself. The back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside) and can read but not change pricing data.</li><li>If you ran M3, a fail-open screen sits in front of the price-match agent only; the customer-record attack is not screened.</li><li>None of this shows whether the agent still gives associates useful answers.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img155\" alt=\"Map of the NovaSmart agent estate, M4 Step 1. 1: the Gen AI evaluation service sends the scenario set through the Inbound gateway, with Model Armor in front, to the deployed Price Match Agent. 2: a judge model in that service, separate from the agent's own model, scores each reply. Nothing in the estate changes. Architecture-and-workflow map.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Score the deployed agent on NovaSmart's scenarios: up to 10% settled on the spot, more goes to the back office, manipulation refused.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p class=\"module-subtitle\">M4 · Evaluate and Decide (Optional Module) — Instructions</p><p>You test whether the price-match agent still does its job, then make the launch call. This module changes nothing in your estate and is not scored; \"scorecard\" here means the evaluation results.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Start a new agy conversation for M4 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>If replies are slow, ask agy to skip the pictures; every step works the same without them.</li></ul></div><h3>Key objective</h3><p>Score the price-match agent against its policy with the Gen AI evaluation service, using a judge model separate from the agent's own.</p><ul><li>Run the existing scenario set and read the scorecard, case by case.</li><li>Have the tooling write a tougher set and score a local copy against it.</li><li>See a proposed change to the agent's instructions before anything changes.</li><li>Run the same set again after the change and compare both runs.</li></ul><p>Why it matters: a per-scenario record with reasons is evidence you can hand to risk and compliance, not an opinion.</p><h3>Where we left off</h3><ul><li>Every agent signs in as itself. The back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside) and can read but not change pricing data.</li><li>If you ran M3, a fail-open screen sits in front of the price-match agent only; the customer-record attack is not screened.</li><li>None of this shows whether the agent still gives associates useful answers.</li></ul><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img155\" alt=\"Map of the NovaSmart agent estate, M4 Step 1. 1: the Gen AI evaluation service sends the scenario set through the Inbound gateway, with Model Armor in front, to the deployed Price Match Agent. 2: a judge model in that service, separate from the agent's own model, scores each reply. Nothing in the estate changes. Architecture-and-workflow map.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Score the deployed agent on NovaSmart's scenarios: up to 10% settled on the spot, more goes to the back office, manipulation refused.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Evaluate our price-match agent against our scenario set, and walk me through the failures and near-misses."},
     {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>One row per scenario: what was asked, what the agent did, whether it matched policy, and why; then failures and right-for-the-wrong-reason passes.</li><li>agy names the judge model and the agent's model, which differ; if no judge ran, it says the verdicts are its own reading. Under the policy, only the 15% case should go to the back office.</li><li>If a screen is attached and stops a request, agy quotes its message and says the agent was never asked; with no screen, it says so. Any limit other than 10% means drift.</li><li>It takes a few minutes. Nothing in your estate changes.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Run the evaluation and read the scorecard</p>"}
   ]
@@ -1382,7 +1489,7 @@ MISSIONS.M4.steps.push({
   blocks:[
     {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img158\" alt=\"Map of the NovaSmart agent estate, M4 Step 4. 1: agy applies the one-line change to the local copy, now green. 2: the same case file is replayed on it. 3: the Gen AI evaluation service's judge model scores the replies. 4: the two runs are compared. The deployed Price Match Agent is unchanged and carries a red 'no fix' marker.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Apply the fix to the local copy, measure it on the same set, and compare with what your stores run.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Make that change, measure it again, and tell me what is still broken in what is actually running."},
-    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep.</li><li>Then what is still true in production: the deployed agent lacks the fix, and the rule that reveals the discount code is still in its source.</li><li>Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Make the change and see what is actually running</p><h3>Decide whether to launch</h3><p><strong>Goal:</strong> Make the launch call yourself; agy gives input but does not decide.</p><ul><li>Does this go live? Decide on what the scorecard shows, not on how much work it took.</li><li>What would you fix first, and why that one?</li><li>What would you monitor after launch, so you hear the day it starts going wrong?</li></ul><h3>What you built</h3><ul><li>Found: a marketing agent missing from the catalog, two agents sharing one login.</li><li>Fixed: one identity per agent, least access, every customer-data read traceable to one agent.</li><li>Controlled: the back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside), sits behind the outbound gateway, and reads but cannot change pricing data.</li><li>Screened (if you ran M3): a fail-open screen in front of the price-match agent only.</li><li>Measured: a per-scenario record with reasons, and a fix measured on a local copy, the deployed agent untouched.</li></ul><p>The habit to take home: ask what is running, insist on evidence, measure before you trust.</p><h3>See it in the console</h3><ul><li>Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.</li><li>Scorecards live in the <code>novasmart-evidence</code> folder on your Desktop, not the console; the wording change exists only in the folder on this workstation. Deploying it is a separate decision.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep.</li><li>Then what is still true in production: the deployed agent lacks the fix, and the rule that reveals the discount code is still in its source.</li><li>Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed.</li></ul><p class=\"more-bg\">More background: Reference Guide tab, Make the change and see what is actually running</p><h3>Decide whether to launch</h3><p><strong>Goal:</strong> Make the launch call yourself; agy gives input but does not decide.</p><ul><li>Does this go live? Decide on what the scorecard shows, not on how much work it took.</li><li>What would you fix first, and why that one?</li><li>What would you monitor after launch, so you hear the day it starts going wrong?</li></ul><h3>What you built</h3><ul><li>Found: a marketing agent missing from the catalog, two agents sharing one login.</li><li>Fixed: one identity per agent, least access, every customer-data read traceable to one agent.</li><li>Controlled: the back-office margin agent names the price-match agent as its one permitted caller (project-wide roles aside), sits behind the outbound gateway, and reads but cannot change pricing data.</li><li>Screened (if you ran M3): a fail-open screen in front of the price-match agent only.</li><li>Measured: a per-scenario record with reasons, and a fix measured on a local copy, the deployed agent untouched.</li></ul><p>The habit to take home: ask what is running, insist on evidence, measure before you trust.</p><div class=\"note\"><p><strong>That's the lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open.</p></div><h3>See it in the console</h3><ul><li><a href=\"https://console.cloud.google.com/agent-platform/agent-registry/agents\" target=\"_blank\" rel=\"noopener\">Agent Registry</a> — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.</li><li>Scorecards live in the <code>novasmart-evidence</code> folder on your Desktop, not the console; the wording change exists only in the folder on this workstation. Deploying it is a separate decision.</li></ul><h3 class=\"optional-head\">Try this too — optional</h3><p><em>Optional.</em> Ask any of these, in any order, or skip them.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Which of these did the agent actually answer, and which never got to it?"},
     {type:"prose",html:"<p>This shows you which verdicts are on the agent and which are on something standing in front of it.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Would this set of tests have caught any of the problems we found earlier this week?"},
@@ -1411,7 +1518,7 @@ MISSIONS.M4.steps.push({
     {type:"prompt",text:"Build me a game called Judge the Judge from our evaluation, for my team to play."},
     {type:"prose",html:"<p>A game for your team.</p>"},
     {type:"prompt",text:"Turn what I measured into a one-page evidence pack for the launch review."},
-    {type:"prose",html:"<p>An evidence pack for the launch review.</p><p>Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome, built only from what agy recorded in Steps 1 to 4. Nothing in your estate changes, and no page makes the launch call for you.</p>"}
+    {type:"prose",html:"<p>An evidence pack for the launch review.</p><p>Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/</code> and click the page. Nothing in your estate changes, and no page makes the launch call for you.</p><div class=\"note\"><p><strong>That's the lab.</strong> See the <strong>Wrap-up</strong> tab at the top for what you built and what is still open.</p></div>"}
   ]
 });
 
@@ -1468,6 +1575,537 @@ MISSIONS.SETUP = {
 }
 };
 /* == END SETUP == */
+/* == BEGIN WRAP-UP (generated from wrapup.md by htmlgen/build_wrapup.py) == */
+MISSIONS["WRAP-UP"] = {
+ "code": "WRAP-UP",
+ "name": "What you built and learned",
+ "kicker": "Wrap-up",
+ "sub": "What you built and learned",
+ "env": "after the lab",
+ "accentVar": "#455a64",
+ "toc": [
+  {
+   "id": "wrapup-sec-0",
+   "title": "Before and after",
+   "sub": "",
+   "icon": "refresh"
+  },
+  {
+   "id": "wrapup-sec-1",
+   "title": "Your path",
+   "sub": "",
+   "icon": "compass"
+  },
+  {
+   "id": "wrapup-sec-2",
+   "title": "Six properties of a governed estate",
+   "sub": "",
+   "icon": "shield"
+  },
+  {
+   "id": "wrapup-sec-3",
+   "title": "Still open",
+   "sub": "",
+   "icon": "warn"
+  },
+  {
+   "id": "wrapup-sec-4",
+   "title": "How you worked",
+   "sub": "",
+   "icon": "spark"
+  },
+  {
+   "id": "wrapup-sec-5",
+   "title": "The habit to take home",
+   "sub": "",
+   "icon": "bulb"
+  },
+  {
+   "id": "wrapup-sec-6",
+   "title": "Take it with you",
+   "sub": "",
+   "icon": "gift"
+  },
+  {
+   "id": "wrapup-sec-7",
+   "title": "Glossary",
+   "sub": "",
+   "icon": "search"
+  }
+ ],
+ "steps": [
+  {
+   "nav": {
+    "title": "Wrap-up",
+    "sub": "Everything on one page"
+   },
+   "eyebrow": {
+    "text": "Wrap-up · M0 to M4",
+    "tone": "default"
+   },
+   "h2": "Wrap-up",
+   "lede": "You took NovaSmart's AI estate from unmapped to governed, one module at a time, by asking agy in plain English.",
+   "fx": "none",
+   "restart": true,
+   "noRestart": true,
+   "blocks": [
+    {
+     "type": "prose",
+     "html": "<h4 id=\"wrapup-sec-0\" class=\"sec-anchor first\">Before and after<\/h4>"
+    },
+    {
+     "type": "table",
+     "wrap": true,
+     "nobar": true,
+     "cols": [
+      "",
+      "When you started",
+      "When you finished"
+     ],
+     "rows": [
+      {
+       "cells": [
+        "The catalog",
+        "Missing the promo agent, which had no owner",
+        "Lists every running agent, each with an owner"
+       ]
+      },
+      {
+       "cells": [
+        "Logins",
+        "Two agents shared one login that could reach the whole customer table",
+        "Each agent signs in as itself"
+       ]
+      },
+      {
+       "cells": [
+        "Customer-data reads",
+        "The audit log named only the shared login",
+        "The audit log names the one agent that read"
+       ]
+      },
+      {
+       "cells": [
+        "The back-office agent",
+        "A leftover test login could call it, and it could change pricing data",
+        "Its caller list names one caller, the Price Match Agent; it reads pricing data but cannot change it"
+       ]
+      },
+      {
+       "cells": [
+        "Customer messages",
+        "Reached the agents unscreened",
+        "Screened before the Price Match Agent reads them"
+       ]
+      },
+      {
+       "cells": [
+        "Agent quality",
+        "Never measured",
+        "Scored case by case, with reasons (M4, optional)"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "prose",
+     "html": "<h4 id=\"wrapup-sec-1\" class=\"sec-anchor\">Your path<\/h4>"
+    },
+    {
+     "type": "table",
+     "wrap": true,
+     "nobar": true,
+     "cols": [
+      "Module",
+      "What you did",
+      "Products",
+      "Concepts"
+     ],
+     "rows": [
+      {
+       "cells": [
+        "<strong>M0 · See Everything<\/strong>",
+        "Compared the catalog with what really runs, and checked who read customer data. Changed nothing.",
+        "Agent Registry, Agent Runtime, Cloud Run, Cloud Audit Logs",
+        "Shadow AI; a shared login hides which agent acted"
+       ]
+      },
+      {
+       "cells": [
+        "<strong>M1 · Take Action<\/strong>",
+        "Registered the hidden agent under an owner, gave each agent its own login, and cut customer-data access back",
+        "Agent Registry, Agent Identity, IAM",
+        "One agent, one identity; least privilege; blast radius"
+       ]
+      },
+      {
+       "cells": [
+        "<strong>M2 · Control the Connections<\/strong>",
+        "Named one caller for the back-office agent, put it behind the outbound gateway, and made pricing data read-only for it",
+        "Agent Gateway, IAM, BigQuery",
+        "Name who may call an agent; see what a lockdown costs before you order one"
+       ]
+      },
+      {
+       "cells": [
+        "<strong>M3 · Protect the Content<\/strong>",
+        "Watched agy talk two agents out of their rules, then screened one at the inbound gateway and replayed the attacks",
+        "Model Armor, Agent Gateway",
+        "Screen at the door; know which agents a screen covers; fail open"
+       ]
+      },
+      {
+       "cells": [
+        "<strong>M4 · Evaluate and Decide<\/strong> <em>(optional)<\/em>",
+        "Scored the agent against its policy, had the tooling write a tougher set, and measured a fix on a local copy",
+        "Gen AI evaluation service, agents-cli",
+        "Evaluation; read the rows, not the total; a fix on a copy is not in production"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "prose",
+     "html": "<h4 id=\"wrapup-sec-2\" class=\"sec-anchor\">Six properties of a governed estate<\/h4>"
+    },
+    {
+     "type": "table",
+     "wrap": true,
+     "nobar": true,
+     "cols": [
+      "Property",
+      "What it means",
+      "Built in",
+      "Covers now"
+     ],
+     "rows": [
+      {
+       "cells": [
+        "Visible",
+        "Every agent that runs is in the catalog, with an owner",
+        "M1",
+        "Every running agent"
+       ]
+      },
+      {
+       "cells": [
+        "Attributable",
+        "Every action traces to one named agent",
+        "M1",
+        "Every customer-data read"
+       ]
+      },
+      {
+       "cells": [
+        "Least privileged",
+        "Each agent holds only the access its job needs",
+        "M1, M2",
+        "Three agents; not yet the Price Match Agent"
+       ]
+      },
+      {
+       "cells": [
+        "Access controlled",
+        "Only approved callers can reach a sensitive agent",
+        "M2",
+        "The back-office agent"
+       ]
+      },
+      {
+       "cells": [
+        "Screened",
+        "Attempts to talk an agent out of its rules are stopped at the door",
+        "M3",
+        "The Price Match Agent"
+       ]
+      },
+      {
+       "cells": [
+        "Measured",
+        "The agent's answers are tested against known cases before you trust it",
+        "M4 (optional)",
+        "The Price Match Agent"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "prose",
+     "html": "<h4 id=\"wrapup-sec-3\" class=\"sec-anchor\">Still open<\/h4><ul><li>The screen covers one agent, and lets traffic through if it cannot run.<\/li><li>Broad project-wide roles can still call any agent.<\/li><li>The Price Match Agent still holds broad database rights.<\/li><li>The M4 fix is on a local copy, not deployed.<\/li><\/ul><h4 id=\"wrapup-sec-4\" class=\"sec-anchor\">How you worked<\/h4><ul><li>You described what you wanted in plain English; agy ran every command.<\/li><li>Every claim agy made is backed by a saved record: the <code>novasmart-evidence<\/code> folder on your Desktop, one file per step.<\/li><\/ul><h4 id=\"wrapup-sec-5\" class=\"sec-anchor\">The habit to take home<\/h4><p>Find out what is running, make every action traceable to one actor, decide who may reach what, screen what flows through, then measure before you trust it.<\/p><h4 id=\"wrapup-sec-6\" class=\"sec-anchor\">Take it with you<\/h4><ul><li><a href=\"https://github.com/lavinigam-gcp/BwG-Track2\" target=\"_blank\" rel=\"noopener\">Skills and lab materials on GitHub<\/a>: the skill, and every module's instructions and guides.<\/li><li>Questions about the lab: the <strong>Ask agy<\/strong> button under the left nav.<\/li><\/ul><h4 id=\"wrapup-sec-7\" class=\"sec-anchor\">Glossary<\/h4><h5>Products<\/h5><p>Agent Registry, Agent Runtime, Agent Identity and Agent Gateway are part of Gemini Enterprise Agent Platform.<\/p>"
+    },
+    {
+     "type": "table",
+     "wrap": true,
+     "nobar": true,
+     "cols": [
+      "Product",
+      "What it is",
+      "Learn more"
+     ],
+     "rows": [
+      {
+       "cells": [
+        "Antigravity (agy)",
+        "The AI agent you worked with; it ran every command and saved the evidence",
+        "<a href=\"https://antigravity.google/docs/cli/install/\" target=\"_blank\" rel=\"noopener\">Antigravity CLI<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Agent skills",
+        "Instructions that steer agy; this lab's skill is in the repo",
+        "<a href=\"https://antigravity.google/docs/skills\" target=\"_blank\" rel=\"noopener\">Agent skills<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Agent Registry",
+        "The official catalog of the agents you run, with their owners",
+        "<a href=\"https://docs.cloud.google.com/agent-registry/overview\" target=\"_blank\" rel=\"noopener\">Agent Registry overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Agent Runtime",
+        "Google Cloud's managed service for running agents",
+        "<a href=\"https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/runtime\" target=\"_blank\" rel=\"noopener\">Agent Runtime<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Agent Identity",
+        "The per-agent badge that makes every action traceable to one agent",
+        "<a href=\"https://docs.cloud.google.com/iam/docs/agent-identity-overview\" target=\"_blank\" rel=\"noopener\">Agent Identity overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Agent Gateway",
+        "Decides which agent may reach which agent or tool, inbound and outbound",
+        "<a href=\"https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview\" target=\"_blank\" rel=\"noopener\">Agent Gateway overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Model Armor",
+        "Screens what is sent to an agent for attempts to talk it out of its rules",
+        "<a href=\"https://docs.cloud.google.com/model-armor/overview\" target=\"_blank\" rel=\"noopener\">Model Armor overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Gen AI evaluation service",
+        "Scores an agent's answers case by case, using a separate judge model",
+        "<a href=\"https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/evaluation-overview\" target=\"_blank\" rel=\"noopener\">Gen AI evaluation service overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "agents-cli",
+        "Command-line tool for building and evaluating agents; it wrote M4's tougher test set",
+        "<a href=\"https://google.github.io/agents-cli/\" target=\"_blank\" rel=\"noopener\">Agents CLI<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "IAM",
+        "The system that decides who is allowed to do what",
+        "<a href=\"https://docs.cloud.google.com/iam/docs/overview\" target=\"_blank\" rel=\"noopener\">IAM overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Service accounts",
+        "A login for a program rather than a person; how an agent signs in",
+        "<a href=\"https://docs.cloud.google.com/iam/docs/service-account-overview\" target=\"_blank\" rel=\"noopener\">Service accounts overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Cloud Run",
+        "Google Cloud's service for running any container: a website, a tool, or an agent",
+        "<a href=\"https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run\" target=\"_blank\" rel=\"noopener\">What is Cloud Run<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "BigQuery",
+        "Google Cloud's data warehouse, where NovaSmart keeps its customer and business data",
+        "<a href=\"https://docs.cloud.google.com/bigquery/docs/introduction\" target=\"_blank\" rel=\"noopener\">BigQuery overview<\/a>"
+       ]
+      },
+      {
+       "cells": [
+        "Cloud Audit Logs",
+        "The platform's own record of who did what, which you cannot edit",
+        "<a href=\"https://docs.cloud.google.com/logging/docs/audit\" target=\"_blank\" rel=\"noopener\">Cloud Audit Logs overview<\/a>"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "prose",
+     "html": "<h5>Concepts<\/h5>"
+    },
+    {
+     "type": "table",
+     "wrap": true,
+     "nobar": true,
+     "cols": [
+      "Concept",
+      "In plain words",
+      "Module"
+     ],
+     "rows": [
+      {
+       "cells": [
+        "Shadow AI",
+        "An agent running in the business that no central list knows about",
+        "M0"
+       ]
+      },
+      {
+       "cells": [
+        "Shared login",
+        "One login used by several agents, so the log cannot tell them apart",
+        "M0"
+       ]
+      },
+      {
+       "cells": [
+        "Attribution",
+        "Tying every action to the one agent that took it",
+        "M1"
+       ]
+      },
+      {
+       "cells": [
+        "Least privilege",
+        "Giving a job only the access it needs and nothing more",
+        "M1, M2"
+       ]
+      },
+      {
+       "cells": [
+        "Blast radius",
+        "How far the damage reaches if a login is misused or stolen",
+        "M1"
+       ]
+      },
+      {
+       "cells": [
+        "Re-grant before you revoke",
+        "Give the new login what it needs before removing the old access, so the agent keeps working",
+        "M1"
+       ]
+      },
+      {
+       "cells": [
+        "Caller list",
+        "Who may call an agent; name the callers you want instead of accepting whoever holds a grant",
+        "M2"
+       ]
+      },
+      {
+       "cells": [
+        "Project-wide role",
+        "Access granted across everything in the project, not on one resource",
+        "M2"
+       ]
+      },
+      {
+       "cells": [
+        "Prompt injection",
+        "Wording meant to talk an agent out of its rules",
+        "M3"
+       ]
+      },
+      {
+       "cells": [
+        "Screen at the door",
+        "Check what a customer sent before the agent reads it",
+        "M3"
+       ]
+      },
+      {
+       "cells": [
+        "Fail open",
+        "If the screen cannot run, traffic goes through unscreened",
+        "M3"
+       ]
+      },
+      {
+       "cells": [
+        "Evaluation",
+        "Running an agent against many known cases and scoring each answer",
+        "M4"
+       ]
+      },
+      {
+       "cells": [
+        "Judge model",
+        "A second model that scores each answer, separate from the agent's own",
+        "M4"
+       ]
+      },
+      {
+       "cells": [
+        "Configured is not running",
+        "A fix measured on a copy is not in production until someone deploys it",
+        "M4"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "badges": {
+  "steps": {
+   "0": {
+    "icon": "refresh",
+    "name": "Before and after",
+    "cheer": "Before and after — read."
+   },
+   "1": {
+    "icon": "compass",
+    "name": "Your path",
+    "cheer": "Your path — read."
+   },
+   "2": {
+    "icon": "shield",
+    "name": "Six properties of a governed estate",
+    "cheer": "Six properties of a governed estate — read."
+   },
+   "3": {
+    "icon": "warn",
+    "name": "Still open",
+    "cheer": "Still open — read."
+   },
+   "4": {
+    "icon": "spark",
+    "name": "How you worked",
+    "cheer": "How you worked — read."
+   },
+   "5": {
+    "icon": "bulb",
+    "name": "The habit to take home",
+    "cheer": "The habit to take home — read."
+   },
+   "6": {
+    "icon": "gift",
+    "name": "Take it with you",
+    "cheer": "Take it with you — read."
+   },
+   "7": {
+    "icon": "search",
+    "name": "Glossary",
+    "cheer": "Glossary — read."
+   }
+  }
+ }
+};
+/* == END WRAP-UP == */
 
 /* ---------- Small helpers ---------- */
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -1502,7 +2140,7 @@ var RENDERERS = {
       }).join("");
       return '<tr'+(r.cls?' class="'+r.cls+'"':'')+'>'+tds+'</tr>';
     }).join("");
-    return '<div class="table-wrap"><div class="table-bar"><span class="ic">'+ico("rows")+'</span>'+(b.bar||"")+'</div>'
+    return '<div class="table-wrap'+(b.wrap?' wraps':'')+'">'+(b.nobar?'':'<div class="table-bar"><span class="ic">'+ico("rows")+'</span>'+(b.bar||"")+'</div>')
       + '<div class="table-scroll"><table class="log">'+(hasHead?'<thead><tr>'+head+'</tr></thead>':'')+'<tbody>'+body+'</tbody></table></div></div>';
   },
   placeholder: function(b){
@@ -1608,7 +2246,7 @@ var _curCode = "M1";
 function CURRENT_CODE(){ return _curCode; }
 /* next mission in LAB order (M1→M2→M3→M4), or null if this is the last */
 function nextMissionCode(code){
-  var order = LAB.missions.map(function(m){ return m.code; });
+  var order = LAB.missions.filter(function(m){ return m.code !== "SETUP"; }).map(function(m){ return m.code; });
   var i = order.indexOf(code);
   return (i >= 0 && i < order.length - 1) ? order[i+1] : null;
 }
@@ -1636,8 +2274,9 @@ function buildNav(mission){
         +   '<span class="s">'+esc(t.sub||"")+'</span></span></li>';
     });
     el("steps").innerHTML = html;
-    el("navKicker").textContent = "Module " + mission.code;
+    el("navKicker").textContent = mission.kicker || ("Module " + mission.code);
     el("navSub").textContent = mission.sub || "";
+    var repoCard = el("repoCard"); if (repoCard) repoCard.hidden = !/^(M[0-4]|WRAP-UP)$/.test(mission.code);
     return;
   }
   /* == END TOC NAV == */
@@ -1654,8 +2293,9 @@ function buildNav(mission){
       + '</li>';
   });
   el("steps").innerHTML = html;
-  el("navKicker").textContent = "Module " + mission.code;
+  el("navKicker").textContent = mission.kicker || ("Module " + mission.code);
   el("navSub").textContent = mission.sub || "";
+  var repoCard = el("repoCard"); if (repoCard) repoCard.hidden = !/^(M[0-4]|WRAP-UP)$/.test(mission.code);
 }
 
 /* ---------- Build left trophy shelf (per-mission step medallions) ---------- */
@@ -1937,11 +2577,15 @@ function syncGrandBadge(){
   gb.classList.toggle("earned", all);
   var lk = gb.querySelector(".lk"); if (lk) lk.style.display = all ? "none" : "";
 }
-function markModuleEarned(code){
+function markModuleEarned(code, silent){
   var mt = el("moduleTrophy"); if (mt){ mt.classList.add("earned"); var sub=mt.querySelector("[data-modsub]"); if(sub) sub.textContent = "Cleared"; }
   var tile = document.querySelector('.lab-tile[data-mcode="'+code+'"]'); if (tile){ tile.classList.remove("unlockable"); tile.classList.add("earned"); }
   var all = requiredCodes().every(function(c){ return state.moduleEarned[c]; });
   var gb = el("grandBadge"); if (gb){ gb.classList.toggle("earned", all); var lk=gb.querySelector(".lk"); if(lk) lk.style.display = all?"none":""; }
+  if (all && !silent && !state.doneShown){
+    state.doneShown = true;
+    setTimeout(function(){ var d = el("doneDialog"); if (d && d.showModal && !d.open) d.showModal(); }, 1500);  /* after the module badge */
+  }
 }
 
 
@@ -2019,6 +2663,7 @@ function showBadge(badge, isModule){
 /* ---------- Copy to clipboard ---------- */
 var toast=el("toast"), toastText=el("toastText"), toastTimer=null;
 toast.querySelector(".tic").innerHTML = ico("check");
+var repoCopyBtn = document.querySelector(".repo-copy"); if (repoCopyBtn){ repoCopyBtn.querySelector(".cp").innerHTML = ico("copy"); repoCopyBtn.querySelector(".ok").innerHTML = ico("check"); }
 function showToast(msg){ toastText.textContent = msg||"Copied to clipboard"; toast.classList.add("show"); if (toastTimer) clearTimeout(toastTimer); toastTimer=setTimeout(function(){ toast.classList.remove("show"); },1900); }
 function fallbackCopy(text){ var ta=document.createElement("textarea"); ta.value=text; ta.setAttribute("readonly",""); ta.style.position="absolute"; ta.style.left="-9999px"; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok=document.execCommand("copy"); }catch(e){ ok=false; } document.body.removeChild(ta); return ok; }
 function copyText(text){
@@ -2034,6 +2679,12 @@ document.addEventListener("click", function(e){
   var t = e.target;
   var copyBtn = t.closest(".copy-btn");
   if (copyBtn){ var card=copyBtn.closest(".prompt-card"); var txtEl=card&&card.querySelector(".prompt-text"); var txt=txtEl?txtEl.textContent.trim():""; copyText(txt).then(function(ok){ showToast(ok?"Copied — paste into Antigravity":"Copy failed — select the text manually"); if(ok){ copyBtn.classList.add("copied"); setTimeout(function(){ copyBtn.classList.remove("copied"); },1400); } }); return; }
+  var repoCopy = t.closest(".repo-copy");
+  if (repoCopy){ var rp=el("repoPrompt"); copyText(rp?rp.textContent.trim():"").then(function(ok){ if(ok){ repoCopy.classList.add("copied"); setTimeout(function(){ repoCopy.classList.remove("copied"); },1600); } else { showToast("Copy failed — select the text manually"); } }); return; }
+  if (t.closest("#repoAskBtn")){ var dlg=el("repoDialog"); if (dlg && dlg.showModal && !dlg.open) dlg.showModal(); return; }
+  var openDlgEl = document.querySelector("dialog.repo-dlg[open]");
+  if (openDlgEl && (t.closest(".repo-dlg-x") || t === openDlgEl)){ openDlgEl.close(); return; }
+  if (openDlgEl && t.closest("[data-goto]")) openDlgEl.close();
   var tocLi = t.closest("#steps .step[data-anchor]"); if (tocLi){ gotoAnchor(tocLi.getAttribute("data-anchor")); return; }
   var stepLi = t.closest("#steps .step[data-idx]"); if (stepLi){ go(parseInt(stepLi.getAttribute("data-idx"),10)); return; }
   var ssChip = t.closest(".ss-chip[data-ssidx]"); if (ssChip){
@@ -2057,6 +2708,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("keydown", function(e){
   var tag = (e.target && e.target.tagName) || "";
   if (tag==="INPUT" || tag==="TEXTAREA") return;
+  if (document.querySelector("dialog.repo-dlg[open]")) return;  /* an open popup owns the keyboard */
   var kTocLi = e.target && e.target.closest && e.target.closest("#steps .step[data-anchor]");
   if (kTocLi && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); gotoAnchor(kTocLi.getAttribute("data-anchor")); return; }
   var kTile = e.target && e.target.closest && e.target.closest(".lab-tile[data-mcode]");
@@ -2582,7 +3234,7 @@ var SKILLMAP = {
       {type:"prose",html:"<pre class=\"code\"><code>export CLOUDSDK_API_ENDPOINT_OVERRIDES_MODELARMOR=\"https://modelarmor.&lt;REGION&gt;.rep.googleapis.com/\"\ngcloud model-armor templates list --location=\"&lt;REGION&gt;\"\ngcloud model-armor templates describe nvst-jailbreak-template --location=\"&lt;REGION&gt;\" --format=yaml\ngcloud beta network-security authz-policies list --location=\"&lt;REGION&gt;\"<\/code><\/pre><p>The first line sends only <code>gcloud model-armor<\/code> commands to the regional host. Without it, or with the wrong host, the template read fails with a permission error that looks like a missing role, so the skill checks this first.<\/p><p><strong>Why it matters:<\/strong> \"nothing screens\" is true only if the reads worked. A refused read means \"I could not look\", never \"nothing is attached\".<\/p><h3>Step 3 · Turn the screening on<\/h3><blockquote><p>\"Put the price match agent behind the inbound gateway and screen what clients send it.\"<\/p><\/blockquote>"},
       {type:"table",cols:["",""],rows:[{cells:["Skill read","<code>m3-step3.md<\/code>"]},{cells:["What it required","Save the before state (gateway, both service agents' roles, all three agents' bindings, project policy, template); add a service-agent role only if that read shows it missing; then the extension, the policy polled to <code>policy-done<\/code>, and the binding polled to <code>attach-done<\/code>, each re-read; one change record per change; an undo file checked with <code>bash -n<\/code>"]},{cells:["Google Cloud","Service Extensions, Network Security, Model Armor, Agent Gateway, Agent Runtime; IAM only if a role is missing"]},{cells:["Guardrail","No agent call or test this turn; one agent only; never create or delete a gateway, edit the template, or touch the back office's outbound binding or M2's extension and policy; no self-grant"]},{cells:["May change","<code>novasmart-ma-ext<\/code>, <code>novasmart-ma-pol<\/code>, the Price Match Agent's inbound binding; a documented role for one of two Google service agents, only if missing"]},{cells:["Saved","<code>m3_step3.txt<\/code> with one record per change; <code>undo_step3.sh<\/code> and <code>step3_ids.txt<\/code> in <code>work/<\/code>"]},{cells:["What to expect (Instructions)","\"agy adds a screening rule to the inbound gateway using the filter from Step 2, and reads the routing back. It covers one agent, the Price Match Agent. The other two use a protocol this screen does not read; M2's outbound gateway is unchanged. The routing takes about five minutes to take effect; agy waits before testing. The Price Match Agent now sits behind the inbound gateway. agy can take it out again, but its earlier revisions are archived for good.\""]}]},
       {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img88\" alt=\"Step 3: the order the skill requires. Six boxes joined by arrows: save the before state; role only if missing; add the screen extension; policy on inbound gateway; bind Price Match only; re-read all three. The first and last boxes are gray: checks rather than changes, and the role box is amber because it happens only if needed. An amber band reads: Each change: say, do, re-read, record undo. A red band reads: No floor setting; no agent call yet.\" width=\"1120\" height=\"625\" /><\/figure><pre class=\"code\"><code>gcloud beta service-extensions authz-extensions import novasmart-ma-ext --source=\"$W/ma_ext.yaml\" --location=\"&lt;REGION&gt;\" --quiet\ngcloud beta network-security authz-policies import novasmart-ma-pol --source=\"$W/ma_pol.yaml\" --location=\"&lt;REGION&gt;\" --quiet\ncurl -s -X PATCH -H \"Authorization: Bearer $T\" -H \"Content-Type: application/json\" -d '{\"spec\":{\"deploymentSpec\":{\"agentGatewayConfig\":{\"clientToAgentConfig\":{\"agentGateway\":\"projects/&lt;PROJECT&gt;/locations/&lt;REGION&gt;/agentGateways/novasmart-ingress-gateway\"}}}}}' \"https://&lt;REGION&gt;-aiplatform.googleapis.com/v1/projects/&lt;PROJECT&gt;/locations/&lt;REGION&gt;/reasoningEngines/&lt;PMA_ID&gt;?updateMask=spec.deploymentSpec.agentGatewayConfig\"<\/code><\/pre><p>Two shapes fail quietly. The extension's <code>model_armor_settings<\/code> must be one JSON string naming <code>nvst-jailbreak-template<\/code> for requests and responses, and the <code>CUSTOM<\/code> policy with <code>policyProfile: CONTENT_AUTHZ<\/code> must target <code>agentGateways/novasmart-ingress-gateway<\/code>, not <code>gateways/<\/code>. The extension sets <code>failOpen: true<\/code>, which agy must disclose as a remaining risk.<\/p><p><strong>Why it matters:<\/strong> the PATCH reply is not the binding; the re-read is. The binding also archives the agent's earlier revisions, and no undo restores them.<\/p><h3>Step 4 · Prove the attacks are blocked<\/h3><blockquote><p>\"Run those attacks again. Are they blocked now, and do normal requests still work?\"<\/p><\/blockquote>"},
-      {type:"table",cols:["",""],rows:[{cells:["Skill read","<code>m3-step4.md<\/code>, and <code>m3-step1.md<\/code> again"]},{cells:["What it required","Read <code>attach-done<\/code> back and wait until 300 seconds have passed; write <code>wait-done<\/code> and <code>T0<\/code>; send Step 1's four bodies again, checked as the same text; quote each reply; compare a refusal with the template's own block message; 23 rows, a coverage line, then the scorecard"]},{cells:["Google Cloud","Agent Runtime, Model Armor (template read), Agent Gateway and Service Extensions (re-reads)"]},{cells:["Guardrail","No change, retune or re-binding; \"blocked\" only beside the reply's words quoted this turn; the customer-record attack is <code>not covered<\/code>, never blocked or failed; no Cloud Logging verdict promised"]},{cells:["May change","Nothing in the estate; the scorecard is the one write"]},{cells:["Saved","<code>m3_step4.txt<\/code> with 23 rows; <code>step4_ids.txt<\/code> in <code>work/<\/code>; the scorecard"]},{cells:["What to expect (Instructions)","\"The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging. A price match of about 5%, and a request that needs a lookup, still get answers. The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered. Checks go to <code>m3_step4.txt<\/code> in <code>novasmart-evidence<\/code> on your Desktop; agy updates your Governance Scorecard. Nothing else changes.\""]}]},
+      {type:"table",cols:["",""],rows:[{cells:["Skill read","<code>m3-step4.md<\/code>, and <code>m3-step1.md<\/code> again"]},{cells:["What it required","Read <code>attach-done<\/code> back and wait until 300 seconds have passed; write <code>wait-done<\/code> and <code>T0<\/code>; send Step 1's four bodies again, checked as the same text; quote each reply; compare a refusal with the template's own block message; 23 rows, a coverage line, then the scorecard"]},{cells:["Google Cloud","Agent Runtime, Model Armor (template read), Agent Gateway and Service Extensions (re-reads)"]},{cells:["Guardrail","No change, retune or re-binding; \"blocked\" only beside the reply's words quoted this turn; the customer-record attack is <code>not covered<\/code>, never blocked or failed; no Cloud Logging verdict promised"]},{cells:["May change","Nothing in the estate; the scorecard is the one write"]},{cells:["Saved","<code>m3_step4.txt<\/code> with 23 rows; <code>step4_ids.txt<\/code> in <code>work/<\/code>; the scorecard"]},{cells:["What to expect (Instructions)","\"The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging. A price match of about 5%, and a request that needs a lookup, still get answers. The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered. Checks go to <code>m3_step4.txt<\/code> in <code>novasmart-evidence<\/code> on your Desktop; agy updates your Governance Scorecard (open its link in Chrome yourself). Nothing else changes.\""]}]},
       {type:"prose",html:"<pre class=\"code\"><code>A=$(awk '/^attach-done /{print $2}' \"$W/step3_ids.txt\" | tail -1); echo \"attach-done ${A:-missing}\"\nif [ -n \"$A\" ]; then S=$(( 300 - ( $(date -u +%s) - $(date -u -d \"$A\" +%s) ) )); [ \"$S\" -gt 0 ] &amp;&amp; sleep \"$S\"; fi\necho \"T0 $(date -u +%Y-%m-%dT%H:%M:%SZ)\" | tee -a \"$W/step4_ids.txt\"\npython3 -c 'import json,sys; t=json.load(open(sys.argv[1])); m=t.get(\"templateMetadata\",{}); print(\"block code:\", m.get(\"customPromptSafetyErrorCode\")); print(\"block message:\", m.get(\"customPromptSafetyErrorMessage\")); print(\"filters:\", json.dumps(t.get(\"filterConfig\",{}), sort_keys=True))' \"$W/template_step4.json\"<\/code><\/pre><p>By the lab's setup, the template carries its own block code and message and is not set to log verdicts. The skill counts a refusal only when the reply's body carries that message or names Model Armor; a bare server error or a timeout is <code>not verified<\/code>.<\/p><p><strong>Why it matters:<\/strong> a blocked message looks like an error until you read its words. The ordinary requests show the screen did not switch the business off.<\/p><h4>Change records and the verify step<\/h4><p>Each record is <code>Change<\/code> · <code>Resource<\/code> · <code>When<\/code> · <code>Undo<\/code>. The undo file holds literal values, passes <code>bash -n<\/code> and is recorded, not run.<\/p>"},
       {type:"table",cols:["Change (Step 3)","Recorded undo"],rows:[{cells:["Price Match Agent bound to <code>novasmart-ingress-gateway<\/code>","Detach first; restores the routing, not the archived revisions"]},{cells:["Custom policy <code>novasmart-ma-pol<\/code> on the inbound gateway","Delete it, after the detach"]},{cells:["Extension <code>novasmart-ma-ext<\/code>","Delete it, after the policy"]},{cells:["A service-agent role, only if Step 3 added one","Remove that one binding"]}]},
       {type:"prose",html:"<p>Step 4 writes all 23 checks and puts one coverage line on screen, counted off the rows written. Row 16, the customer-record attack, is always <code>not covered<\/code>. <code>scripts/update_scorecard.py<\/code> runs at the end of Step 4, pass or fail; PASS needs every other row evidenced live.<\/p>"},
@@ -2632,7 +3284,7 @@ var SKILLMAP = {
       {type:"prose",html:"<pre class=\"code\"><code>python3 -c 'import json,sys; L=open(sys.argv[1]).read().split(\"\\n\"); n=int(sys.argv[2]); new=sys.stdin.read().rstrip(\"\\n\"); json.dump({\"line\":n,\"old\":L[n-1],\"new\":new},open(sys.argv[3],\"w\")); print(\"- \"+L[n-1]); print(\"+ \"+new)' \"$L/m4-local/app/agent.py\" \"&lt;LINE&gt;\" \"$L/step3_change.json\" &lt;&lt;'NEW'\n&lt;the proposed line&gt;\nNEW<\/code><\/pre><p><strong>Why it matters:<\/strong> \"worst\" is judged by what it would cost (margin given away, a customer wrongly refused, a rule overridden), not by how the judge marked it. The hash printed here is the state Step 4 must start its edit from.<\/p><h3>Step 4 · Make the change and see what is actually running<\/h3><blockquote><p>\"Make that change, measure it again, and tell me what is still broken in what is actually running.\"<\/p><\/blockquote>"},
       {type:"table",cols:["",""],rows:[{cells:["Skill read","<code>m4-step4.md<\/code>"]},{cells:["What it required","Check the file's hash against Step 3's; back up; apply only Step 3's line and re-read it with <code>diff<\/code>; replay the frozen file, hash checked, with the same script and judge; compare case by case on Step 2's <code>N<\/code>; then read the deployed side this turn: the agent's record and the source in the seed bucket; all 22 checks in the file, one coverage line on screen"]},{cells:["Google Cloud","Gen AI evaluation service; Agent Runtime, Cloud Storage and IAM (reads)"]},{cells:["Guardrail","No new cases; no score or delta; never \"fixed\"; never deploy or offer to; the discount code stays in the file"]},{cells:["May change","One line of the local copy; nothing in the estate"]},{cells:["Saved","<code>m4_step4.txt<\/code> with checks 1-22 and the local edit and backup named; <code>results_step4.jsonl<\/code>"]},{cells:["What to expect (Instructions)","\"agy changes the local copy only, reruns the cases saved in Step 2, and compares the two runs case by case. Expect movement, not a clean sweep. Then what is still true in production: the deployed agent lacks the fix, and anything M3 left open, such as the exposed discount code, is still open. Expect an uncomfortable answer; that is the point. Nothing in your estate changes or is deployed.\""]}]},
       {type:"prose",html:"<figure class=\"fig\"><img class=\"figimg\" data-src=\"#img95\" alt=\"One case file, measured twice: six boxes joined by arrows: tool writes the cases; freeze file, record hash; run it on local copy; show one-line change (amber); apply it to the copy; replay same file, compare. An amber band reads: Same file, hash checked; never rewritten. A red band reads: Nothing deployed; no single score.\" width=\"1120\" height=\"625\" /><\/figure><pre class=\"code\"><code>sha256sum -c \"$L/cases.sha256\"; echo \"replay-start $(date -u +%Y-%m-%dT%H:%M:%SZ)\" | tee \"$L/step4_ids.txt\"\npython3 \"$W/m4_eval.py\" \"$L/cases.json\" \"$L/results_step4.jsonl\" --project \"$PROJECT\" --region \"$REGION\" \\\n  --agent \"local:$L/m4-local/app/agent.py\" --judge-model \"$JUDGE\" &gt; \"$L/step4_eval.log\" 2&gt;&amp;1; echo \"eval-exit $? $(date -u +%Y-%m-%dT%H:%M:%SZ)\" | tee -a \"$L/step4_ids.txt\"\ngrep -h 'M4EVAL script sha256\\|judge model' \"$L/step2_ids.txt\" \"$L/step4_ids.txt\"<\/code><\/pre><p><strong>Why it matters:<\/strong> the last line puts both runs' script hash and judge model side by side; if they differ, the runs are not compared case by case. The agent's record holds no instruction text, so the seed bucket's source is the closest read of what runs, and the skill says so. Its strongest allowed sentence: \"a better instruction exists on this workstation; nothing customers reach has changed.\"<\/p><h3>Step 5 · Show what you measured<\/h3><blockquote><p>\"Build me a page where I can read our evaluation results case by case.\" Or any of four more Show prompts, in any order.<\/p><\/blockquote>"},
-      {type:"table",cols:["",""],rows:[{cells:["Skill read","<code>showcase.md<\/code> and <code>showcase-m4.md<\/code>, at every Show prompt"]},{cells:["What it required","Run <code>scripts/show_facts.py 4 &lt;demo&gt;<\/code> (fact sheet plus that page's recipe) and build only from the sheet; keep the three runs apart (deployed agent, local copy, local copy after the change), each shown whole on its own <code>N<\/code>; run <code>scripts/show_check.py<\/code> until clean, look at the screenshots, then run <code>scripts/show_record.py<\/code>, which writes the evidence entry from a log of every run, failed checks included"]},{cells:["Google Cloud","None: no <code>gcloud<\/code>, <code>curl<\/code> or <code>bq<\/code>"]},{cells:["Guardrail","No single score; never say the deployed agent is fixed; the discount code is shown as \"[code withheld]\"; the leader's three launch questions stay unanswered unless the leader answered them"]},{cells:["May change","Nothing"]},{cells:["Saved","One page per prompt in <code>/config/Desktop/novasmart-showcase/<\/code>, such as <code>m4_case_explorer.html<\/code>; one entry per page in <code>m4_step5.txt<\/code>"]},{cells:["What to expect (Instructions)","\"Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome, built only from what agy recorded in Steps 1 to 4. Nothing in your estate changes, and no page makes the launch call for you.\""]}]},
+      {type:"table",cols:["",""],rows:[{cells:["Skill read","<code>showcase.md<\/code> and <code>showcase-m4.md<\/code>, at every Show prompt"]},{cells:["What it required","Run <code>scripts/show_facts.py 4 &lt;demo&gt;<\/code> (fact sheet plus that page's recipe) and build only from the sheet; keep the three runs apart (deployed agent, local copy, local copy after the change), each shown whole on its own <code>N<\/code>; run <code>scripts/show_check.py<\/code> until clean, look at the screenshots, then run <code>scripts/show_record.py<\/code>, which writes the evidence entry from a log of every run, failed checks included"]},{cells:["Google Cloud","None: no <code>gcloud<\/code>, <code>curl<\/code> or <code>bq<\/code>"]},{cells:["Guardrail","No single score; never say the deployed agent is fixed; the discount code is shown as \"[code withheld]\"; the leader's three launch questions stay unanswered unless the leader answered them"]},{cells:["May change","Nothing"]},{cells:["Saved","One page per prompt in <code>/config/Desktop/novasmart-showcase/<\/code>, such as <code>m4_case_explorer.html<\/code>; one entry per page in <code>m4_step5.txt<\/code>"]},{cells:["What to expect (Instructions)","\"Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to <code>file:///config/Desktop/novasmart-showcase/<\/code> and click the page. Nothing in your estate changes, and no page makes the launch call for you.\""]}]},
       {type:"prose",html:"<pre class=\"code\"><code>S=/config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts; P=/config/Desktop/novasmart-showcase/&lt;file&gt;.html\npython3 $S/show_facts.py 4 &lt;demo&gt;\nPLAYWRIGHT_BROWSERS_PATH=/ms-playwright /opt/venv/bin/python3 $S/show_check.py \"$P\"\npython3 $S/show_record.py 4 \"$P\" \"&lt;your words&gt;\"<\/code><\/pre><p><strong>Why it matters:<\/strong> a page can only show what Steps 1-4 recorded. Every page carries the footer \"Nothing in the estate was changed in this module.\"<\/p><p><em>Try this too:<\/em> the skill has agy answer each prompt directly, bold answer first, naming the step it builds on, never calling it optional; commands go to <code>m4_other.txt<\/code>; reads and analysis only, and the local fix is never deployed.<\/p>"}
     ]},
     {id:"skm4",title:"Who agy is, and which record to trust",blocks:[

@@ -132,7 +132,7 @@ Two shapes fail quietly. The extension's `model_armor_settings` must be one JSON
 | Guardrail | No change, retune or re-binding; "blocked" only beside the reply's words quoted this turn; the customer-record attack is `not covered`, never blocked or failed; no Cloud Logging verdict promised |
 | May change | Nothing in the estate; the scorecard is the one write |
 | Saved | `m3_step4.txt` with 23 rows; `step4_ids.txt` in `work/`; the scorecard |
-| What to expect (Instructions) | "The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging. A price match of about 5%, and a request that needs a lookup, still get answers. The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered. Checks go to `m3_step4.txt` in `novasmart-evidence` on your Desktop; agy updates your Governance Scorecard. Nothing else changes." |
+| What to expect (Instructions) | "The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging. A price match of about 5%, and a request that needs a lookup, still get answers. The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered. Checks go to `m3_step4.txt` in `novasmart-evidence` on your Desktop; agy updates your Governance Scorecard (open its link in Chrome yourself). Nothing else changes." |
 
 ```bash
 A=$(awk '/^attach-done /{print $2}' "$W/step3_ids.txt" | tail -1); echo "attach-done ${A:-missing}"

@@ -2,6 +2,10 @@
 
 In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step is read-only: you change nothing and fix nothing. Fixing is M1.
 
+> **Before you start**
+> - Use a new agy conversation for each module, starting with this one. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.
+> - If replies are slow, ask agy to skip the pictures; every step works the same without them.
+
 <!-- FIGURE:I01 BEGIN -->
 
 ![See everything, change nothing. You are the Head of AI Platform and Security at NovaSmart. Three questions, still unanswered: what do we officially have (the catalog), what is actually running (every workload, wherever it runs), and who has been reading customer data (the audit trail). Changes made: 0; this module only looks.](images/I01_objective.webp)
@@ -11,6 +15,8 @@ In this module you find out what NovaSmart says it runs, what is really running,
 ## Step 1 · Check your environment
 
 **Goal:** Make sure your workstation and cloud project are ready before you look at anything.
+
+First, check the model picker in the chat box reads Gemini 3.8 Flash Low. If it does not, open it and pick Gemini 3.8 Flash, then Low.
 
 Ask agy:
 
@@ -126,6 +132,8 @@ More background: Reference Guide tab, Decide
 
 *Optional.* You can go straight to M1, or open the **What did we learn?** tab.
 
+> **Going to M1?** Start a new agy conversation first, then ask M1's first prompt there.
+
 - You now know what is officially registered, what is really running, and who reads customer data under a shared login. None of it is fixed.
 - M1 · Take Action is where you fix it — register the shadow agent, give each agent its own identity, and scope its access down to what its job actually needs.
 - In M1 you also find out whether your answer to the first question above matches the leadership call.
@@ -194,4 +202,6 @@ Make a one-page poster of what I found that I can share.
 
 A one-page poster to share.
 
-Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome. Pages use only what agy recorded in Steps 1 to 4. Nothing in your environment changes.
+Each page is saved in the novasmart-showcase folder on your Desktop. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Pages use only what agy recorded in Steps 1 to 4. Nothing in your environment changes.
+
+> **Going to M1?** Start a new agy conversation first, then ask M1's first prompt there.

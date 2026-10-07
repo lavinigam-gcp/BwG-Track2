@@ -2,6 +2,10 @@
 
 M2 settled who may call whom. M3 settles what customers may say: you test whether your agents can be talked out of their rules, then screen one of them.
 
+> **Before you start**
+> - Start a new agy conversation for M3 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.
+> - If replies are slow, ask agy to skip the pictures; every step works the same without them.
+
 ## Key objective
 
 Put a Google Cloud Model Armor filter on the inbound gateway in front of the Price Match Agent, so manipulation attempts are stopped before that one agent ever reads them.
@@ -115,7 +119,7 @@ Run those attacks again. Are they blocked now, and do normal requests still work
 - The discount attack is stopped before the agent sees it and comes back as an error. agy quotes that reply exactly; it is the record, with no verdict in Cloud Logging.
 - The 5% price match still gets an answer, and so does the ordinary request to the Customer Personalization Agent.
 - The customer-record attack still gets an answer: that agent is not behind the inbound gateway, so it is not covered.
-- Checks go to `m3_step4.txt` in `novasmart-evidence` on your Desktop; agy updates your Governance Scorecard. Nothing else changes.
+- Checks go to `m3_step4.txt` in `novasmart-evidence` on your Desktop; agy updates your Governance Scorecard (open its link in Chrome yourself). Nothing else changes.
 
 More background: Reference Guide tab, Prove the attacks are blocked
 
@@ -154,15 +158,17 @@ More background: Reference Guide tab, What you just did
 
 *Optional.* You can go straight to M4, or open the **What did we learn?** tab.
 
+> **That's the core lab.** See the **Wrap-up** tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.
+
 - The discount attack is turned away at the inbound gateway; ordinary requests still get answers.
 - Still open: the customer-record attack, fail-open, and the plain-text discount code.
 - M4 · Evaluate and Decide (Optional Module) measures, against a full scenario set, whether the agent got worse at its job.
 
 ## See it in the console
 
-- Model Armor, at https://console.cloud.google.com/security/modelarmor/templates — nvst-jailbreak-template, created at lab setup; it does not show where it is used.
-- Agent Gateway, at https://console.cloud.google.com/agent-platform/gateways — novasmart-ingress-gateway (inbound) and novasmart-egress-gateway (outbound, from M2).
-- Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; the Price Match Agent is Non A2A, the other two A2A.
+- [Model Armor](https://console.cloud.google.com/security/modelarmor/templates) — nvst-jailbreak-template, created at lab setup; it does not show where it is used.
+- [Agent Gateway](https://console.cloud.google.com/agent-platform/gateways) — novasmart-ingress-gateway (inbound) and novasmart-egress-gateway (outbound, from M2).
+- [Agent Registry](https://console.cloud.google.com/agent-platform/agent-registry/agents) — set Location to your lab's region; the Price Match Agent is Non A2A, the other two A2A.
 
 ## Try this too — optional
 
@@ -236,4 +242,6 @@ Turn what I screened into a two-minute update I can present to the board.
 
 What is screened, for which agent, and what is open.
 
-Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. Nothing in your environment changes.
+Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your environment changes.
+
+> **That's the core lab.** See the **Wrap-up** tab at the top for what you built and what is still open. M4 is optional: to take it, start a new agy conversation first, then ask M4's first prompt there.

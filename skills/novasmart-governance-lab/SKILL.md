@@ -12,10 +12,9 @@ description: >-
 
 This file is the **shared core** for every mission. Mission context lives in `references/mN.md`; load
 only the one you need (§5). Each reference puts its estate facts behind a **spoiler fence** with a
-**step gate**: they tell you where to look, never what to report.
+**step gate**.
 
 ## 0. Non-negotiables
-The hard stops. Each is spelled out in the section named.
 1. ⛔ **Report only what this step's own command returned.** Fenced facts are orientation; the live
    result wins (§4).
 2. ⛔ **Write the evidence entry first, then compose the answer** from a re-read of it (§3g).
@@ -29,8 +28,11 @@ The hard stops. Each is spelled out in the section named.
 9. ⛔ **A FORBIDDEN picture is never drawn** (§3b).
 10. ⛔ **No skill markers in learner text** — no `§`, file names or rule ids (§3d).
 11. ⛔ **A command sent to the background has no output until its "finished with result" arrives** (or
-    `manage_task` shows it done with its log). Write no entry, picture or answer from it before then, and
-    never type a "Notice: A background task…" block yourself (§3g).
+    `manage_task` shows it done with its log). Write no entry, picture or answer from it before then. Never
+    type a "Notice: A background task…" block, and never copy a `<SYSTEM_MESSAGE>` into your text: state its
+    result in one plain sentence (§3g).
+12. ⛔ **No browser opens from your shell** (here `xdg-open` only logs the URL). Never say you opened or
+    launched a page: give its file name or link, and say the leader opens it in Chrome.
 
 ## 1. First moves — freshness & tools (every session, before anything else)
 - **Fetch today's date** (`date -u +%Y-%m-%d`). Never hardcode or assume one; use it in every doc search.
@@ -162,7 +164,7 @@ only inside commands. "Agent Identity" is only the per-agent badge.
 ### 3b. The picture is generated, and it is an addition
 Make the picture **and** write the paragraph; it sits after `### Why this matters`.
 
-**Tool.** Call **`generate_image`** with the model **`gemini-3-pro-image`**; it renders in the chat.
+**Tool.** Call **`generate_image`**; it renders in the chat.
 
 **Style — pin it in the prompt every time.** Ask for: a **clean architectural workflow diagram** · a
 **plain white background** · **Google brand colors** (blue, red, yellow and green on white) · **flat and
@@ -339,8 +341,8 @@ Commands, outputs, verification tables and change records go to **one plain-text
 **Where it goes — one folder per module** under `/config/Desktop/novasmart-evidence/`:
 
 ```
-/config/Desktop/novasmart-evidence/m1/m1_step3.txt      Mission 1, Step 3
-/config/Desktop/novasmart-evidence/m0/m0_step4.txt      Mission 0, Step 4
+/config/Desktop/novasmart-evidence/m1/m1_step3.txt      M1 Step 3
+/config/Desktop/novasmart-evidence/m0/m0_step4.txt      M0 Step 4
 /config/Desktop/novasmart-evidence/m1/m1_other.txt      anything that is not a numbered step
 ```
 
@@ -348,8 +350,7 @@ Commands, outputs, verification tables and change records go to **one plain-text
 restart and `/tmp` does not; leave nothing that matters in `/tmp`. An optional prompt or an off-script
 question you ran commands for goes in that module's `mN_other.txt`, never filed as a step.
 
-**The four-line write sequence — run all four lines, in order, every time.** (A hand-built `>` once
-erased two earlier answers in `m0_other.txt`; the sequence makes that impossible.)
+**The four-line write sequence — run all four lines, in order, every time.**
 
 ```bash
 # A  folder and file exist - and neither of these two can empty a file

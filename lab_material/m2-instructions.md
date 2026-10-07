@@ -2,6 +2,10 @@
 
 M2 settles who may call your most sensitive agent, and what that agent may reach and change.
 
+> **Before you start**
+> - Start a new agy conversation for M2 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.
+> - If replies are slow, ask agy to skip the pictures; every step works the same without them.
+
 ## Key objective
 
 Control who may call the back-office agent, using the caller list held on the agent itself.
@@ -139,7 +143,7 @@ Make sure the back office can only reach what it needs, and can only read the pr
 - Two controls: the outbound gateway decides where the back office may reach; its database permissions now let it read the pricing tables, not change them.
 - Expect pauses: about four minutes for the gateway attach, three for permissions, three more before agy reads the records.
 - agy calls the back office directly through a broad project-wide role. A read answers; a change is refused, shown by the BigQuery audit log and the table's unchanged last-modified time, not by the gateway's allow.
-- The pricing data is read-only for the back office only; other accounts can still change it. agy writes `m2_step5.txt` and updates your Governance Scorecard; a FAIL names the step to revisit.
+- The pricing data is read-only for the back office only; other accounts can still change it. agy writes `m2_step5.txt` and updates your Governance Scorecard (open its link in Chrome yourself); a FAIL names the step to revisit.
 
 More background: Reference Guide tab, Lock down what the back office can reach and do
 
@@ -153,14 +157,16 @@ More background: Reference Guide tab, Lock down what the back office can reach a
 
 *Optional.* You can go straight to M3, or open the **What did we learn?** tab.
 
+> **Going to M3?** Start a new agy conversation first, then ask M3's first prompt there.
+
 - The back office's list names one caller, the leftover login is refused, the escalation gets the back office's answer if Step 4 recorded one, and the back office reads but cannot change the pricing data.
 - Still open: broad project-wide roles can still call any agent; agy's Step 5 call used one.
 - M3 · Protect the Content is where you screen what customers can talk your agents into.
 
 ## See it in the console
 
-- Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; the back office is markdown-strategy-agent. Its caller list is not shown.
-- Agent Gateway, at https://console.cloud.google.com/agent-platform/gateways — novasmart-egress-gateway, the outbound one the back office now sits behind.
+- [Agent Registry](https://console.cloud.google.com/agent-platform/agent-registry/agents) — set Location to your lab's region; the back office is markdown-strategy-agent. Its caller list is not shown.
+- [Agent Gateway](https://console.cloud.google.com/agent-platform/gateways) — novasmart-egress-gateway, the outbound one the back office now sits behind.
 
 ## Try this too — optional
 
@@ -226,4 +232,6 @@ Turn what I controlled into a two-minute update I can present to the board.
 
 A short board update.
 
-Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. Nothing in your environment changes.
+Pages are saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 5. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your environment changes.
+
+> **Going to M3?** Start a new agy conversation first, then ask M3's first prompt there.

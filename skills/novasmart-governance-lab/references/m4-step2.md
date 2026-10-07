@@ -8,6 +8,9 @@
 > "a project" (the scaffold prints "Connected to project: …", which is the Google Cloud project it reads
 > credentials for, not a new one).
 >
+> ⛔ **Naming (`m4.md` Rule E):** the cases are written by *agents-cli* and scored by *the Gen AI evaluation
+> service*; never "Vertex AI", in a progress line or anywhere else.
+>
 > ⛔ **Background tasks (`../SKILL.md` §0 rule 11):** synthesis takes minutes and the run longer; both go to
 > the background. No case list, verdict, count, picture or entry line until "finished with result"
 > arrives; then read the values back from their files.

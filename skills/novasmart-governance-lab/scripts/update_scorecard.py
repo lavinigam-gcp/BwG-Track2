@@ -455,19 +455,9 @@ def main():
             start_new_session=True,
         )
 
-    # Launch browser automatically in background. In this lab a PATH shim ahead
-    # of the real xdg-open only logs the URL and exits 0, so this may silently
-    # do nothing - the printed links below are the reliable route.
-    try:
-        subprocess.Popen(
-            ["xdg-open", SCORECARD_URL],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-        )
-    except Exception:
-        pass
-
+    # No browser is launched: in this lab a PATH shim ahead of the real
+    # xdg-open only logs the URL, so agy's shell can never open a window. The
+    # leader opens the printed link in Chrome.
     print(f"Successfully updated Scorecard for {args.mission} -> {args.status}.")
     print(f"📊 Live Scorecard URL: {SCORECARD_URL}")
     print(f"📄 Or open the file directly: file://{REPORT_PATH}")
@@ -475,7 +465,10 @@ def main():
     print(
         f"   (a copy is also on the Desktop: {os.path.join(DESKTOP_DIR, REPORT_NAME)})"
     )
-    print("   If the browser does not open by itself, paste one of the links above.")
+    print(
+        "   No browser window was opened. Give the leader the Live Scorecard link to open in Chrome;"
+        " never say it was opened or launched."
+    )
 
 
 if __name__ == "__main__":

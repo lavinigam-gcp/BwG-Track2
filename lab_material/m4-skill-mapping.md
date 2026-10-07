@@ -152,7 +152,7 @@ grep -h 'M4EVAL script sha256\|judge model' "$L/step2_ids.txt" "$L/step4_ids.txt
 | Guardrail | No single score; never say the deployed agent is fixed; the discount code is shown as "[code withheld]"; the leader's three launch questions stay unanswered unless the leader answered them |
 | May change | Nothing |
 | Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m4_case_explorer.html`; one entry per page in `m4_step5.txt` |
-| What to expect (Instructions) | "Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome, built only from what agy recorded in Steps 1 to 4. Nothing in your estate changes, and no page makes the launch call for you." |
+| What to expect (Instructions) | "Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your estate changes, and no page makes the launch call for you." |
 
 ```bash
 S=/config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts; P=/config/Desktop/novasmart-showcase/<file>.html

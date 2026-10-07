@@ -199,7 +199,11 @@ python3 /config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts
 1. A **bold** line naming what you made and its full path, then *"This is Step 7 of Module N, <step
    title>."*
 2. A `file://` link to it, e.g. `file:///config/Desktop/novasmart-showcase/m0_dashboard.html` — plus the
-   `.png` link for a poster.
+   `.png` link for a poster — and the line *"To open it, paste that link into Chrome's address bar."*
+   ⛔ **You cannot open it yourself**: no browser opens from your shell (`xdg-open` here only logs the
+   URL). Never say you opened, launched or displayed it. Asked to open it (*"open the dashboard"*), say you
+   cannot open a browser window in this lab and give the file name and link again. (A run answered *"I
+   have launched the executive dashboard in your desktop browser"*; nothing opened.)
 3. One short paragraph: what it shows, **how to use it** (Play, arrow keys, `N` for notes, the answers
    view), which steps' files it draws on, and anything shown as not run yet.
 4. `### Where the proof is`, in the `../SKILL.md` §3g form.

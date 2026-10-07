@@ -2,6 +2,10 @@
 
 You test whether the price-match agent still does its job, then make the launch call. This module changes nothing in your estate and is not scored; "scorecard" here means the evaluation results.
 
+> **Before you start**
+> - Start a new agy conversation for M4 before Step 1. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.
+> - If replies are slow, ask agy to skip the pictures; every step works the same without them.
+
 ## Key objective
 
 Score the price-match agent against its policy with the Gen AI evaluation service, using a judge model separate from the agent's own.
@@ -135,9 +139,11 @@ More background: Reference Guide tab, Make the change and see what is actually r
 
 The habit to take home: ask what is running, insist on evidence, measure before you trust.
 
+> **That's the lab.** See the **Wrap-up** tab at the top for what you built and what is still open.
+
 ## See it in the console
 
-- Agent Registry, at https://console.cloud.google.com/agent-platform/agent-registry/agents — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.
+- [Agent Registry](https://console.cloud.google.com/agent-platform/agent-registry/agents) — set Location to your lab's region; Price Match Agent is unchanged, and its description still says it approves up to 10% directly.
 - Scorecards live in the `novasmart-evidence` folder on your Desktop, not the console; the wording change exists only in the folder on this workstation. Deploying it is a separate decision.
 
 ## Try this too — optional
@@ -204,4 +210,6 @@ Turn what I measured into a one-page evidence pack for the launch review.
 
 An evidence pack for the launch review.
 
-Each page is saved in the novasmart-showcase folder on your Desktop, with a link to open it in Chrome, built only from what agy recorded in Steps 1 to 4. Nothing in your estate changes, and no page makes the launch call for you.
+Each page is saved in the novasmart-showcase folder on your Desktop, built only from what agy recorded in Steps 1 to 4. agy gives you each page's file name but cannot open a browser window in this lab: in Chrome, go to `file:///config/Desktop/novasmart-showcase/` and click the page. Nothing in your estate changes, and no page makes the launch call for you.
+
+> **That's the lab.** See the **Wrap-up** tab at the top for what you built and what is still open.

@@ -34,7 +34,8 @@ list saved here.
 ## 2. The evaluation path — the Gen AI evaluation service, one script
 
 **The path:** the managed **Gen AI evaluation service**, through the `vertexai` SDK that ships in
-`google-cloud-aiplatform` (`from vertexai import Client`; its evaluation interface is Preview).
+`google-cloud-aiplatform` (`from vertexai import Client`; its evaluation interface is Preview). The SDK's
+name stays in commands: to the leader it is *the Gen AI evaluation service*, never "Vertex AI" (`m4.md` Rule E).
 `client.evals.run_inference` puts every case to the agent — here the deployed Price Match agent, which the
 SDK reaches through the same `:streamQuery` endpoint the screen sits on — and `client.evals.evaluate`, with
 one policy metric (an `LLMMetric`), has the service's judge mark each reply.
