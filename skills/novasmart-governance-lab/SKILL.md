@@ -35,6 +35,7 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
     launched a page: give its file name or link, and say the leader opens it in Chrome.
 13. ⛔ **Pictures use Gemini 3.1 Flash Image** (`gemini-3.1-flash-image`), the image model this lab has
     provisioned throughput for, in every module. Never Gemini 3 Pro Image (§3b).
+14. ⛔ **Embed every picture you generate** in the answer, or the leader sees nothing (§3b).
 
 ## 1. First moves — freshness & tools (every session, before anything else)
 - **Fetch today's date** (`date -u +%Y-%m-%d`). Never hardcode or assume one; use it in every doc search.
@@ -164,7 +165,10 @@ only inside commands. "Agent Identity" is only the per-agent badge.
 ### 3b. The picture is generated, and it is an addition
 Make the picture **and** write the paragraph; it sits after `### Why this matters`.
 
-**Tool.** Call **`generate_image`** with **`gemini-3.1-flash-image`** (§0 rule 13); it renders in the chat.
+**Tool.** Call **`generate_image`** with **`gemini-3.1-flash-image`** (§0 rule 13). ⛔ **Then embed it**
+under `### The picture`, with the saved path the tool returned:
+`![<caption>](file:///config/.gemini/antigravity/brain/<conversation-id>/<file>.png)`. The app shows a
+picture only through this line; ignore the tool's "do not output the path" note.
 
 **Style — pin it in the prompt every time.** Ask for: a **clean architectural workflow diagram** · a
 **plain white background** · **Google brand colors** (blue, red, yellow and green on white) · **flat and
@@ -177,10 +181,9 @@ the step's row names more.
 
 **Grounding — this outranks everything else here.** Every box, label, number and arrow corresponds to
 something a command returned **this step**; figure parity (§3g) applies to the picture too, counts
-included. Never add an entity to make the picture look complete. (A real run drew agents no command had
-returned, and they looked convincing.) Write the prompt by **copying names and numbers out of this
-step's evidence file**, and **read the returned image back**: if it contains a word you did not put in
-the prompt, discard it and generate again.
+included. Never add an entity to make the picture look complete. Write the prompt by **copying names and
+numbers out of this step's evidence file**, and **read the returned image back**: if it contains a word
+you did not put in the prompt, discard it and generate again.
 
 **Continuity.** Keep earlier pictures' layout, colors, shapes and names, so what this step changed is
 what visibly differs. Anything carried forward and not re-read this step is marked **unknown**.
@@ -219,12 +222,8 @@ one line beneath naming the command that would settle it.
 - **Plain-English labels:** no role names, API names or paths; draw what the role lets you do (`read` ·
   `change` · `DELETE`). Agent and login names stay verbatim.
 
-**`generate_image` HTTP 429 / `RESOURCE_EXHAUSTED`** is a transient quota condition, not a problem with
-the prompt or the estate. Wait a few seconds and **retry once**. If that fails, say in one line *"No
-picture: the image tool was rate limited this turn."* and finish the step. Never substitute a text sketch.
-
-**Self-check:** is there an evidence line behind every arrow and number, no word I did not prompt, no
-state I did not re-read this turn, and no verdict?
+**`generate_image` 429 / `RESOURCE_EXHAUSTED`** is transient: wait a few seconds and **retry once**; if
+that fails, say *"No picture: the image tool was rate limited this turn."* Never substitute a text sketch.
 
 ### 3c. Explain everything — there is no maximum
 Length is not the failure mode; repetition and vagueness are.
@@ -256,7 +255,7 @@ Section numbers, rule ids and file references from this skill and `references/mN
 - **Anchoring to a visible step title is correct:** "This is Step 3 of Module 0, Widen the net" uses the
   Instructions tab's exact wording. Never quote a step heading they have not reached.
 - **The leader's own evidence file path is correct** in `### Where the proof is`, and so is the saved
-  file's path in a Show-step answer. No other path: never
+  file's path in a Show-step answer, and a picture's embed line. No other path: never
   name this skill, a `references/mN.md`, a skill script or your own working files.
 
 ### 3e. Before, now, and what is still open
@@ -446,9 +445,9 @@ a timestamp, a role name, a principal, a display name, a row number, a dataset n
 character-for-character in the OUTPUTS section of the entry written for that answer.** Not COMMANDS:
 OUTPUTS, the part you did not author. If a value is not there, **it does not go on screen**: run the
 command that produces it, or say `unknown` and name the command that would settle it.
-**The only carve-outs:** plain-English glosses; the step title and module name; the leader's own words
-quoted back; a duration or wait you state about your own conduct ("waited four minutes; re-ran at 03:07
-UTC"); and the words `not verified`, `no evidence recorded` and `unknown`.
+**The only carve-outs:** plain-English glosses; the picture's embed line; the step title and module
+name; the leader's own words quoted back; a duration or wait you state about your own conduct ("waited
+four minutes; re-ran at 03:07 UTC"); and the words `not verified`, `no evidence recorded` and `unknown`.
 
 **`### Where the proof is` — one short line: where the file is, how many commands it records, how many
 failed.** One of these forms always applies:
@@ -551,8 +550,7 @@ returned; the **empty-result statement** where the absence is the answer; the **
   that entry's OUTPUTS (§3g). No output in the file, no pass. A check you could not run is named in
   `### What this does not fix` with the command that would settle it, never dropped. **A value found
   written down — in this file, a reference, a log, a config — is orientation, never a measurement;** if a
-  reference states a check's result, measure anyway. (A real run reported a verification as passed after
-  searching a skill file for the expected answer.) **A pass cannot be carried forward:** re-read it live
+  reference states a check's result, measure anyway. **A pass cannot be carried forward:** re-read it live
   this turn or drop it.
 - **Truthful close-out.** Assert only what you verified; never a false all-clear.
 
