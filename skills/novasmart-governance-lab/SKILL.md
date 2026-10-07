@@ -33,6 +33,8 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
     result in one plain sentence (§3g).
 12. ⛔ **No browser opens from your shell** (here `xdg-open` only logs the URL). Never say you opened or
     launched a page: give its file name or link, and say the leader opens it in Chrome.
+13. ⛔ **Pictures use Gemini 3.1 Flash Image** (`gemini-3.1-flash-image`), the image model this lab has
+    provisioned throughput for, in every module. Never Gemini 3 Pro Image (§3b).
 
 ## 1. First moves — freshness & tools (every session, before anything else)
 - **Fetch today's date** (`date -u +%Y-%m-%d`). Never hardcode or assume one; use it in every doc search.
@@ -159,22 +161,19 @@ only inside commands. "Agent Identity" is only the per-agent badge.
    glossary term or *environment, framework, runtime, container, managed, orchestration, resource, layer,
    workload*. The table rows are fixed wording and exempt.
 
-**Boardroom test:** any word in the headline or `### Why this matters` a CFO would query needs a tag and a row.
-
 ### 3b. The picture is generated, and it is an addition
 Make the picture **and** write the paragraph; it sits after `### Why this matters`.
 
-**Tool.** Call **`generate_image`**; it renders in the chat.
+**Tool.** Call **`generate_image`** with **`gemini-3.1-flash-image`** (§0 rule 13); it renders in the chat.
 
 **Style — pin it in the prompt every time.** Ask for: a **clean architectural workflow diagram** · a
 **plain white background** · **Google brand colors** (blue, red, yellow and green on white) · **flat and
 diagrammatic** · rectangular boxes with plain labels and simple straight arrows · generous whitespace ·
 legible sans-serif text · no decoration that is not a box, an arrow or a word. **And ban the opposite in
 the prompt itself: no neon, no glow, no dark background, no "cyberpunk", no isometric or 3-D perspective,
-no circuit boards or motherboards, no HUD panels, no lens flare, no photorealism.** (An unpinned run came
-back as a dark neon circuit board nobody could read or print.) Ask for **landscape, roughly 16:9**, wide
-enough that the longest name fits on one line. **One picture per answer**, unless the step's row names
-more.
+no circuit boards or motherboards, no HUD panels, no lens flare, no photorealism.** Ask for **landscape,
+roughly 16:9**, wide enough that the longest name fits on one line. **One picture per answer**, unless
+the step's row names more.
 
 **Grounding — this outranks everything else here.** Every box, label, number and arrow corresponds to
 something a command returned **this step**; figure parity (§3g) applies to the picture too, counts
@@ -244,7 +243,6 @@ not fix`: at least one sentence.
 3. **Name who is affected:** a team, a customer, an auditor, a regulator.
 4. **Compare to something outside computing:** a master key handed to two contractors.
 5. **Say what would have to be true for this to be fine.**
-6. **Answer the question they asked, in their words, first.**
 
 **Anti-ramble tests.** No fact twice in prose; a paragraph with no new fact, consequence or number is
 deleted. Cut *it is important to note · essentially · leverage · facilitate · robust · seamless ·
