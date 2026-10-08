@@ -1,10 +1,10 @@
 # M0 · See Everything — Instructions
 
-In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step is read-only: you change nothing and fix nothing. Fixing is M1.
+In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. After Step 0 refreshes agy's guide on your workstation, every step is read-only: you change nothing and fix nothing. Fixing is M1.
 
 > **Before you start**
 > - Use a new agy conversation for each module, starting with this one. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.
-> - If replies are slow, ask agy to skip the pictures; every step works the same without them.
+> - Tell agy how you like its answers, for example "keep it short", "more detail" or "skip the pictures". It keeps to that for the rest of the lab, in every module, and every step works the same either way.
 
 <!-- FIGURE:I01 BEGIN -->
 
@@ -12,11 +12,30 @@ In this module you find out what NovaSmart says it runs, what is really running,
 
 <!-- FIGURE:I01 END -->
 
+## Step 0 · Get the latest lab guide
+
+**Goal:** Make sure agy has the newest version of the lab guide it follows, before you start.
+
+First, check the model picker in the chat box reads Gemini 3.8 Flash Low. If it does not, open it and pick Gemini 3.8 Flash, then Low.
+
+Ask agy:
+
+```
+Update the skills for this lab and make sure I have the latest version: run skills/novasmart-governance-lab/scripts/sync_skill.py from github.com/lavinigam-gcp/BwG-Track2. Go ahead without asking me, then tell me what to do next.
+```
+
+**What to expect:**
+
+- agy fetches the update script from the lab's GitHub repository, runs it, and tells you in a line or two which version of the guide you now have, or that it was already the latest.
+- Nothing in your cloud project changes. Only agy's guide on this workstation is replaced.
+- If agy says it could not reach GitHub, carry on: the lab works with the guide it already has.
+- Then start a new agy conversation for Step 1, so agy reads the updated guide.
+
 ## Step 1 · Check your environment
 
 **Goal:** Make sure your workstation and cloud project are ready before you look at anything.
 
-First, check the model picker in the chat box reads Gemini 3.8 Flash Low. If it does not, open it and pick Gemini 3.8 Flash, then Low.
+In the new conversation, check the model picker still reads Gemini 3.8 Flash Low.
 
 Ask agy:
 
@@ -28,6 +47,7 @@ Check my environment is ready.
 
 - agy checks its own toolkit and your cloud project, then opens by saying plainly whether you are ready to start.
 - A short table follows: one row per check, how agy verified it, the result, and anything it safely fixed.
+- One row says whether agy's lab guide is the latest. If that row is missing or says not ready, go back to Step 0.
 - If anything comes back not ready, ask agy to fix it before you move on.
 - Nothing in your environment changes; any safe fix agy makes is named in the table.
 

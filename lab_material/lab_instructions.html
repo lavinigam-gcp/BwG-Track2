@@ -905,13 +905,14 @@ var MISSIONS = {
     steps:[],
     badges:{
       steps:{
-        0:{icon:"compass",name:"Check your environment",cheer:"Step 1 · Check your environment — done."},
-        1:{icon:"bulb",name:"Meet your estate",cheer:"Step 2 · Meet your estate — done."},
-        2:{icon:"bell",name:"Widen the net",cheer:"Step 3 · Widen the net — done."},
-        3:{icon:"search",name:"Who's reading customer data",cheer:"Step 4 · Who's reading customer data — done."},
-        4:{icon:"scale",name:"Decide",cheer:"Step 5 · Decide — done."},
-        5:{icon:"shield",name:"What's next",cheer:"Step 6 · What's next — done."},
-        6:{icon:"gift",name:"Show what you found",cheer:"Step 7 · Show what you found — done."}
+        0:{icon:"refresh",name:"Get the latest lab guide",cheer:"Step 0 · Get the latest lab guide — done."},
+        1:{icon:"compass",name:"Check your environment",cheer:"Step 1 · Check your environment — done."},
+        2:{icon:"bulb",name:"Meet your estate",cheer:"Step 2 · Meet your estate — done."},
+        3:{icon:"bell",name:"Widen the net",cheer:"Step 3 · Widen the net — done."},
+        4:{icon:"search",name:"Who's reading customer data",cheer:"Step 4 · Who's reading customer data — done."},
+        5:{icon:"scale",name:"Decide",cheer:"Step 5 · Decide — done."},
+        6:{icon:"shield",name:"What's next",cheer:"Step 6 · What's next — done."},
+        7:{icon:"gift",name:"Show what you found",cheer:"Step 7 · Show what you found — done."}
       },
       module:{icon:"trophy",name:"M0 — See Everything",cheer:"See Everything — cleared."}
     }
@@ -982,6 +983,20 @@ var MISSIONS = {
 
 /* ===== M0 steps (from m0-instructions.md) ===== */
 MISSIONS.M0.steps.push({
+  nav:{title:"Step 0 · Get the latest lab guide",sub:""},
+  eyebrow:{text:"M0 · See Everything",tone:"default"},
+  h2:"Step 0 · Get the latest lab guide",
+  lede:"",
+  fx:"none",
+  meta:{kind:"changes",min:2,note:"Changes agy's guide on this workstation only. Your cloud project is not touched"},
+  nextLabel:"Next: Step 1 · Check your environment",
+  blocks:[
+    {type:"prose",html:"<p class=\"module-subtitle\">M0 · See Everything — Instructions</p><p>In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. After Step 0 refreshes agy's guide on your workstation, every step is read-only: you change nothing and fix nothing. Fixing is M1.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Use a new agy conversation for each module, starting with this one. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>Tell agy how you like its answers, for example \"keep it short\", \"more detail\" or \"skip the pictures\". It keeps to that for the rest of the lab, in every module, and every step works the same either way.</li></ul></div><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img130\" alt=\"See everything, change nothing. You are the Head of AI Platform and Security at NovaSmart. Three questions, still unanswered: what do we officially have (the catalog), what is actually running (every workload, wherever it runs), and who has been reading customer data (the audit trail). Changes made: 0; this module only looks.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Make sure agy has the newest version of the lab guide it follows, before you start.</p><p>First, check the model picker in the chat box reads Gemini 3.8 Flash Low. If it does not, open it and pick Gemini 3.8 Flash, then Low.</p><p>Ask agy:</p>"},
+    {type:"prompt",text:"Update the skills for this lab and make sure I have the latest version: run skills/novasmart-governance-lab/scripts/sync_skill.py from github.com/lavinigam-gcp/BwG-Track2. Go ahead without asking me, then tell me what to do next."},
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy fetches the update script from the lab's GitHub repository, runs it, and tells you in a line or two which version of the guide you now have, or that it was already the latest.</li><li>Nothing in your cloud project changes. Only agy's guide on this workstation is replaced.</li><li>If agy says it could not reach GitHub, carry on: the lab works with the guide it already has.</li><li>Then start a new agy conversation for Step 1, so agy reads the updated guide.</li></ul>"}
+  ]
+});
+MISSIONS.M0.steps.push({
   nav:{title:"Step 1 · Check your environment",sub:""},
   eyebrow:{text:"M0 · See Everything",tone:"default"},
   h2:"Step 1 · Check your environment",
@@ -990,9 +1005,9 @@ MISSIONS.M0.steps.push({
   meta:{kind:"reads",min:3},
   nextLabel:"Next: Step 2 · Meet your estate",
   blocks:[
-    {type:"prose",html:"<p class=\"module-subtitle\">M0 · See Everything — Instructions</p><p>In this module you find out what NovaSmart says it runs, what is really running, and who has been reading customer data. Every step is read-only: you change nothing and fix nothing. Fixing is M1.</p><div class=\"note\"><p class=\"note-t\">Before you start</p><ul><li>Use a new agy conversation for each module, starting with this one. One long conversation carries every earlier module's history, which slows agy down and makes its answers less reliable.</li><li>If replies are slow, ask agy to skip the pictures; every step works the same without them.</li></ul></div><figure class=\"fig\"><img class=\"figimg\" data-src=\"#img130\" alt=\"See everything, change nothing. You are the Head of AI Platform and Security at NovaSmart. Three questions, still unanswered: what do we officially have (the catalog), what is actually running (every workload, wherever it runs), and who has been reading customer data (the audit trail). Changes made: 0; this module only looks.\" width=\"1120\" height=\"625\" /></figure><p><strong>Goal:</strong> Make sure your workstation and cloud project are ready before you look at anything.</p><p>First, check the model picker in the chat box reads Gemini 3.8 Flash Low. If it does not, open it and pick Gemini 3.8 Flash, then Low.</p><p>Ask agy:</p>"},
+    {type:"prose",html:"<p><strong>Goal:</strong> Make sure your workstation and cloud project are ready before you look at anything.</p><p>In the new conversation, check the model picker still reads Gemini 3.8 Flash Low.</p><p>Ask agy:</p>"},
     {type:"prompt",text:"Check my environment is ready."},
-    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy checks its own toolkit and your cloud project, then opens by saying plainly whether you are ready to start.</li><li>A short table follows: one row per check, how agy verified it, the result, and anything it safely fixed.</li><li>If anything comes back not ready, ask agy to fix it before you move on.</li><li>Nothing in your environment changes; any safe fix agy makes is named in the table.</li></ul>"}
+    {type:"prose",html:"<p><strong>What to expect:</strong></p><ul><li>agy checks its own toolkit and your cloud project, then opens by saying plainly whether you are ready to start.</li><li>A short table follows: one row per check, how agy verified it, the result, and anything it safely fixed.</li><li>One row says whether agy's lab guide is the latest. If that row is missing or says not ready, go back to Step 0.</li><li>If anything comes back not ready, ask agy to fix it before you move on.</li><li>Nothing in your environment changes; any safe fix agy makes is named in the table.</li></ul>"}
   ]
 });
 MISSIONS.M0.steps.push({
@@ -2166,16 +2181,18 @@ var SS_KIND = {
   "no-prompt":{ ic:"bulb",   say:"No prompt. Read and decide" },
   optional:   { ic:"",       say:"Optional" }
 };
+/* the number a step shows: the N of its "Step N ·" title (M0 starts at Step 0), else its position */
+function stepNum(s, i){ var m = /^Step (\d+)\b/.exec((s && s.nav && s.nav.title) || ""); return m ? m[1] : String(i+1); }
 function stepStripHTML(steps, cur){
   if (!steps || steps.length < 2 || !steps.every(function(s){ return s.meta && SS_KIND[s.meta.kind]; })) return "";
   var h = '<nav class="stepstrip" aria-label="Steps in this module"><ol>';
   steps.forEach(function(s, i){
     var m = s.meta, k = SS_KIND[m.kind], opt = m.kind === "optional";
-    var title = (s.nav && s.nav.title) || ("Step "+(i+1));
+    var title = (s.nav && s.nav.title) || ("Step "+stepNum(s, i));
     var tip = title + ". " + (m.note || k.say) + (m.min ? ". About "+m.min+" min" : "") + ".";
     h += '<li><button type="button" class="ss-chip k-'+m.kind+(i===cur?' is-current':'')+(i<cur?' done':'')+'"'
       + ' data-ssidx="'+i+'" title="'+esc(tip)+'" aria-label="'+esc(tip)+'"'+(i===cur?' aria-current="step"':'')+'>'
-      + '<span class="ss-n">'+(i+1)+'</span>'
+      + '<span class="ss-n">'+stepNum(s, i)+'</span>'
       + (k.ic ? '<span class="ss-k" aria-hidden="true">'+ico(k.ic)+'</span>' : '')
       + (opt ? '<span class="ss-o" aria-hidden="true">Optional</span>'
              : (m.min ? '<span class="ss-m" aria-hidden="true">~'+m.min+' min</span>' : ''))
@@ -2224,8 +2241,10 @@ function sectionHTML(step, idx, total, isPlaceholder){
   h += '<button class="btn" type="button" data-back'+(idx===0?' disabled':'')+'>'+ico("arrowL")+' Back</button>';
   h += '<div class="fspacer"></div>';
   var _cm = MISSIONS[CURRENT_CODE()];
-  if (!(_cm && _cm.toc && _cm.toc.length))
-    h += '<span class="footer-count">Step '+(idx+1)+' of '+total+'</span>';
+  if (!(_cm && _cm.toc && _cm.toc.length)){
+    var _last = (_cm && _cm.steps && _cm.steps.length) ? stepNum(_cm.steps[_cm.steps.length-1], _cm.steps.length-1) : String(total);
+    h += '<span class="footer-count">Step '+stepNum(step, idx)+' of '+_last+'</span>';
+  }
   if (step.restart){
     var _nxt = nextMissionCode(CURRENT_CODE());
     if (!step.noRestart && !isPlaceholder) h += '<button class="btn" type="button" data-restart>Restart '+esc(CURRENT_CODE())+' '+ico("refresh")+'</button>';
@@ -2288,7 +2307,7 @@ function buildNav(mission){
     var badgeIcon = (badges[i] && badges[i].icon) || "medal";
     html += '<li class="step'+(st.optional?' optional':'')+'" data-idx="'+i+'" role="button" tabindex="0" aria-label="'+esc((st.nav?st.nav.title:("Step "+i))+(st.optional?" (optional)":""))+'">'
       + '<span class="marker">'
-      +   '<span class="num">'+(i+1)+'</span>'
+      +   '<span class="num">'+stepNum(st, i)+'</span>'
       +   '<span class="check">'+ico("check")+'</span>'
       +   '<span class="medal-ic">'+ico(badgeIcon)+'</span>'
       + '</span>'

@@ -218,7 +218,7 @@ def install(staging, target):
         shutil.rmtree(prev, ignore_errors=True)
         os.rename(target, prev)
     os.rename(new, target)
-    chown_like(work, skills_dir)
+    chown_like(os.path.dirname(work), skills_dir)
 
 
 def main():

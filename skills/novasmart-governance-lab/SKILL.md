@@ -30,7 +30,8 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
 11. ⛔ **A background command has no output until its "finished with result" arrives** (or `manage_task`
     shows it done with its log). No entry, picture, answer or next estate call is made from it before then.
     **Never type `<SYSTEM_MESSAGE>`, "Notification from task" or "finished with result" yourself:** a value
-    exists only once a tool result shows it. While you wait, write no text; state a result in one sentence.
+    exists only once a tool result shows it. Wait with `manage_task` status checks, never the `schedule`
+    tool (it ends your turn with a line the leader sees); write no text while waiting.
 12. ⛔ **No browser opens from your shell** (`xdg-open` only logs the URL). Never say you opened a page:
     give its link and say the leader opens it in Chrome.
 13. ⛔ **Draw every picture with `scripts/draw_picture.py`** (Gemini 3.1 Flash Image, on this lab's
@@ -59,8 +60,7 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
   - `gcloud` — `gcloud version`. Agent Registry and agent identity are GA in gcloud. Agent Runtime has
     no gcloud commands (`gcloud ai reasoning-engines` does not exist): use REST or the SDK.
   - `google-dev-knowledge` MCP — the docs source once it answers a real query; date your queries.
-- Operational gotchas (two locations, API enablement, propagation lag, missing `unzip`):
-  `references/m0.md` §8.
+- Operational gotchas: `references/m0.md` §8.
 - **"How do I…":** agents-cli and its skills → gcloud `--help` → google-dev-knowledge (dated). Confirm
   every flag with `--help`; don't guess.
 
