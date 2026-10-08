@@ -187,8 +187,8 @@ python3 /config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts
 - **A `grep` of a step file** for a detail the sheet lacks: pass it as
   `--grep "grep -n '<pattern>' /config/Desktop/novasmart-evidence/mN/mN_stepK.txt"` (repeat for each); the
   script runs it and records it.
-- **Do not write a Show entry by hand**, edit the run log, or re-run the A–D sequence: the script is the
-  sequence. If it prints `WARNING`, say so on screen in that answer.
+- **Do not write a Show entry by hand**, edit the run log, or also run `write_entry.py`: this script writes
+  the Show entry. If it prints `WARNING`, say so on screen in that answer.
 - Its last line is the `### Where the proof is` sentence, with the command count and how many failed: use it
   as printed. If it says the last check did not end `RESULT: clean`, say so in the answer.
 - **Never write into the evidence files of other steps, or the scorecard folder.** Write the page this turn

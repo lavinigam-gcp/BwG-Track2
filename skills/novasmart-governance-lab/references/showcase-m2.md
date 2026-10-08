@@ -76,8 +76,8 @@ M2 changed the estate in two steps (Step 3 and Step 5). These rules come from `m
     "PROVEN" label on the gateway. *"Attached only to the back office"* means no other agent has it.
   - **What it may do** — read, not change. Its database access went from *change or delete every table in
     the project* to *run queries* plus *read the two pricing datasets*. Proven only by **the refused change
-    in the audit log under the back office's badge** and **the table's unchanged last-modified time**,
-    both quoted. If the recorded row shows no caller, say *"the audit log shows the refusal; the row as
+    in the audit log under the back office's badge** and **the table check that printed `UNCHANGED`**,
+    both quoted. If it printed `CHANGED`, the page says the test write landed, never that it was refused. If the recorded row shows no caller, say *"the audit log shows the refusal; the row as
     recorded does not name the caller"*. Missing either → say which is missing; with neither, dashed
     *"from configuration, not a test"*.
   - ⛔ The gateway never "stopped the write"; the database access never "decided where it may go". A
@@ -196,7 +196,7 @@ rounds, two to four minutes.
    list* · *through a project-wide role* · *both* · *refused*. **Answers are buttons or cards
    (`aria-pressed`), never a `<select>` dropdown**; every answer, right or wrong, reveals its evidence line.
 2. **Round 2 · Reach or do?**: evidence cards (attached to the gateway; the gateway's verdict; run queries
-   plus read two datasets; the refused change in the audit log; the unchanged last-modified time) sorted
+   plus read two datasets; the refused change in the audit log; the table check as printed) sorted
    into the two controls. Cards the files do not hold are dropped, and an unproven card is labelled so.
 3. **Round 3 · Spot the overclaim**: six to eight statements to mark *the evidence supports this* or *goes
    too far*. Goes too far: *only the front desk can call the back office*; *the gateway stopped the

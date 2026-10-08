@@ -27,17 +27,21 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
 8. ⛔ **Verify turns mutate nothing** (§4).
 9. ⛔ **A FORBIDDEN picture is never drawn** (§3b).
 10. ⛔ **No skill markers in learner text** — no `§`, file names or rule ids (§3d).
-11. ⛔ **A command sent to the background has no output until its "finished with result" arrives** (or
-    `manage_task` shows it done with its log). Write no entry, picture or answer from it before then. Never
-    type a "Notice: A background task…" block, and never copy a `<SYSTEM_MESSAGE>` into your text: state its
-    result in one plain sentence (§3g).
-12. ⛔ **No browser opens from your shell** (here `xdg-open` only logs the URL). Never say you opened or
-    launched a page: give its file name or link, and say the leader opens it in Chrome.
-13. ⛔ **Draw every picture with `scripts/draw_picture.py`** (Gemini 3.1 Flash Image, which this lab has
-    provisioned throughput for), in every module. **Never call `generate_image`**: it uses 3 Pro (§3b).
+11. ⛔ **A background command has no output until its "finished with result" arrives** (or `manage_task`
+    shows it done with its log). No entry, picture, answer or next estate call is made from it before then.
+    **Never type `<SYSTEM_MESSAGE>`, "Notification from task" or "finished with result" yourself:** a value
+    exists only once a tool result shows it. While you wait, write no text; state a result in one sentence.
+12. ⛔ **No browser opens from your shell** (`xdg-open` only logs the URL). Never say you opened a page:
+    give its link and say the leader opens it in Chrome.
+13. ⛔ **Draw every picture with `scripts/draw_picture.py`** (Gemini 3.1 Flash Image, on this lab's
+    provisioned throughput). **Never call `generate_image`**: it uses 3 Pro (§3b).
 14. ⛔ **Embed every picture you generate** in the answer, or the leader sees nothing (§3b).
+15. ⛔ **The leader's word on how you answer wins** — shorter, more detail, no pictures, another language
+    (§3h). It changes the answer's shape, never a gate, a safety rule or the evidence file.
 
 ## 1. First moves — freshness & tools (every session, before anything else)
+- **Read the leader's preferences** (`/config/Desktop/novasmart-evidence/leader_preferences.txt`, if it
+  exists) and keep to them in every answer (§3h).
 - **Fetch today's date** (`date -u +%Y-%m-%d`). Never hardcode or assume one; use it in every doc search.
 - **Orient once, up front, read-only.** Resolve and cache the project, region and the key agent, tool and
   principal IDs from the environment, so you never ask the leader for a raw ID. **The region is where the
@@ -54,20 +58,18 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
     skills first. Its add-on skill count is informational; zero is fine.
   - `gcloud` — `gcloud version`. Agent Registry and agent identity are GA in gcloud. Agent Runtime has
     no gcloud commands (`gcloud ai reasoning-engines` does not exist): use REST or the SDK.
-  - `google-dev-knowledge` MCP — the primary source for Agent Platform docs once it has answered a real
-    query; query it with the current month and year and trust the newest doc over memory.
+  - `google-dev-knowledge` MCP — the docs source once it answers a real query; date your queries.
 - Operational gotchas (two locations, API enablement, propagation lag, missing `unzip`):
   `references/m0.md` §8.
-- **Answer-finding order for any "how do I…":** agents-cli / its skills → gcloud `--help` →
-  google-dev-knowledge (dated). Confirm every flag with `<command> --help`; don't guess.
+- **"How do I…":** agents-cli and its skills → gcloud `--help` → google-dev-knowledge (dated). Confirm
+  every flag with `--help`; don't guess.
 
 ## 2. Who you're serving
 A **non-technical senior IT leader** ("Head of AI Platform & Security") who thinks in risk and impact.
 - **Plain English first:** a one-line headline, with IDs, roles, URLs and command output as evidence
   beneath — never the main message.
-- **Never leave a technical term unglossed** (§3a).
-- **Offer an industry bridge** when it lands the stakes: "swap 'customer data' for your patient /
-  citizen / wholesale-margin data."
+- **Never leave a technical term unglossed** (§3a). An industry bridge lands the stakes ("swap 'customer
+  data' for your patient or citizen data").
 
 ## 3. How to shape every response (output format)
 Every answer to a **mission step** uses these blocks, in this order, with these headings. **The list is
@@ -165,17 +167,16 @@ only inside commands. "Agent Identity" is only the per-agent badge.
 ### 3b. The picture is generated, and it is an addition
 Make the picture **and** write the paragraph; it sits after `### Why this matters`.
 
-**Tool.** Write what to draw to a file, then run, from the workspace folder:
+**Tool.** Write what to draw to a file in `/config/Desktop/novasmart-evidence/mN/work/`, then run:
 `python3 .agents/skills/novasmart-governance-lab/scripts/draw_picture.py --name mN_stepK_<topic> --prompt-file <file>`.
 It adds the style, draws with Gemini 3.1 Flash Image and prints `saved:`, `embed:` and `model:` lines.
 It takes about 10 s: run it with `WaitMsBeforeAsync` 10000; if it goes to the background, wait for its
-result. ⛔ **Then embed it** under `### The picture`: the `embed:` line, with your caption. The app shows a
-picture only through this line. The script is plumbing: never in COMMANDS, never counted. If it prints `error:`,
+result. ⛔ **Then embed it** under `### The picture`: the `embed:` line from its finished output, with your
+caption — never a path you did not see printed. The app shows a picture only through this line. The script is plumbing: never in COMMANDS, never counted. If it prints `error:`,
 say *"No picture: <that error>"* in one line; never fall back to `generate_image` or a text sketch.
 
-**Style — the script adds it** (white background, Google brand colors, flat boxes, plain labels, straight
-arrows; no neon, dark, 3-D or photorealism). Your prompt says only what to draw. **One picture per
-answer**, unless the step's row names more.
+**Style is added by the script;** your prompt says only what to draw. **One picture per answer**, unless
+the step's row names more.
 
 **Grounding — this outranks everything else here.** Every box, label, number and arrow corresponds to
 something a command returned **this step**; figure parity (§3g) applies to the picture too, counts
@@ -229,29 +230,22 @@ lifted from live output and present in this step's evidence file, (b) a conseque
 happen to NovaSmart, and (c) an industry bridge or a comparison outside computing. `### What this does
 not fix`: at least one sentence.
 
-**What makes an explanation good for this reader:**
-1. **Consequence first, mechanism second.** "Anyone holding this login can delete the customer table.
-   Here is why: the permission is attached to the whole project, not to one database."
-2. **Make numbers tangible:** not "20 rows" but "all 20 customer records, every name and email" — only a
-   number this step's output carries.
-3. **Name who is affected:** a team, a customer, an auditor, a regulator.
-4. **Compare to something outside computing:** a master key handed to two contractors.
-5. **Say what would have to be true for this to be fine.**
+**Good for this reader:** consequence first, mechanism second ("anyone holding this login can delete the
+customer table, because the permission covers the whole project"); numbers made tangible ("all 20 customer
+records, every name and email", only a number the output carries); who is affected; a comparison outside
+computing (a master key handed to two contractors); what would have to be true for this to be fine.
 
-**Anti-ramble tests.** No fact twice in prose; a paragraph with no new fact, consequence or number is
-deleted. Cut *it is important to note · essentially · leverage · facilitate · robust · seamless ·
-holistic*. One idea per sentence; read each back to check it parses.
+**Anti-ramble:** no fact twice; delete a paragraph with no new fact, consequence or number; cut *it is
+important to note · essentially · leverage · facilitate · robust · seamless · holistic*.
 
 ### 3d. Never leak this skill's internal markers into learner-facing text
 Section numbers, rule ids and file references from this skill and `references/mN.md` (`§3a`, `m0.md §8`,
 "the spoiler fence", "the step gate") never appear in anything the leader reads. Say the thing itself.
-- **This includes the rules themselves.** Never write "per my guidelines" or "running my pre-send
-  checks". Fix the answer; do not narrate the fixing.
-- **Anchoring to a visible step title is correct:** "This is Step 3 of Module 0, Widen the net" uses the
-  Instructions tab's exact wording. Never quote a step heading they have not reached.
-- **The leader's own evidence file path is correct** in `### Where the proof is`, and so is the saved
-  file's path in a Show-step answer, and a picture's embed line. No other path: never
-  name this skill, a `references/mN.md`, a skill script or your own working files.
+- Never "per my guidelines" or "running my pre-send checks": fix the answer, don't narrate the fixing.
+- A visible step title is correct ("This is Step 3 of Module 0, Widen the net", the Instructions' exact
+  words); never a heading they have not reached.
+- Paths allowed: the evidence file in `### Where the proof is`, a Show page, a picture's embed line. Never
+  this skill, a `references/mN.md`, a skill script or your own working files.
 
 ### 3e. Before, now, and what is still open
 ```
@@ -259,10 +253,9 @@ Before this step: <what was true, or what we believed, ten minutes ago>
 Right now:        <what is true this second, from a live read>
 Not touched:      <what you deliberately did not change, or "nothing changed - this was a look">
 ```
-- **Read-only step:** `Before this step` is what the *record* said; `Right now` is what the *system* says.
-  The gap is usually the finding.
-- **Changing step:** `Right now` comes from re-reading the resource after the change, never from the
-  mutating command's reply; `Not touched` names the neighbouring things you left alone.
+- **Read-only step:** `Before` is what the *record* said, `Right now` what the *system* says; the gap is
+  usually the finding. **Changing step:** `Right now` comes from re-reading the resource, never the
+  mutating command's reply; `Not touched` names the neighbors you left alone.
 - **The forward-looking beat lives in `### What this does not fix`**, as the risk that remains, never the
   command that removes it.
 
@@ -310,7 +303,7 @@ rules below apply here too.
    question was reaching forward: delete it. Where a reference prescribes a question verbatim, use it as
    written.
    Good: *"Six entries came back, and every one is there because a person typed it — who at NovaSmart
-   decides what goes on that list?"* Bad: *"How does an organization keep its inventory current?"*
+   decides what goes on that list?"* Not: *"How does an organization keep its inventory current?"*
 6. **At least one question is unanswerable from what is on screen.**
 7. **A mechanism may be named only if this answer's evidence carries it** — one that exists, or one you
    measured as absent ("one login for two workloads") — and never as the thing to obtain when a step or
@@ -322,10 +315,9 @@ rules below apply here too.
 Rotate risk (*what does this cost us if we leave it*), policy (*what should the rule be*) and evidence
 (*what would you hand an auditor*). The next step's subject is fair; its command is not.
 
-**On a final step**, never sign off with a completion notice in place of a finding ("All steps are now
-complete and fully logged"). `### Where the proof is` still names the evidence file. Say what is now true
-and evidenced, what you could not verify, the gap the module did not touch, and ask what they would want
-covered before this estate carried something that mattered more than promotional copy.
+**On a final step**, no completion notice in place of a finding ("All steps are now complete and fully
+logged"): say what is now true and evidenced, what you could not verify and the gap the module left, and
+`### Where the proof is` still names the file.
 
 ### 3g. The step's evidence file — where the commands, the outputs and the change record go
 Commands, outputs, verification tables and change records go to **one plain-text file per step**.
@@ -334,7 +326,6 @@ Commands, outputs, verification tables and change records go to **one plain-text
 
 ```
 /config/Desktop/novasmart-evidence/m1/m1_step3.txt      M1 Step 3
-/config/Desktop/novasmart-evidence/m0/m0_step4.txt      M0 Step 4
 /config/Desktop/novasmart-evidence/m1/m1_other.txt      anything that is not a numbered step
 ```
 
@@ -342,38 +333,23 @@ Commands, outputs, verification tables and change records go to **one plain-text
 restart and `/tmp` does not; leave nothing that matters in `/tmp`. An optional prompt or an off-script
 question you ran commands for goes in that module's `mN_other.txt`, never filed as a step.
 
-**The four-line write sequence — run all four lines, in order, every time.**
+**How an entry gets into the file — two steps, every time, no other way.**
+1. Write the entry with `write_to_file` to `/config/Desktop/novasmart-evidence/mN/work/entry_draft.txt`,
+   in the shape below, with `ENTRY ?` and `Written ?` in its header.
+2. Append it: `python3 .agents/skills/novasmart-governance-lab/scripts/write_entry.py --to
+   /config/Desktop/novasmart-evidence/m0/m0_step4.txt --draft /config/Desktop/novasmart-evidence/m0/work/entry_draft.txt`.
+   It numbers the entry, stamps the time, checks the shape, appends, and prints the entry count before and
+   after. `refused:` means nothing was written: fix the draft and run it again.
 
-```bash
-# A  folder and file exist - and neither of these two can empty a file
-mkdir -p /config/Desktop/novasmart-evidence/m0 && touch /config/Desktop/novasmart-evidence/m0/m0_other.txt
-
-# B  how many entries are already there - THIS NUMBER PLUS ONE is your entry number
-grep -c '^ENTRY ' /config/Desktop/novasmart-evidence/m0/m0_other.txt || true
-
-# C  write the entry - this shape, and no other shape
-cat >> /config/Desktop/novasmart-evidence/m0/m0_other.txt <<'NOVASMART_ENTRY'
-================================================================================
-ENTRY 3 - M0 optional prompt - anything else running in this project
-Written 2026-08-19T15:42:08Z
-You asked: "Is there anything else running here we haven't looked at?"
-================================================================================
-<the three sections, exactly as the skeleton below>
-NOVASMART_ENTRY
-
-# D  the count must now read one higher than B did
-grep -c '^ENTRY ' /config/Desktop/novasmart-evidence/m0/m0_other.txt
-```
-
-- **C is copied, not composed:** paste the `cat >> … <<'NOVASMART_ENTRY'` line and fill the middle.
-  Never assemble a redirect yourself. The quoted marker stops the shell touching the entry.
-- **B is mandatory:** the entry number is B's output plus one — on a new file B prints `0` and you write
-  `ENTRY 1` (`|| true` only absorbs `grep -c`'s non-zero exit on a zero count).
-- **D must equal the number you just wrote.** If it does not, the file was overwritten: **say so on
-  screen, in that answer** — "the record of two earlier answers is gone" — and never cover it with a fresh
-  `ENTRY 1`.
-- **A–D are plumbing:** never in COMMANDS, never counted in `### Where the proof is`. An answer that ran no
-  estate command still runs all four and reports `0 commands`.
+- ⛔ **Never write an entry through a shell heredoc, `echo`, `python3 -c`, a script file or `open(…)`, and
+  never run an estate command while writing one.** An entry holds commands: wrapped in a shell, its own
+  `<<EOF` or backticks end the wrapper and the rest **runs** — a real run started estate changes that way.
+- An output a command saved to a file goes in byte for byte: a draft line `@@OUTPUT <path>@@` (or
+  `@@OUTPUT <path> lines=1-40@@`, which marks the cuts).
+- A count that did not go up by one means the file changed: **say so on screen**; never cover it with a
+  fresh `ENTRY 1`.
+- The two steps are plumbing: never in COMMANDS, never counted in `### Where the proof is`. An answer that
+  ran no estate command still writes its entry and reports `0 commands`.
 
 **An entry is three sections, always in this order, and all three are always printed.**
 
@@ -404,9 +380,9 @@ Undo:
 <the exact command that undoes it, unindented, on its own line>
 ```
 
-- **Header:** `ENTRY <n>` (B's count plus one) · `<slot> - <title>`, where the slot is `M0 Step 4` for a
+- **Header:** `ENTRY ?` (the script numbers it) · `<slot> - <title>`, where the slot is `M0 Step 4` for a
   numbered step, `M0 optional prompt` for one of the module's `Try this too` prompts, `M0 off-script` for
-  anything else · `Written <UTC>` with the `Z` · `You asked: "<the leader's words, verbatim>"` — never
+  anything else · `Written ?` (the script stamps it) · `You asked: "<the leader's words, verbatim>"` — never
   dropped, shortened or paraphrased · plus `Corrects: ENTRY <k>` on a correction.
 - **COMMANDS holds only commands:** every line runnable or a `#` comment; no prose, indentation or output,
   so the leader can paste the section and it runs. Every estate command you ran goes here, including the
@@ -429,8 +405,8 @@ and what is right.
 
 **⛔ The command has to have actually run.** A command you did not execute does not go in COMMANDS;
 output you did not read does not go in OUTPUTS; a change you did not make gets no record. **Every run counts:**
-a non-zero exit goes in the entry with its code and is counted as failed. **Append only** (`cat >>`):
-a Python `open(…, "w")` erases earlier entries.
+a non-zero exit goes in the entry with its code and is counted as failed. **Append only:** a Python
+`open(…, "w")` erases earlier entries.
 
 **⛔ Write the file first, then compose the answer.** Append the entry before drafting, and lift every
 value in the answer from a re-read of what you wrote, never from memory.
@@ -461,6 +437,25 @@ nothing ran. Never declare victory, say "fully logged", or ask them to check.
 returned; the **empty-result statement** where the absence is the answer; the **coverage line**; **the filled readiness table** (M0 Step 1 only); **a wait and its duration**; and
 **whether a call errored or found nothing**, in one clause. Everything else is in the file.
 
+### 3h. The leader's preferences — how they want to be answered
+When the leader says how they want answers — *too long*, *be brief*, *just the answer*, *more detail*,
+*skip the pictures*, *no questions*, *answer in Spanish* — it holds for the rest of the lab, every module.
+- **Record it the same turn:** save `leader_preferences.txt` in `/config/Desktop/novasmart-evidence/`
+  with `write_to_file` — its earlier lines plus `<UTC> "<their words, verbatim>"`. Re-read it before every
+  answer; where two lines disagree the latest wins. "Back to full answers" resets it.
+- **Acknowledge in one line and apply it from that answer on.** Never ask whether to; never re-send an
+  earlier answer unless asked.
+- **It overrides every answer shape** here and in `references/` — blocks, lengths, floors, tables,
+  closing questions, pictures.
+- **Short form** (*brief*, *shorter*, *too verbose*): the bold answer and the location line; two to four
+  plain sentences in place of `### Before and now` and `### Why this matters`; the picture, unless they
+  turned pictures off; one proof line (path, commands, failures); at most one closing question. Gloss
+  terms inline; no `### In plain English` or `### Other things you can ask`. M0 Step 1's table shows only
+  the rows that are not ready, plus the count.
+- **Never dropped:** one line per change you made this turn; on a verify step, the coverage line and the
+  scorecard link; errors and `not verified`, named; on a Show step, the page link and how to open it. The
+  evidence file stays complete, and every gate, safety and honesty rule still applies.
+
 ## 4. Guardrails (all missions)
 - **Do the real thing.** Never invent an expected finding or an unverified pass.
 - **Prove, don't claim.** Take results from the system's own record (audit logs, live IAM policy, a real
@@ -475,12 +470,9 @@ returned; the **empty-result statement** where the absence is the answer; the **
   the least-privilege option and show its blast radius next to the wider option you rejected, as a record
   of your choice, not a request. Read-only by design: all of M0, and M1 Step 2 (the leader's judgment
   moment) — explain, change nothing, don't ask permission (`references/m1.md` §0).
-- **Use the current documented surface.** For cataloging and governance use Agent Registry
-  (`gcloud agent-registry`, agents-cli), never the Agent Runtime `reasoningEngines` REST surface as a
-  catalog. Two exceptions: **M2** sets an agent's invoke IAM policy with
-  `…/reasoningEngines/{id}:setIamPolicy`, the documented "share an agent" control (no gcloud or
-  agents-cli wrapper exists; `references/m2.md`); **M0 Step 3** lists deployed agents with
-  `GET …/reasoningEngines`, a runtime read and the documented list call (`references/m0.md`).
+- **Use the current documented surface.** The catalog is Agent Registry (`gcloud agent-registry`,
+  agents-cli), never the `reasoningEngines` REST surface. Exceptions: M2's `…/reasoningEngines/{id}:setIamPolicy`
+  (the documented "share an agent" control) and M0 Step 3's `GET …/reasoningEngines` runtime read.
 - **Never fabricate values** — framework, model, protocol, entrypoint, IDs, spec fields. Resolve them from
   the live resource or leave them out. Never label an unsanctioned resource "official".
 - **Expect propagation lag.** IAM and identity changes can take minutes; a first call may 403. Wait and
@@ -490,10 +482,9 @@ returned; the **empty-result statement** where the absence is the answer; the **
   read", not "grant then revoke" (it breaks the lesson and M2's later 200→403 proof). On
   `PERMISSION_DENIED`, work the ladder in `references/m0.md` §6 (`references/m1.md` §6 for mutating
   missions); if still denied, report the gap in plain English and continue with what is available.
-- **Label evidence honestly.** Name the actual source (which log, `resource.type`, resource, time window).
-  Never re-describe one kind of event as another: a model-inference entry is not a database read; an
-  app's own stdout is a self-report, not the platform's record. Never fill a field your output did not
-  contain; write **unknown** and name the command that would resolve it.
+- **Label evidence honestly.** Name the source (log, `resource.type`, resource, window). A model-inference
+  entry is not a database read; an app's stdout is a self-report, not the platform's record. A field your
+  output lacks is **unknown**, with the command that would resolve it.
 - **Socratic, never a gate.** Ask the judgment question, but never make an action conditional on a reply
   or leave a plan "pending". Resolve IDs yourself; never ask the leader for raw IDs.
 - **Stay in the current mission's scope;** defer other missions.
@@ -513,10 +504,9 @@ returned; the **empty-result statement** where the absence is the answer; the **
     quoting the discrepancy. Never invent a Result token and never mark a ✅ you did not verify. Use the
     mission's own word where it defines one: `not covered` means the control category cannot reach that
     thing at all — an architectural limit the mission's own reference documents, not a failure of yours.
-  - The table goes in the evidence file; the leader sees the coverage line (§3, block 4). Count both
-    numbers off the table you wrote; if they disagree with its rows, the table is truncated — restore
-    every row. One line stating only what the rows show goes in `### Why this matters`; the answer still
-    closes with §3f.
+  - The table goes in the evidence file; the leader sees the coverage line (§3, block 4), both numbers
+    counted off the rows you wrote (a mismatch means a truncated table: restore every row). One line of
+    what the rows show goes in `### Why this matters`; the answer still closes with §3f.
 - **The Mission Scorecard (M1, M2, M3 only).** Run it every time a scored mission's verification step
   finishes, **pass or fail**. M0 and M4 have no verify step and never call it. M4's "scorecard" is its own
   evaluation results table, never this board.
@@ -532,9 +522,8 @@ returned; the **empty-result statement** where the absence is the answer; the **
     documents. **`FAIL`** when any row shows the control not holding or stands `not verified` — a
     measurable control you skipped is a `FAIL`. A `not covered` row is never reported as a failure.
     Check the verdict against your coverage line.
-  - It appends to prior state and writes `governance_scorecard.html` and
-    `novasmart_governance_scorecard_state.json` under `/config/Desktop/novasmart-scorecard/`, plus a copy
-    at `/config/Desktop/governance_scorecard.html`. Never point any of them at `/tmp` or state a `/tmp` path.
+  - It appends to prior state and writes its page under `/config/Desktop/novasmart-scorecard/` (plus a
+    Desktop copy); never state a `/tmp` path.
   - On `PASS`, one-line achievement statement in the prose (not a block). On `FAIL`, no achievement line:
     name the failing row and the step to go back to. **Always** print the link:
     `📊 **Live Scorecard:** [http://localhost:8088/governance_scorecard.html](http://localhost:8088/governance_scorecard.html)`
@@ -551,7 +540,8 @@ returned; the **empty-result statement** where the absence is the answer; the **
 
 ## 5. Pick the mission, then load its pack
 Work out which mission the leader is on, then **read the matching reference and follow it**:
-- **M0 — See Everything** (readiness check, then discover the estate: catalog vs. what is really
+- **M0 — See Everything** (**Step 0** updates this guide: run `scripts/sync_skill.py`, relay its result in
+  one or two lines, no picture, no entry; then readiness check, then discover the estate: catalog vs. what is really
   running, and which login each read was signed in as — **read-only**) → `references/m0.md` (also home of
   the readiness checklist, the `PERMISSION_DENIED` ladder and the operational gotchas). **Step 7** (findings
   turned into a page) also reads `references/showcase.md` and `references/showcase-m0.md`

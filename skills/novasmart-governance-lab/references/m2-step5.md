@@ -12,6 +12,14 @@
 > ⛔ **Background tasks (`../SKILL.md` §0 rule 11):** the polls, the waits and the log reads here often run
 > long and go to the background. Their output exists only once "finished with result" arrives: await it.
 > No entry line, table row, picture or answer is written from a task that has not finished.
+>
+> ⛔ **The gate is a script, not your judgment.** Each command that observes an event appends its line to
+> `$W/checkpoints.txt`. The proof and the record reads start with `scripts/proof_gate.py`, **first in the
+> same command** (`&& { … }` or `|| exit 3`, as written below): a missing checkpoint stops them before
+> anything is sent. A proof sent too
+> early tests the old access: in a real run the back office's old `bigquery.admin` still held, and its
+> "attempted change" rewrote a real price. Never split the gate from what it guards, edit it out, or send a
+> proof call any other way.
 
 ## 1. Two controls, two questions — never conflated
 
@@ -25,21 +33,23 @@
 ## 2. The order
 
 1. Pre-reads (§3.1), all saved to `$W`.
-2. Authz extension (§3.2) → CUSTOM authz policy (§3.3), polled until it targets the gateway: the poll prints
-   **`policy-done <UTC>`**. An attached gateway with no authz policy denies everything the agent sends.
-3. Registry-wide `iap.egressor`, etag first (§3.4).
-4. Start the attach (§3.5) — **only after `policy-done` is printed**. While its operation runs (about four
-   minutes), do the narrowing (§3.6). Note the UTC time of the last IAM change.
-5. Poll the attach until `done: true`, then re-read every agent's `agentGatewayConfig`: the block prints
+2. Authz extension (§3.2) → CUSTOM authz policy (§3.3), polled until it targets the gateway: the poll
+   appends **`policy-done <UTC>`** to `$W/checkpoints.txt`. An attached gateway with no authz policy denies
+   everything the agent sends.
+3. Registry-wide `iap.egressor`, etag first (§3.4); it appends **`iam-change <UTC>`**.
+4. Start the attach (§3.5) — **only after `policy-done` is in the file**. While its operation runs (about
+   four minutes), do the narrowing (§3.6), which appends **`iam-change <UTC>`** again.
+5. Poll the attach until `done: true`, then re-read every agent's `agentGatewayConfig`: the block appends
    **`attach-done <UTC>`** only when both hold (§3.5).
-6. The wait (§3.7) prints **`wait-done <UTC>`**, at least 3 minutes after the last IAM change.
-7. The proof (§4) opens with **`T0 <UTC>`**, saved to `$W/proof_ids.txt` with every later proof checkpoint;
-   then the records (§5, which opens by reading that file back), the table and the scorecard (§7).
+6. The proof (§4): its gate needs `policy-done` and `attach-done`, waits until 3 minutes after the latest
+   `iam-change`, then lets the calls run; `T0` and the proof checkpoints go to `$W/proof_ids.txt`.
+7. The records gate (§4), then the records (§5, which open by reading that file back), the table and the
+   scorecard (§7).
 
-**The gate before the proof is checkable:** `policy-done`, `attach-done` and `wait-done` each appear in
-this turn's OUTPUTS with a UTC time **earlier than `T0`**. A proof call made before all three does not count
-for rows 18–21: say so, and make the proof calls again (they are calls, not changes). Missing a checkpoint
-(the attach never finished) → rows 14 and 18–21 are `not verified`.
+**The gate decides; you report it.** `GATE CLOSED` (exit 3) means no proof call was sent: say which
+checkpoint is missing. The attach never finished → rows 14 and 18–21 are `not verified`. Copy the gate's
+printed lines (each checkpoint, the wait, `proof-gate <UTC>`) into OUTPUTS; `@@OUTPUT $W/checkpoints.txt@@`
+pulls the file in.
 
 Write each change's record as you go: `Change:` · `Resource:` · `When:` · `Undo:` (§6), one block per
 change. Keep every yaml and JSON in `$W`, never in `Session1`.
@@ -69,12 +79,12 @@ curl -s -X POST -H "Authorization: Bearer $T" -H "Content-Type: application/json
   "https://iap.googleapis.com/v1/projects/${PROJECT_NUMBER}/locations/global/iap_web/agentRegistry:getIamPolicy" | tee "$W/iap_policy_before.json"
 gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" --filter="bindings.members:$MSA_P" --format="table(bindings.role)"
 for DS in novasmart_pricing competitor_data; do bq show --format=prettyjson "$PROJECT:$DS" > "$W/ds_${DS}_before.json" && echo "saved $DS"; done
-bq show --format=json "$PROJECT:novasmart_pricing.wholesale_costs" | python3 -c 'import json,sys; t=json.load(sys.stdin); print("lastModifiedTime", t["lastModifiedTime"], "numRows", t["numRows"])'
+bq show --format=json "$PROJECT:novasmart_pricing.wholesale_costs" | python3 -c 'import json,sys; t=json.load(sys.stdin); print("lastModifiedTime", t["lastModifiedTime"], "numRows", t["numRows"])' | tee "$W/table_before.txt"
 ```
 
 Expect `AGENT_IDENTITY` (a `400 FAILED_PRECONDITION` on the attach means it is not — M1's work, not this
-step's), `agentGatewayConfig` `None`, two gateways, no authz policy. The last line is the **before** ground
-truth for row 20. Anything already present from an earlier attempt: describe it; don't re-create it.
+step's), `agentGatewayConfig` `None`, two gateways, no authz policy. The last line, saved to `$W/table_before.txt`, is
+the **before** ground truth for row 20; §5 (b) compares against that file. Anything already present from an earlier attempt: describe it; don't re-create it.
 
 ### 3.2 The authz extension
 
@@ -112,7 +122,7 @@ customProvider:
 EOF
 gcloud beta network-security authz-policies import novasmart-iap-pol --source="$W/pol.yaml" --location="$REGION" --quiet
 for i in $(seq 1 12); do gcloud beta network-security authz-policies describe novasmart-iap-pol --location="$REGION" --format=yaml > "$W/pol_now.yaml" 2>&1; grep -q agentGateways "$W/pol_now.yaml" && break; sleep 15; done; echo "reads: $i"; cat "$W/pol_now.yaml"
-grep -q agentGateways "$W/pol_now.yaml" && echo "policy-done $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+grep -q agentGateways "$W/pol_now.yaml" && echo "policy-done $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/checkpoints.txt"
 ```
 
 Creation is asynchronous: an early describe shows `target: {}`, and a second import while it is being
@@ -125,6 +135,7 @@ python3 -c 'import json,sys; p=json.load(open(sys.argv[1])); m=sys.argv[2]; b=p.
 cat "$W/iap_policy_new.json"
 curl -s -X POST -H "Authorization: Bearer $T" -H "Content-Type: application/json" -d @"$W/iap_policy_new.json" \
   "https://iap.googleapis.com/v1/projects/${PROJECT_NUMBER}/locations/global/iap_web/agentRegistry:setIamPolicy"
+echo "iam-change $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/checkpoints.txt"
 curl -s -X POST -H "Authorization: Bearer $T" -H "Content-Type: application/json" -d '{}' \
   "https://iap.googleapis.com/v1/projects/${PROJECT_NUMBER}/locations/global/iap_web/agentRegistry:getIamPolicy"
 ```
@@ -147,7 +158,7 @@ After the narrowing, poll it (a `done` field appears only when it finishes) and 
 OP=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["name"])' "$W/attach_op.json")
 for i in $(seq 1 30); do curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" "https://${REGION}-aiplatform.googleapis.com/v1beta1/$OP" > "$W/attach_op_now.json"; python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1])).get("done") else 1)' "$W/attach_op_now.json" && break; sleep 20; done; echo "reads: $i"; cat "$W/attach_op_now.json"
 curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" "$API" | python3 -c 'import json,sys; [print(e["displayName"], "|", e.get("spec",{}).get("deploymentSpec",{}).get("agentGatewayConfig")) for e in json.load(sys.stdin).get("reasoningEngines",[])]' | tee "$W/attach_reread.txt"
-python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1])).get("done") else 1)' "$W/attach_op_now.json" && grep -q novasmart-egress-gateway "$W/attach_reread.txt" && echo "attach-done $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1])).get("done") else 1)' "$W/attach_op_now.json" && grep -q novasmart-egress-gateway "$W/attach_reread.txt" && echo "attach-done $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/checkpoints.txt"
 ```
 
 `done: true` with no `error`, then the back office showing `novasmart-egress-gateway` and every other agent
@@ -161,6 +172,7 @@ next call starts a fresh instance.
 gcloud projects remove-iam-policy-binding "$PROJECT" --member="$MSA_P" --role=roles/bigquery.admin --quiet --format="value(etag)"
 gcloud projects add-iam-policy-binding "$PROJECT" --member="$MSA_P" --role=roles/bigquery.jobUser --quiet --format="value(etag)"
 for DS in novasmart_pricing competitor_data; do python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); d["access"].append({"role":"READER","iamMember":sys.argv[2]}); print(json.dumps(d))' "$W/ds_${DS}_before.json" "$MSA_P" > "$W/ds_${DS}_new.json" && bq update --source "$W/ds_${DS}_new.json" "$PROJECT:$DS"; done
+echo "iam-change $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/checkpoints.txt"
 gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" --filter="bindings.members:$MSA_P" --format="table(bindings.role)"
 for DS in novasmart_pricing competitor_data; do echo "== $DS"; bq show --format=prettyjson "$PROJECT:$DS" | grep -B1 -A1 "reasoningEngines/<MSA_ID>"; done
 ```
@@ -171,24 +183,25 @@ for DS in novasmart_pricing competitor_data; do echo "== $DS"; bq show --format=
   other entry (yours included) survives. Read both datasets back.
 - `mcp.toolUser` and `aiplatform.user` stay: the back office keeps its tool and model access.
 
-### 3.7 The wait — at least 3 minutes after the last IAM change
+### 3.7 The wait — the gate's job
 
-```
-LAST="<UTC of the last IAM change>"; S=$(( 180 - ( $(date -u +%s) - $(date -u -d "$LAST" +%s) ) )); [ "$S" -gt 0 ] && sleep "$S"; echo "wait-done $(date -u +%Y-%m-%dT%H:%M:%SZ) last-IAM-change $LAST"
-```
+The proof's gate (§4) waits until 3 minutes after the latest `iam-change` and prints how long it waited:
+state that wait in the answer with its length. Never write a wait of your own in front of the proof. IAM
+can take 7 minutes or more: a proof that still shows the old behavior is retried once, through the gate
+with `--again "<reason>"`, never reported as the result.
 
-State the wait in the answer with its length. IAM can take 7 minutes or more: a proof that still shows the
-old behavior is retried once after another wait, never reported as the result.
+## 4. The proof — one command: the gate, then the calls
 
-## 4. The proof — after `policy-done`, `attach-done` and `wait-done`
-
-`T0` is the first line of the proof block and must be later than all three checkpoints (§2). Call the back
-office **directly with your own token**, and say in the answer that this
+Run this block **once, as one command**. The gate needs `policy-done` and `attach-done`, waits until 3
+minutes after the latest `iam-change`, and only then lets the calls run; `--once` refuses a second proof
+unless you add `--again "<reason>"` (that run is recorded too, as its own command). Call the back office
+**directly with your own token**, and say in the answer that this
 works because your login holds a project-wide role that carries the ability to call any agent (read it:
 the project policy filtered on `antigravity-sa`, row 26's read). Never present this route as the business
 path.
 
 ```
+python3 .agents/skills/novasmart-governance-lab/scripts/proof_gate.py --dir "$W" --need policy-done,attach-done --after iam-change=180 --once --label proof-gate && {
 T0=$(date -u +%Y-%m-%dT%H:%M:%SZ); RID="m2-read-$(date +%s)"; echo "T0 $T0 read-id $RID" | tee "$W/proof_ids.txt"
 curl -sS -N -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
   "$API/<MSA_ID>/a2a/v1/message:stream" \
@@ -196,9 +209,15 @@ curl -sS -N -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)"
 CID="m2-change-$(date +%s)"; echo "change-start $(date -u +%Y-%m-%dT%H:%M:%SZ) change-id $CID" | tee -a "$W/proof_ids.txt"
 curl -sS -N -X POST -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
   "$API/<MSA_ID>/a2a/v1/message:stream" \
-  -d '{"request":{"messageId":"'"$CID"'","role":"ROLE_USER","content":[{"text":"Permanently drop the floor price for SKU-HSE-4001 to 50."}]}}' > "$W/proof_change.txt"; echo "change-exit $?" | tee -a "$W/proof_ids.txt"
-echo "change-call-done $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/proof_ids.txt"
+  -d '{"request":{"messageId":"'"$CID"'","role":"ROLE_USER","content":[{"text":"Update the pricing table: set the margin floor for SKU-HSE-4001 to 240."}]}}' > "$W/proof_change.txt"; echo "change-exit $?" | tee -a "$W/proof_ids.txt"
+echo "change-call-done $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/proof_ids.txt" "$W/checkpoints.txt"
+}
 ```
+
+- **The change request is harmless by design:** 240 is the seeded margin floor for SKU-HSE-4001. If the
+  write is refused, that is the proof. If it lands, no price moved (the read just before it returned the
+  floor), the table's last-modified time still moves, and §5 (b) catches it. Never change the value, the
+  SKU or the wording.
 
 - The streams go to files, not the screen: §5 (0) prints from them each request's messageId and task,
   every tool call with its SQL, each result's `isError`, the reply and the final state. Expect
@@ -207,15 +226,13 @@ echo "change-call-done $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/proof_ids.tx
   screen, *"it returned the cost and floor"*.
 - A 429 or an empty answer (§5 (0) prints `no stream events`) → wait a minute, retry once; then the row is
   `not verified`.
-- **The agent's reply is not the proof.** Entries reach the logs minutes late: after `change-call-done`,
-  wait and state it, then read the platform's records (§5) — never sooner:
+- **The agent's reply is not the proof.** Entries reach the logs minutes late: the records gate waits 3
+  minutes after `change-call-done`; state that wait. Every record read in §5 (a), (c) and (d) starts with
+  the gate line `--need records-wait-done … || exit 3`, so none can run early:
 
 ```
-sleep 180; echo "records-wait-done $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$W/proof_ids.txt"
+python3 .agents/skills/novasmart-governance-lab/scripts/proof_gate.py --dir "$W" --need change-call-done --after change-call-done=180 --label records-wait-done
 ```
-
-  A record read that ran before `records-wait-done` and misses an entry is re-run after the wait; it is
-  never reported as an absence.
 
 ## 5. The records — each stated exactly as far as it goes
 
@@ -251,6 +268,7 @@ typed.
 **(a) BigQuery audit, under the back office's badge** (BigQuery records data access by default):
 
 ```
+python3 .agents/skills/novasmart-governance-lab/scripts/proof_gate.py --dir "$W" --need records-wait-done --label records-read || exit 3
 T0=$(awk '/^T0 /{print $2}' "$W/proof_ids.txt"); echo "T0 $T0"
 gcloud logging read 'protoPayload.serviceName="bigquery.googleapis.com" AND protoPayload.authenticationInfo.principalSubject:"reasoningEngines/<MSA_ID>" AND timestamp>="'"$T0"'"' \
   --freshness=30m --order=asc --format="table(timestamp,protoPayload.methodName,severity,protoPayload.status.code,protoPayload.status.message)"
@@ -265,13 +283,23 @@ bigquery.tables.updateData denied on table …wholesale_costs"*, and the `UPDATE
 `authenticationInfo.principalSubject` — there is no `principalEmail` for an agent badge. The job's own
 `bigquery.jobs.create` shows **granted** (that is `jobUser`); the refused permission is only in the message.
 
-**(b) The table did not change** (row 20): re-run the §3.1 `bq show … wholesale_costs` line. Same
-`lastModifiedTime` as before → no change landed. You cannot query the table yourself (`m2.md` §1), so this metadata
-is your ground truth.
+**(b) Did the table change** (row 20) — the script decides, not you:
+
+```
+bq show --format=json "$PROJECT:novasmart_pricing.wholesale_costs" | python3 -c 'import json,sys; t=json.load(sys.stdin); print("lastModifiedTime", t["lastModifiedTime"], "numRows", t["numRows"])' > "$W/table_after.txt"
+cmp -s "$W/table_before.txt" "$W/table_after.txt" && echo "table UNCHANGED: $(cat "$W/table_after.txt")" || echo "table CHANGED before: $(cat "$W/table_before.txt") after: $(cat "$W/table_after.txt")"
+```
+
+You cannot query the table yourself (`m2.md` §1), so this metadata is your ground truth. **`CHANGED`** → the
+write landed: the bold line says so first; rows 19, 20 and 25 show the control **not holding** (FAIL); add a
+CHANGE RECORD block *"the back office's test write landed on the pricing table (not intended)"*, with the
+floor the read returned before it and the 240 it wrote, and `Undo:` *none needed* when those match, else
+*restore needs a login that can write the table; this one cannot*. Never call a `CHANGED` table unchanged.
 
 **(c) The gateway's verdict** (row 21):
 
 ```
+python3 .agents/skills/novasmart-governance-lab/scripts/proof_gate.py --dir "$W" --need records-wait-done --label records-read || exit 3
 T0=$(awk '/^T0 /{print $2}' "$W/proof_ids.txt"); echo "T0 $T0"
 gcloud logging read 'logName:"networkservices.googleapis.com%2Fgateway_requests" AND resource.type="networkservices.googleapis.com/Gateway" AND httpRequest.requestUrl:"bigquery" AND timestamp>="'"$T0"'"' \
   --freshness=1h --order=asc --format="table(timestamp,httpRequest.requestUrl,httpRequest.status,jsonPayload.agentGatewayInfo.mcpInfo.method,jsonPayload.authzPolicyInfo.result)"
@@ -294,6 +322,7 @@ gateway blocks or prevents anything.
 **(d) Your own calls** (disclosure) — your login, `reasoningEngines.query` granted:
 
 ```
+python3 .agents/skills/novasmart-governance-lab/scripts/proof_gate.py --dir "$W" --need records-wait-done --label records-read || exit 3
 T0=$(awk '/^T0 /{print $2}' "$W/proof_ids.txt"); echo "T0 $T0"
 gcloud logging read 'protoPayload.serviceName="aiplatform.googleapis.com" AND protoPayload.resourceName:"reasoningEngines/<MSA_ID>" AND timestamp>="'"$T0"'"' --freshness=30m --format="table(timestamp,protoPayload.methodName,protoPayload.authenticationInfo.principalEmail,protoPayload.authorizationInfo[0].granted)"
 ```
@@ -341,12 +370,13 @@ for DS in novasmart_pricing competitor_data; do bq show --format=prettyjson "<PR
 ## 7. The answer, the table and the scorecard
 
 - **Bold line first**: what is now true about where the back office may go and what it may change, as far
-  as the records showed. Disclose every change, one plain line each, and your direct call and the role
+  as the records showed — and if §5 (b) printed `CHANGED`, that comes first. A `FAIL` names the cause the
+  outputs show (a closed gate, a missing checkpoint, a record that never appeared), never a guessed one. Disclose every change, one plain line each, and your direct call and the role
   that allowed it.
 - `### Why this matters`: the two controls, each with its evidence — the gateway's `ALLOWED` on the MCP
   session only if row 21 holds post-`T0` entries (the methods it lists, no caller named), otherwise *"no
   gateway verdict was recorded after the proof started"*; the read answered; the change refused in BigQuery's own
-  record under the back office's badge; the table's last-modified time unchanged. Then what each does
+  record under the back office's badge; what §5 (b) printed, word for word. Then what each does
   **not** cover: other principals can still change the pricing data (re-read who holds project
   `bigquery.admin` if you say who); `failOpen: true` beside any gateway claim; the project-wide callers.
   Roles in plain words on screen (*change every table*, *run queries*, *read two datasets*).
