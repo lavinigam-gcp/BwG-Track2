@@ -1,6 +1,6 @@
-# M1 Step 5 — Prove it worked · the procedure
+# M1 Step 6 — Prove it worked · the procedure
 
-> Read this when the leader reaches **M1 Step 5**. `../SKILL.md` and `m1.md` still apply: commands are in
+> Read this when the leader reaches **M1 Step 6**. `../SKILL.md` and `m1.md` still apply: commands are in
 > `m1.md` §5, the 16-row table in §9. This file adds the triggers, how to read the rows, the mislabels, the
 > answer and the scorecard.
 >
@@ -12,7 +12,7 @@
 1. **You caused a real action this session** — a legitimate read and a promo attempt. **No trigger, no
    claim:** say so and name the call you would need.
 2. **"Proof", "proves", "proven", "verified" as affirmative claims** only once the log rows are written in
-   this turn's entry in `m1_step5.txt` and the answer names what they show. Never "cryptographic proof",
+   this turn's entry in `m1_step6.txt` and the answer names what they show. Never "cryptographic proof",
    "100 % accountability", "fully verified". `not verified` is always allowed.
 
 **Nothing relevant came back** (no entries, or only rows that name none of your triggers)? The only output
@@ -60,7 +60,7 @@ Take `date -u +%Y-%m-%dT%H:%M:%SZ` before each, and keep every reply in the file
   stopped at job creation and the customer dataset's access list was never consulted. Say *"refused
   permission to run a query in this project"*, never *"the read of the customer table was refused"*.
 - **Match by time.** The promo container tries a read about 15 s after every boot, so a denial under the
-  new login already sits right after the Step 3 re-point. The row that answers this step is the one just
+  new login already sits right after the Step 4 re-point. The row that answers this step is the one just
   after **your** trigger's UTC time. If times cannot separate them, say so.
 - **A post-change read that still succeeds:** check who acted. The default compute account means a caller
   sent no token and the tool layer used its own owner-level account — a finding to report
@@ -90,8 +90,8 @@ Take `date -u +%Y-%m-%dT%H:%M:%SZ` before each, and keep every reply in the file
 - `### What I checked`: **one coverage line, never a table** — *"15 of the 16 checks are evidenced live; 1 is
   not verified."* Both numbers counted off the rows you wrote in the file, and both present there.
 - **The table** (§9 order, all 16 rows, `Check | How I verified | Result`) goes into this turn's entry in
-  `m1_step5.txt` after OUTPUTS. A table with gaps is the step working; never drop a row.
-- `### Where the proof is` names `/config/Desktop/novasmart-evidence/m1/m1_step5.txt`, its command count and
+  `m1_step6.txt` after OUTPUTS. A table with gaps is the step working; never drop a row.
+- `### Where the proof is` names `/config/Desktop/novasmart-evidence/m1/m1_step6.txt`, its command count and
   failures, in the `../SKILL.md` §3g form.
 
 ## 7. The scorecard — every time, pass or fail
@@ -111,7 +111,7 @@ python3 /config/Desktop/Session1/.agents/skills/novasmart-governance-lab/scripts
   its output in the entry; running it is not an estate mutation.
 - **PASS:** one plain line of achievement in the prose (each workload signs in as itself, and the promo
   agent's access to customer data is gone). **FAIL:** no achievement line; name the failing row and the step
-  to return to — identity or dataset scope → Step 3, a remaining promo path → Step 4, an entry that never
+  to return to — identity or dataset scope → Step 4, a remaining promo path → Step 5, an entry that never
   arrived → wait and re-run this step. Do not re-run the fix here to turn a row green.
 - **Always** print: `📊 **Live Scorecard:** [http://localhost:8088/governance_scorecard.html](http://localhost:8088/governance_scorecard.html)`
 

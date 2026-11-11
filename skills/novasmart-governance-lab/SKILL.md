@@ -60,6 +60,11 @@ only the one you need (§5). Each reference puts its estate facts behind a **spo
   - `gcloud` — `gcloud version`. Agent Registry and agent identity are GA in gcloud. Agent Runtime has
     no gcloud commands (`gcloud ai reasoning-engines` does not exist): use REST or the SDK.
   - `google-dev-knowledge` MCP — the docs source once it answers a real query; date your queries.
+- **AAD (Agent Anomaly Detection) findings have their own skill.** The estate is monitored, and the
+  results live in the AAD API — **not** on this workstation. There is no results file in `/config`, no
+  environment variable, nothing under `~/Desktop`: searching the filesystem for them finds nothing. When
+  the leader asks for "the AAD results", anomalies, flagged sessions or what security monitoring found,
+  load `skills/google-agents-cli-aad-findings/SKILL.md` and follow it (§5).
 - Operational gotchas: `references/m0.md` §8.
 - **"How do I…":** agents-cli and its skills → gcloud `--help` → google-dev-knowledge (dated). Confirm
   every flag with `--help`; don't guess.
@@ -75,6 +80,12 @@ A **non-technical senior IT leader** ("Head of AI Platform & Security") who thin
 Every answer to a **mission step** uses these blocks, in this order, with these headings. **The list is
 closed — never invent a heading.** An explanation belongs in `### Why this matters`; raw material (a
 command, a full output, a change record) belongs in this step's evidence file (§3g).
+
+**One exception, M1 Step 3 (See what AAD caught).** That step reports a set of independent findings
+rather than one change, so prose buries it. There, `### Why this matters` is written as **one block per
+flagged session** in the shape given in `references/m1.md` §Step 3, not as paragraphs. The headings
+around it are unchanged — the step still opens with the bold headline, still carries `### Before and
+now`, and still closes on `### Worth sitting with`.
 
 **A question that is not a mission step** — what a word means, why you did that, an aside, a follow-up on
 something already shown — gets a direct, conversational answer in a few sentences, glossed, with no
@@ -333,6 +344,15 @@ Commands, outputs, verification tables and change records go to **one plain-text
 restart and `/tmp` does not; leave nothing that matters in `/tmp`. An optional prompt or an off-script
 question you ran commands for goes in that module's `mN_other.txt`, never filed as a step.
 
+⛔ **Do not go looking for any of this — every path here is fixed.** You run from
+`/config/Desktop/Session1`; evidence lives at `/config/Desktop/novasmart-evidence/mN/`; the writer is at
+`.agents/skills/novasmart-governance-lab/scripts/write_entry.py`. A measured run wasted four commands and
+most of a minute on `git status`, two `ls -la` and a `find /config -name "*eval*"` before doing any real
+work. **Never** run an orientation command to locate the session dir, the evidence dir, the scripts or a
+scorecard, and **never read a file under `scripts/`** — every script's interface is documented here, and
+reading a 189-line writer to rediscover two flags costs more than the step it serves. `mkdir -p` the
+module's `work/` directory and write.
+
 **How an entry gets into the file — two steps, every time, no other way.**
 1. Write the entry with `write_to_file` to `/config/Desktop/novasmart-evidence/mN/work/entry_draft.txt`,
    in the shape below, with `ENTRY ?` and `Written ?` in its header.
@@ -346,6 +366,10 @@ question you ran commands for goes in that module's `mN_other.txt`, never filed 
   `<<EOF` or backticks end the wrapper and the rest **runs** — a real run started estate changes that way.
 - An output a command saved to a file goes in byte for byte: a draft line `@@OUTPUT <path>@@` (or
   `@@OUTPUT <path> lines=1-40@@`, which marks the cuts).
+- **Reference outputs, do not retype them.** Redirect a command's output to a file under the module's
+  `work/` and cite it with `@@OUTPUT`. The draft you write should be tens of lines, not hundreds — a
+  measured run hand-wrote a 400-line draft that was mostly pasted JSON, which is slow to generate, easy
+  to get wrong and no more faithful than the file it was copied from.
 - A count that did not go up by one means the file changed: **say so on screen**; never cover it with a
   fresh `ENTRY 1`.
 - The two steps are plumbing: never in COMMANDS, never counted in `### Where the proof is`. An answer that
@@ -468,7 +492,7 @@ When the leader says how they want answers — *too long*, *be brief*, *just the
   every change you made this turn, in this turn's answer.
   **One mutation at a time — never bundled, never silent.** Where a change carries a judgment call, apply
   the least-privilege option and show its blast radius next to the wider option you rejected, as a record
-  of your choice, not a request. Read-only by design: all of M0, and M1 Step 2 (the leader's judgment
+  of your choice, not a request. Read-only by design: all of M0, and M1 Steps 2 and 3 (the leader's judgment
   moment) — explain, change nothing, don't ask permission (`references/m1.md` §0).
 - **Use the current documented surface.** The catalog is Agent Registry (`gcloud agent-registry`,
   agents-cli), never the `reasoningEngines` REST surface. Exceptions: M2's `…/reasoningEngines/{id}:setIamPolicy`
@@ -545,9 +569,11 @@ Work out which mission the leader is on, then **read the matching reference and 
   running, and which login each read was signed in as — **read-only**) → `references/m0.md` (also home of
   the readiness checklist, the `PERMISSION_DENIED` ladder and the operational gotchas). **Step 7** (findings
   turned into a page) also reads `references/showcase.md` and `references/showcase-m0.md`
-- **M1 — Take Action** (fix what M0 found: register the shadow agent, split the shared login, right-size
-  access, prove it; **Step 2 is read-only**) → `references/m1.md`; Steps 3 and 5 also read
-  `references/m1-step3.md` / `references/m1-step5.md`, and Step 7 reads `references/showcase.md` and
+- **M1 — Take Action** (fix what M0 found: register the shadow agent, see what the shared login can do,
+  confirm from monitoring what actually happened, split the login, right-size access, prove it;
+  **Steps 2 and 3 are read-only**) → `references/m1.md`; **Step 3 also loads
+  `skills/google-agents-cli-aad-findings/SKILL.md`**, Steps 4 and 6 also read
+  `references/m1-step4.md` / `references/m1-step6.md`, and Step 8 reads `references/showcase.md` and
   `references/showcase-m1.md`
 - **M2 — Control the Connections** (who may call the back-office agent, then what it may reach and change
   — resource IAM, the egress gateway, BigQuery narrowing; **Step 2 is read-only**) → `references/m2.md`;
@@ -561,6 +587,14 @@ Work out which mission the leader is on, then **read the matching reference and 
   the estate is read-only) → `references/m4.md`; Steps 1, 2 and 4 also read `references/m4-step1.md` /
   `references/m4-step2.md` / `references/m4-step4.md`, and Step 5 reads `references/showcase.md` and
   `references/showcase-m4.md`
+
+**Not a mission — AAD security findings.** "Fetch me the AAD results", "what did security monitoring
+find", "any anomalies", "is anything flagged" → load `skills/google-agents-cli-aad-findings/SKILL.md`
+and follow it. It is valid at any point in any mission, and it is **read-only**: it resolves the agent's
+MonitoredAgent id and reads AnalyzedSessions over the public `v1beta1` API, and never changes AAD or the
+estate. The spoiler fence still governs what you say (§4) — report what the check returned for the step
+the leader is on, and do not let a finding name the shadow agent, the shared login or a governance gap
+ahead of the step whose own command discovers it.
 
 A reference tells you where to look, never what you will find: if one states a check's result, that is
 a fault in the reference — run the check. Confirm exact flags live (`--help` + dated docs).

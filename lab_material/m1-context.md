@@ -102,11 +102,46 @@ Least privilege means each agent gets only the access its job needs, and nothing
 
 You did not guess at that. You worked it out by comparing the job to the grant, which is exactly what this step exists to let you do. Now you can tell agy the shape you want, instead of letting it infer one.
 
-## Step 3 · Give each agent its own login
+## Step 3 · See what AAD caught
+
+Step 2 told you what the shared login *can* do. This step tells you what the agents *did* with it, and it changes nothing either.
+
+### Capability is not evidence
+
+A permissions readout is a statement about the future: this login could read every customer record. It cannot tell you whether anything actually did. The gap matters, because the two questions have different remedies. An oversized grant is fixed by resizing the grant. A caller who talks an agent into misusing access it legitimately holds is not fixed that way at all.
+
+Agent Anomaly Detection answers the second question. It is a reasoning-based oversight layer: rather than matching traffic against a list of banned patterns, it reads each session an agent handled and judges it the way a reviewer would.
+
+### What it reads
+
+It does not sit in front of your agents, and it adds no delay to them. It works from records the platform already keeps — the logs and traces each agent emits as it runs. For one session that means:
+
+- what the caller asked for, turn by turn;
+- what the agent replied;
+- which tools the agent reached for, the arguments it passed, and what came back.
+
+From those it decides whether the session looks like ordinary use or like abuse, and says why.
+
+### Reading the result
+
+Every analysed session gets a verdict, and flagged ones carry a severity and an explanation in plain English. Read the explanation before the severity: the severity tells you how much to care, the explanation tells you what happened, and the explanation is what you act on.
+
+Two things are worth noticing.
+
+- **A refusal can still be flagged.** If a caller tries to talk an agent into something it should not do and the agent declines, the attempt is still worth knowing about. Nothing was lost that time; the point is that someone tried, and may try again somewhere less well defended.
+- **Flagged does not mean breached.** It means a human should look.
+
+### Why the step sits here
+
+It is deliberately placed between seeing the oversized login and replacing it. Steps 4 and 5 are about to change the estate. Reading what actually happened first is what lets you tell, afterwards, which findings your changes addressed and which ones survived them — because some of what shows up here is an access problem the next two steps fix, and some of it is a caller problem that no permission change touches.
+
+Official documentation: [Agent Anomaly Detection overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/agent-anomalies-overview).
+
+## Step 4 · Give each agent its own login
 
 ### Identity and permissions are two different questions
 
-Identity is *who is acting*. Permissions are *what they are allowed to do*. The two get confused constantly, and keeping them apart is what makes this module work: Step 3 fixes identity, Step 4 fixes permissions, and you cannot sensibly do the second first — until each agent signs in as itself, there is no way to give one of them less access than the other.
+Identity is *who is acting*. Permissions are *what they are allowed to do*. The two get confused constantly, and keeping them apart is what makes this module work: Step 4 fixes identity, Step 5 fixes permissions, and you cannot sensibly do the second first — until each agent signs in as itself, there is no way to give one of them less access than the other.
 
 ### Only two agents are affected
 
@@ -141,7 +176,7 @@ It is worth insisting on proof, because the failure is quiet: the agent still an
 | Price Match Agent | Its own agent identity | Unchanged | Not changed in this module |
 | Markdown Strategy Agent | Its own agent identity | Unchanged | Not changed in this module |
 | Customer Personalization Agent | Shared `novasmart-customer-sa` | Its own agent identity | Read-only, customer data only |
-| Demand and Promotion Agent | Shared `novasmart-customer-sa` | Its own dedicated service account | None from the moment it moved (confirmed in Step 4) |
+| Demand and Promotion Agent | Shared `novasmart-customer-sa` | Its own dedicated service account | None from the moment it moved (confirmed in Step 5) |
 
 Price Match and Markdown Strategy still hold broad data access of their own. That is reviewed later, not here.
 
@@ -151,19 +186,19 @@ Notice what happens to the shared login itself. Only once both workloads have mo
 
 The payoff is quiet but real: from here on, every read by the two agents names exactly one of them. In M0 you had to work out who did what by hand, cross-referencing the log against the running services. That inference is now far narrower: the personalization agent is named directly, and the promo agent's login is used by nothing else.
 
-## Step 4 · Cut off what shouldn't have access
+## Step 5 · Cut off what shouldn't have access
 
 ### Why this step could not have come first
 
 In M0 the two agents shared one identity. Any permission you removed from that shared login, you removed from both. Cutting the promo agent's access would have taken the personalization agent down with it, and personalization is a legitimate service that shoppers see.
 
-Now that each agent signs in as itself, you can act on one without touching the other. That is the practical value of Step 3, and why identity precedes permissions.
+Now that each agent signs in as itself, you can act on one without touching the other. That is the practical value of Step 4, and why identity precedes permissions.
 
 ### What gets removed
 
 The promo agent has one tool, and that tool pulls customer records out of the database: names, email addresses, loyalty tiers, lifetime values. It does not read inventory data. It has no other tool. Removing its access to customer data therefore closes its own route to sensitive information.
 
-There are two ways this step can land, and both are correct. If an access path is still open, agy removes just that access, leaves the agents that genuinely need customer data alone, and shows you the before and after. If Step 3 already closed the route when it moved the agent onto its own login, there is nothing left to take away, and agy tells you that plainly rather than manufacturing a change so the step looks busy.
+There are two ways this step can land, and both are correct. If an access path is still open, agy removes just that access, leaves the agents that genuinely need customer data alone, and shows you the before and after. If Step 4 already closed the route when it moved the agent onto its own login, there is nothing left to take away, and agy tells you that plainly rather than manufacturing a change so the step looks busy.
 
 The lesson is the same either way, and it is worth stating in those terms. What matters is not that a removal happened in this particular step. What matters is that the promo agent ends the module with no route of its own to customer records, and that you can see which action closed it.
 
@@ -177,7 +212,7 @@ Be clear about what this step did and did not achieve. It did not shut the promo
 
 Say what is still open, too. The two agents that read customer data do not reach the database on their own; they go through a shared tool layer. That layer accepts calls from anyone and holds broad access of its own. It passes on the caller's own login when the caller sends one, but a caller that sends none gets the layer's broad access instead, so narrowing one agent's identity does not narrow the layer underneath. This module does not close that. Deciding who may call what is a different control; the next module applies it to the back-office agent.
 
-## Step 5 · Prove it worked
+## Step 6 · Prove it worked
 
 You have agy's word for all of this. That is not evidence. So you go back to the same access log you pulled in M0 and read it again, this time narrowed to reads of the customer records.
 
@@ -200,7 +235,7 @@ Note what is still not in the log, because it never was and never should be: the
 
 One thing in the raw log will look wrong at first glance, so it is worth knowing before you see it. The column that used to name the shared login is empty for the personalization agent's reads. That is the fix working, not a fault.
 
-The reason goes back to the two mechanisms in Step 3. The personalization agent no longer signs in with an account that has an email address. It now carries a machine identity issued by the platform and belonging to that one agent alone, so there is nothing to put in a column built for email addresses. Its name has moved to a different field of the same log entry, and that field is where the proof now lives. The promo agent is the exception, and for a reason you already know: it runs on Cloud Run and got its own dedicated service account rather than a platform-issued identity, so it still has an email address and still shows up in the familiar column.
+The reason goes back to the two mechanisms in Step 4. The personalization agent no longer signs in with an account that has an email address. It now carries a machine identity issued by the platform and belonging to that one agent alone, so there is nothing to put in a column built for email addresses. Its name has moved to a different field of the same log entry, and that field is where the proof now lives. The promo agent is the exception, and for a reason you already know: it runs on Cloud Run and got its own dedicated service account rather than a platform-issued identity, so it still has an email address and still shows up in the familiar column.
 
 Two mechanisms, two ways of being named, one outcome — every read by the two agents traces to exactly one of them. So read the blank for what it is. It is the shared account being gone, not attribution getting worse. If agy shows you only the email column, ask it for the field that carries the per-agent identity and read the proof there.
 
@@ -224,7 +259,7 @@ It also matters that this denial was triggered deliberately. An empty log proves
 - The promo agent's attempt to read customer data appears in the log as denied.
 - The personalization agent and the price-match co-pilot are still doing their jobs. For personalization, the evidence is the agent's own read in the log, not the store app's card.
 
-agy does not leave these to your eye. It writes the full check-by-check table, all 16 checks, to `m1_step5.txt` in the `novasmart-evidence` folder on your Desktop, and its answer tells you in one line how many of them it could prove. It then updates your Governance Scorecard, a web page it generates on your Desktop, and gives you the link. A FAIL names the check that did not hold and the step to go back to, so the file, not the summary, is where to look when anything is in doubt.
+agy does not leave these to your eye. It writes the full check-by-check table, all 16 checks, to `m1_step6.txt` in the `novasmart-evidence` folder on your Desktop, and its answer tells you in one line how many of them it could prove. It then updates your Governance Scorecard, a web page it generates on your Desktop, and gives you the link. A FAIL names the check that did not hold and the step to go back to, so the file, not the summary, is where to look when anything is in doubt.
 
 ## What you just did
 

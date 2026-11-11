@@ -1,4 +1,4 @@
-# M1 Step 7 · Show what you changed — the five demos
+# M1 Step 8 · Show what you changed — the five demos
 
 > Read with `showcase.md`, which holds the workflow, the build bar, the check and the answer shape. This
 > file holds Module 1's facts rules and one recipe per demo. Source: the fact sheet from
@@ -10,7 +10,7 @@ M1 changed the estate. These rules come from `m1.md` and bind every page.
 
 - **BEFORE comes from recorded reads:** Step 1's first catalog read, and Step 2's reads (each workload's
   login, the shared login's project-wide access, the customer dataset's access list). **AFTER comes from
-  the re-reads in Steps 3–5.** Never draw an AFTER the sheet does not show.
+  the re-reads in Steps 4–5.** Never draw an AFTER the sheet does not show.
 - BEFORE never calls the log "anonymous": it named the shared login, never an agent. The promo agent's
   owner and risk tier belong to AFTER: they were written in Step 1.
 - **Changes** are the `Change:` lines across the step files. Count them and say the count (the
@@ -19,13 +19,13 @@ M1 changed the estate. These rules come from `m1.md` and bind every page.
 - **Grant first, remove last:** show that order only as the times prove it — the personalization agent's
   badge reading customer data at its logged time, before the shared login's project-wide access was
   removed at its `When:` time.
-- **Step 4 as recorded** — usually *"nothing left to remove: already closed by Step 3"*, with the re-reads
-  that showed it. Never say Step 4 removed access unless its change record says so.
-- **Step 5's proof as recorded:** the personalization agent's read under its own badge (the log's email
+- **Step 5 as recorded** — usually *"nothing left to remove: already closed by Step 4"*, with the re-reads
+  that showed it. Never say Step 5 removed access unless its change record says so.
+- **Step 6's proof as recorded:** the personalization agent's read under its own badge (the log's email
   field is blank; its badge is named in another field, `principalSubject`); the promo agent's attempt
   **refused in the log** (time, its login, what it tried — *start a query job* — and the refusal); Price
   Match still answering. The promo agent's own reply ("launched", 0 records) is the app talking, not proof.
-- **The Step 5 checklist** — show its rows, the coverage line and the scorecard verdict exactly as
+- **The Step 6 checklist** — show its rows, the coverage line and the scorecard verdict exactly as
   recorded. A row evidenced from configuration only is drawn dashed: *"from configuration, not a test"*.
   A row marked `not verified` is drawn gray.
 - **Do not widen the claim.** Least privilege covers the two workloads M1 changed, as the files show them
@@ -40,8 +40,8 @@ M1 changed the estate. These rules come from `m1.md` and bind every page.
   BigQuery admin) · *run queries* · *read the customer dataset* · *read the seed files* · and so on.
 - **No customer values.** The legitimate read returned a customer record: show *"returned 1 record (values
   not shown)"*.
-- **Still open / next:** Module 2 only as M1 Step 6 says it, word for word: *who may call whom, starting
-  with who is allowed to call that back-office margin agent.* There is no Step 6 evidence file: never cite
+- **Still open / next:** Module 2 only as M1 Step 7 says it, word for word: *who may call whom, starting
+  with who is allowed to call that back-office margin agent.* There is no Step 7 evidence file: never cite
   one.
 - **Footer on every page:** *"Every change is on record with a way to undo it"* — only if every change in
   the files has an undo line; otherwise say which does not.
@@ -74,7 +74,7 @@ M1 changed the estate. These rules come from `m1.md` and bind every page.
    in another field; an alert that matches only on email would miss them.
 8. A marker: *"Least privilege — these two workloads only."* "Still open" band and footer.
 
-**Done when:** every AFTER item traces to a Step 3–5 re-read; no role names; the promo agent is shown with
+**Done when:** every AFTER item traces to a Step 4–5 re-read; no role names; the promo agent is shown with
 its own service account, not Agent Identity.
 
 ### B · Change replay — `m1_change_replay.html`
@@ -90,9 +90,9 @@ its own service account, not Agent Identity.
    timeline updates: the login moves, access appears, access disappears.
 3. **Grant first, remove last**, highlighted on the timeline with both times (§1), only if the times show
    that order.
-4. Log events inside the same window, if Step 3's or Step 5's log rows hold them: the badge's successful
+4. Log events inside the same window, if Step 4's or Step 6's log rows hold them: the badge's successful
    read, the promo agent's refusals after it moved — each labelled *from the log*.
-5. **Step 4** as a marker: what its re-reads showed and what it changed (usually nothing).
+5. **Step 5** as a marker: what its re-reads showed and what it changed (usually nothing).
 6. "Still open" band and footer.
 
 **Done when:** the card count equals the number of `Change:` lines; every time matches the sheet; no undo
@@ -111,7 +111,7 @@ command text appears.
 2. **The legitimate read**: its time, the personalization agent's own badge, the blank email field,
    *returned 1 record (values not shown)*.
 3. **Price Match still answers**, as recorded.
-4. **The checklist wall**: one tile per Step 5 checklist row — the check, then on tap how it was verified
+4. **The checklist wall**: one tile per Step 6 checklist row — the check, then on tap how it was verified
    and the result in plain words. Configuration-only rows dashed, `not verified` rows gray. The coverage
    line, verbatim. The scorecard verdict as recorded, with its `http://localhost:8088/…` link if the sheet
    shows one.
@@ -162,7 +162,7 @@ Three rounds, two to four minutes.
 4. Grant first, remove last: the timeline strip with its two times.
 5. The proof: what the app said vs what the log shows.
 6. What we can now say / what we still cannot — two columns, from the files.
-7. Still open: Module 2 as Step 6 describes it.
+7. Still open: Module 2 as Step 7 describes it.
 Speaker notes (`N`), the timer (`T`), print layout (`showcase.md` §4).
 
 **Done when:** the slides stay sparse and the notes carry the detail; every slide has a source line.

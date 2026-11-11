@@ -72,13 +72,48 @@ Don't change anything yet. What can that shared login actually do today?
 
 More background: Reference Guide tab, See what that shared login can do
 
-## Step 3 · Give each agent its own login
+## Step 3 · See what AAD caught
 
-<!-- FIGURE:K1S3 BEGIN -->
+<!-- NOTE(no-figure): this step intentionally ships without a map, so there is no
+     K1S3 figure, spec or FIGURE marker pair. Every other M1 step has one; what
+     this step would show is a read-only per-agent tally, which the console
+     screen the learner is already looking at shows better than a static
+     diagram would. If a map is ever wanted: author images/specs/K1S3.spec.json
+     in the shape of the neighbouring K1S2 / K1S4 specs (figure_id "K1S3",
+     module "M1", tab "instructions"), render it to images/K1S3_map.webp, and
+     wrap it in FIGURE:K1S3 BEGIN/END markers here. -->
 
-![Map of the NovaSmart estate, M1 Step 3: agy (1) switches the personalization agent to its own agent identity, (2) gives the promo agent a new login of its own and (3) removes the shared login's data access. The personalization agent turns green ('own identity'), the promo agent's tag reads 'cataloged · own login', and the shared login is grey, 'unused', with no agent attached.](images/K1S3_map.webp)
+**Goal:** Step 2 showed what that shared login *can* do. This step will help you find out what the agents
+actually *did*.
 
-<!-- FIGURE:K1S3 END -->
+**Agent Anomaly Detection** is Google Cloud's reasoning-based oversight layer for AI agents: it reads the
+sessions your agents actually handled and identifies behavioural anomalies and suspicious intent.
+
+When this estate was built, each agent handled a batch of simulated sessions, and some of those were
+deliberately malicious. **Agent Anomaly Detection** has been running on the platform the whole time,
+evaluating your agent behavior and identifying any suspicious execution.
+
+Ask agy:
+
+```
+Agent Anomaly Detection has been running the whole time. What did it catch?
+```
+
+**What to expect:**
+
+- Learn which agents **Agent Anomaly Detection** is enrolled for, how many sessions it analysed for each, and which ones it flagged.
+- For all sessions flagged with anomalies, the actual user-agent conversation in plain English: what the caller asked for, and what the agent did about it.
+- **Agent Anomaly Detection** evaluates each flagged session with intelligence, not just counts: it tells you what the caller asked for, why the agent's behaviour was flagged as an anomaly, and what you could do about it.
+
+More background: Reference Guide tab, See what AAD caught · [Agent Anomaly Detection overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/agent-anomalies-overview)
+
+## Step 4 · Give each agent its own login
+
+<!-- FIGURE:K1S4 BEGIN -->
+
+![Map of the NovaSmart estate, M1 Step 4: agy (1) switches the personalization agent to its own agent identity, (2) gives the promo agent a new login of its own and (3) removes the shared login's data access. The personalization agent turns green ('own identity'), the promo agent's tag reads 'cataloged · own login', and the shared login is grey, 'unused', with no agent attached.](images/K1S4_map.webp)
+
+<!-- FIGURE:K1S4 END -->
 
 **Goal:** Replace the shared, oversized login with separate identities, each scoped to its job.
 
@@ -97,13 +132,13 @@ Give each agent its own login, with only what its job needs.
 
 More background: Reference Guide tab, Give each agent its own login
 
-## Step 4 · Cut off what shouldn't have access
+## Step 5 · Cut off what shouldn't have access
 
-<!-- FIGURE:K1S4 BEGIN -->
+<!-- FIGURE:K1S5 BEGIN -->
 
-![Map of the NovaSmart estate, M1 Step 4: agy (1) checks the promo agent's login and (2) checks the customer dataset's access list. The promo agent's line to novasmart-mcp is now grey dashed with no arrowhead, so it has no route to customer data, and the box is green; the personalization agent's path through novasmart-mcp to customer data is green, 'read kept'.](images/K1S4_map.webp)
+![Map of the NovaSmart estate, M1 Step 5: agy (1) checks the promo agent's login and (2) checks the customer dataset's access list. The promo agent's line to novasmart-mcp is now grey dashed with no arrowhead, so it has no route to customer data, and the box is green; the personalization agent's path through novasmart-mcp to customer data is green, 'read kept'.](images/K1S5_map.webp)
 
-<!-- FIGURE:K1S4 END -->
+<!-- FIGURE:K1S5 END -->
 
 **Goal:** Make sure the promo agent, which writes promotional copy, has no route to customer records.
 
@@ -116,18 +151,18 @@ Marketing doesn't need our customer database. Take that access away, and leave t
 **What to expect:**
 
 - agy checks the promo agent's routes to customer data, leaving the Customer Personalization Agent and the Price Match Agent working.
-- If a path is still open, agy removes it. If Step 3 already closed it, agy says so rather than inventing a change. Either is a pass.
+- If a path is still open, agy removes it. If Step 4 already closed it, agy says so rather than inventing a change. Either is a pass.
 - The only possible change: removing access that remained, which can be undone.
 
 More background: Reference Guide tab, Cut off what shouldn't have access
 
-## Step 5 · Prove it worked
+## Step 6 · Prove it worked
 
-<!-- FIGURE:K1S5 BEGIN -->
+<!-- FIGURE:K1S6 BEGIN -->
 
-![Map of the NovaSmart estate, M1 Step 5: agy (1) sends test calls through the personalization agent and the promo agent, then (2) reads Cloud Audit Logs, which is highlighted. Two dashed outcomes end at the log: (3, green) the customer-data read recorded under the personalization agent's own identity, and (4, red) the promo agent's attempt, denied. Nothing changes.](images/K1S5_map.webp)
+![Map of the NovaSmart estate, M1 Step 6: agy (1) sends test calls through the personalization agent and the promo agent, then (2) reads Cloud Audit Logs, which is highlighted. Two dashed outcomes end at the log: (3, green) the customer-data read recorded under the personalization agent's own identity, and (4, red) the promo agent's attempt, denied. Nothing changes.](images/K1S6_map.webp)
 
-<!-- FIGURE:K1S5 END -->
+<!-- FIGURE:K1S6 END -->
 
 **Goal:** Check that the Cloud Audit Logs record you read in M0 can now say which agent read customer data.
 
@@ -142,17 +177,17 @@ Show me the customer data log again. Can you prove who did what now?
 - agy triggers a legitimate read and a promo agent attempt, checks Price Match answers, waits a few minutes for the log to catch up, then reads it.
 - Every read names exactly one agent. The personalization agent's email column is blank, as it should be; its identity is in another field.
 - The promo agent's attempt shows as denied, yet the store app reports the campaign launched with zero records: the log is the evidence, not the app.
-- agy saves the table to `m1_step5.txt` (`novasmart-evidence` folder on your Desktop), says how many of 16 checks it proved, and links your Governance Scorecard; open that link in Chrome yourself. Nothing in your environment changes.
+- agy saves the table to `m1_step6.txt` (`novasmart-evidence` folder on your Desktop), says how many of 16 checks it proved, and links your Governance Scorecard; open that link in Chrome yourself. Nothing in your environment changes.
 
 More background: Reference Guide tab, Prove it worked
 
-## Step 6 · What's next
+## Step 7 · What's next
 
-<!-- FIGURE:K1S6 BEGIN -->
+<!-- FIGURE:K1S7 BEGIN -->
 
-![Map of the NovaSmart estate, M1 Step 6: what M1 put in place is green, the promo agent cataloged on its own login with no route to customer data, the personalization agent on its own identity with its read kept, and the shared login unused. The back-office Markdown Strategy Agent is outlined in amber with its two callers, the store portal and the Price Match Agent, tagged 'M2 · its callers'.](images/K1S6_map.webp)
+![Map of the NovaSmart estate, M1 Step 7: what M1 put in place is green, the promo agent cataloged on its own login with no route to customer data, the personalization agent on its own identity with its read kept, and the shared login unused. The back-office Markdown Strategy Agent is outlined in amber with its two callers, the store portal and the Price Match Agent, tagged 'M2 · its callers'.](images/K1S7_map.webp)
 
-<!-- FIGURE:K1S6 END -->
+<!-- FIGURE:K1S7 END -->
 
 *Optional.* You can go straight to M2, or open the **What did we learn?** tab.
 
@@ -196,7 +231,7 @@ What would break if I just deleted that login?
 
 This shows you what depended on that shared login, the question worth asking before you take any access away.
 
-## Step 7 · Show what you changed
+## Step 8 · Show what you changed
 
 *Optional.* You can skip this and go to M2, or open the **What did we learn?** tab.
 

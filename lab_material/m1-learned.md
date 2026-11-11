@@ -8,7 +8,7 @@
 
 <!-- FIGURE:L1_01 BEGIN -->
 
-![The title reads: What each prompt tested. Five rows, each a white step card with a blue product chip and an arrow to a finding. 1 · Register it, Agent Registry, leads to Owned, not yet safe, in gray. 2 · See its power, IAM, leads to Can change or delete all data, in red. 3 · One login each, Agent Identity + Cloud Run, leads to Each signs in as itself, in green. 4 · Cut marketing's access, BigQuery access list, leads to Already closed in Step 3, in green. 5 · Prove it, Cloud Audit Logs, leads to Denial in the log is the proof, in green.](images/L1_01_what_each_prompt_tested.webp)
+![The title reads: What each prompt tested. Five rows, each a white step card with a blue product chip and an arrow to a finding. 1 · Register it, Agent Registry, leads to Owned, not yet safe, in gray. 2 · See its power, IAM, leads to Can change or delete all data, in red. 3 · One login each, Agent Identity + Cloud Run, leads to Each signs in as itself, in green. 4 · Cut marketing's access, BigQuery access list, leads to Already closed in Step 4, in green. 5 · Prove it, Cloud Audit Logs, leads to Denial in the log is the proof, in green.](images/L1_01_what_each_prompt_tested.webp)
 
 <!-- FIGURE:L1_01 END -->
 
@@ -16,9 +16,23 @@ In M0, two agents shared one login, a service account: a login for a program rat
 
 - **Step 1** registered the promo agent in the official catalog, Agent Registry, with marketing as owner. Visible and owned, not yet safe.
 - **Step 2** changed nothing. IAM, the system that decides who is allowed to do what, showed the shared login's power was project-wide (granted across everything in the project, not on one database): it could change or delete every table.
-- **Step 3** gave each agent its own login with only what its job needs.
-- **Step 4** asked to cut the promo (marketing) agent's access to customer data. The customer dataset's access list showed Step 3 had already closed it, and agy said so.
-- **Step 5** read the audit log, the platform's own record of who did what, which we cannot edit, and evidenced 16 of the 16 checks, one from configuration only.
+- **Step 3** changed nothing either. Agent Anomaly Detection had been reading every session these agents handled the whole time; this is where you read its verdicts, and saw which sessions it flagged and why.
+- **Step 4** gave each agent its own login with only what its job needs.
+- **Step 5** asked to cut the promo (marketing) agent's access to customer data. The customer dataset's access list showed Step 4 had already closed it, and agy said so.
+- **Step 6** read the audit log, the platform's own record of who did what, which we cannot edit, and evidenced 16 of the 16 checks, one from configuration only.
+
+## Capability, then evidence
+
+Steps 2 and 3 answer two different questions, and it is worth keeping them apart.
+
+Step 2 was about **capability**: what the shared login is allowed to do. That is a statement about what could happen. Step 3 was about **evidence**: what the agents actually did with it. Agent Anomaly Detection supplies the second answer, by reading the sessions each agent handled — the caller's requests, the agent's replies, and the tools it called — and judging each one. It reads the logs and traces the platform already keeps, so it adds no delay to the agents themselves.
+
+The distinction matters because the two have different fixes. An oversized grant is fixed by resizing it, which is what Steps 4 and 5 do. A caller who talks an agent into misusing access it genuinely needs for its job is not fixed by any permission change; what you need is to know it happened.
+
+Two things that tend to surprise people:
+
+- A session can be flagged even when the agent refused. The attempt is the finding.
+- Flagged does not mean breached. It means a human should look.
 
 ## One shared login became one each
 
@@ -56,7 +70,7 @@ In one test run on October 3, 2026 (UTC; your times will differ), agy triggered 
 
 The promo agent may not run a query, yet its app said the campaign launched, with 0 records analyzed. The log is the evidence; the app is not.
 
-Each agent's reads show its own name, and the refusal works. That does not show nobody else reads customer data: the store app's account still can. Open `/config/Desktop/novasmart-evidence/m1/m1_step5.txt` and find `bigquery.jobs.create`, the refused permission.
+Each agent's reads show its own name, and the refusal works. That does not show nobody else reads customer data: the store app's account still can. Open `/config/Desktop/novasmart-evidence/m1/m1_step6.txt` and find `bigquery.jobs.create`, the refused permission.
 
 ## Where this shows up
 
@@ -83,7 +97,7 @@ Each agent's reads show its own name, and the refusal works. That does not show 
 Step 2 was the pause: a question that only reads, before anything that writes.
 
 - **Least privilege:** giving a job only the access it needs and nothing more. The personalization agent needs to read customer records, never to change one. The promo agent needs none.
-- **Blast radius:** how far the damage reaches if this is misused or stolen. Before Step 3, the whole project for both agents; now only what each job needs.
+- **Blast radius:** how far the damage reaches if this is misused or stolen. Before Step 4, the whole project for both agents; now only what each job needs.
 
 ## Where your estate stands
 
@@ -124,5 +138,6 @@ Still open: which agents may talk to each other. The back-office Markdown Strate
 | Smallest role for the job | [BigQuery IAM roles and permissions](https://docs.cloud.google.com/bigquery/docs/access-control) · [Use IAM securely](https://docs.cloud.google.com/iam/docs/using-iam-securely) |
 | How long a change takes | [Access change propagation](https://docs.cloud.google.com/iam/docs/access-change-propagation) |
 | Who did what, and when | [Cloud Audit Logs overview](https://docs.cloud.google.com/logging/docs/audit) |
+| Watching what agents actually do | [Agent Anomaly Detection overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/agent-anomalies-overview) |
 
 For the story behind each step, see the matching Step section on the Reference Guide tab.

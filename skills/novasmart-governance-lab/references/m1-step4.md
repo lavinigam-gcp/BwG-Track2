@@ -1,11 +1,11 @@
-# M1 Step 3 — Give each agent its own login · the procedure
+# M1 Step 4 — Give each agent its own login · the procedure
 
-> Read this when the leader reaches **M1 Step 3**. `../SKILL.md` and `m1.md` still apply: commands are in
+> Read this when the leader reaches **M1 Step 4**. `../SKILL.md` and `m1.md` still apply: commands are in
 > `m1.md` §5, the allowlist and re-point rules in §6·5–§6·7, gotchas in §8. This file adds the order, the
 > evidence, the disclosure list, the picture and the close.
 >
 > ⛔ **Two identity moves, then one removal — in that order.** Every sub-step is its own say → do → re-read
-> → evidence → change record, appended to `m1/m1_step3.txt` in the order you did them. Never bundled.
+> → evidence → change record, appended to `m1/m1_step4.txt` in the order you did them. Never bundled.
 
 ## 1. The mechanism — say it this way
 
@@ -29,7 +29,7 @@ the poll to the background had its raw `<SYSTEM_MESSAGE>` completion notice show
 - **Refused or failed?** Record the response verbatim and report it in the §6·4 shape. Do not redeploy.
   Take the **fallback** in `m1.md` §5: the agent stays on the shared login, which gets project `jobUser` and
   dataset `READER` in place of `bigquery.admin` (add `READER`, confirm a read, then remove the admin role).
-  The answer says the flip failed and that this was done instead; sub-step 4 then does not apply.
+  The answer says the flip failed and that this was done instead; sub-step 5 then does not apply.
 
 **(b) Re-key — do not skip, do not defer.** The flip voids every grant the agent held through the shared
 login. Prepend `principal://` to `spec.effectiveIdentity` (never assemble it), then:
@@ -50,7 +50,7 @@ back; never add a role to make it pass.
 
 1. **Create** `promo-agent-sa` (§5). Refused (`iam.serviceAccounts.create` → `PERMISSION_DENIED`) → stop the
    split and take `m1.md` §6·7: report it blocked, name the permission, mark it `not verified`, carry on to
-   sub-step 4 and Step 4. **Never** reuse, rename or re-point an existing account — `test-agent-caller`
+   sub-step 5 and Step 5. **Never** reuse, rename or re-point an existing account — `test-agent-caller`
    least of all.
 2. **One role.** Read the seed bucket's name from the container command in the promo service's
    `describe --format=yaml` (the `gcloud storage cp gs://…/promo_agent_service.zip` line). Grant
@@ -61,7 +61,7 @@ back; never add a role to make it pass.
    login, including the project-wide `aiplatform.user` a later module counts.
 3. **Wait 60–120 s** for the grant to propagate (refused at 20 s, allowed at 90 s here).
 
-## 4. Sub-step 3 · Re-point the promo service
+## 4. Sub-step 4 · Re-point the promo service
 
 1. `gcloud run services update … --service-account=promo-agent-sa@…` (§5) — the only Cloud Run re-point M1
    permits (§6·6). It needs `actAs` on the new account, which your project-level `iam.serviceAccountUser`
@@ -72,16 +72,16 @@ back; never add a role to make it pass.
    `status.traffic` shows **100%** on it. A revision at 0% changed nothing.
 3. **Make it answer:** `curl -sS -X POST "<PROMO_URL>/run-campaign"`. Expect HTTP 200 with
    `campaign_status` in the body; `records_analyzed: 0` is the expected result now that it has no data path.
-   Record it; say nothing yet about a refusal — that is Step 5's.
+   Record it; say nothing yet about a refusal — that is Step 6's.
 4. **If the revision fails to start:** inside the first minutes after the grant it is propagation — wait,
    retry once. Still failing → open the revision's logs (`gcloud logging read` on that revision), quote what
    failed, add **the single missing role** on the narrowest resource, and disclose it as an addition beyond
    the plan. Never cite logs you did not open; never grant anything else to "fix" it.
 
 **Note:** about 15 s after the new revision boots, the container tries a customer read itself, and BigQuery
-refuses it. That entry is not Step 5's evidence; leave it for Step 5 to tell apart by time.
+refuses it. That entry is not Step 6's evidence; leave it for Step 6 to tell apart by time.
 
-## 5. Sub-step 4 · Right-size the shared login — last
+## 5. Sub-step 5 · Right-size the shared login — last
 
 Only after **both** moves are re-read — the personalization agent on its own badge with a real read behind
 it, the promo service on `promo-agent-sa` at 100% — nothing signs in as `novasmart-customer-sa`. Then:
@@ -122,14 +122,14 @@ The AFTER half exists only once you have re-read both workloads live this turn.
 - **BEFORE** (read at the start of this step): the two workloads converging on the one shared login.
 - **AFTER** (re-read just now): the personalization agent against *its own badge*, the promo agent against
   *its own new login*, and the shared login with **nobody** on it — that third statement is the finding.
-- A line on the image: *"who signs in as what — identity only, not access"*. Reach is Step 4's picture.
+- A line on the image: *"who signs in as what — identity only, not access"*. Reach is Step 5's picture.
 - Caption: both workloads' runtime identity, re-read just now.
 - Labels say whose badge it is, never the raw identity string. Price Match and Markdown Strategy are absent:
   not touched, not re-read. If the account create was blocked, show BEFORE alone and say why in one line.
 
 ## 8. Don't mislabel
 
-- Removing `bigquery.admin` from the shared login is not the promo agent's cut-off; Step 4 shows that.
+- Removing `bigquery.admin` from the shared login is not the promo agent's cut-off; Step 5 shows that.
 - The re-key is not a new privilege: it restores what the flip removed, narrowed to one dataset, read-only.
 - Never say the promo agent is "blocked" or "denied" — nothing has been refused that you caused and read.
 - Never touch Price Match, Markdown Strategy, `test-agent-caller`, `antigravity-sa` or the tool layer.

@@ -14,13 +14,13 @@ Every number here comes from one test run on October 3, 2026 (agy 1.1.19, Gemini
 
 The prompts are a leader's questions. The technique is what the skill turned them into. Module 1 changes the project, so one thing differs from Module 0: for every change, agy says what it will do, does it, re-reads the live resource, and writes a change record with the exact undo command. A change counts only once the re-read shows it.
 
-The skill adds `references/m1.md`, read whole at the first prompt, plus `m1-step3.md`, `m1-step5.md`, `showcase.md` and `showcase-m1.md`, each read only at its step. Each stays under about 44 KB so agy reads it in one call.
+The skill adds `references/m1.md`, read whole at the first prompt, plus `m1-step4.md`, `m1-step6.md`, `showcase.md` and `showcase-m1.md`, each read only at its step. Each stays under about 44 KB so agy reads it in one call.
 
 ## Does the skill know the answers? Yes.
 
 <!-- FIGURE:S1_02 BEGIN -->
 
-![When each change may happen: five columns. Step 1, Register: Agent Registry; owner on record, one entry added (green card). Step 2, Inspect: IAM and BigQuery; reports the power, changes nothing (gray card). Step 3, Separate: Agent Runtime and Cloud Run; seven changes, fixed order (green card). Step 4, Cut off: BigQuery access list; removes only what remains (gray card). Step 5, Prove: Cloud Audit Logs; proves it, changes nothing (gray card). Each card has an open padlock. A band below reads: Says only what its own re-read showed.](images/S1_02_when_each_change_may_happen.webp)
+![When each change may happen: five columns. Step 1, Register: Agent Registry; owner on record, one entry added (green card). Step 2, Inspect: IAM and BigQuery; reports the power, changes nothing (gray card). Step 4, Separate: Agent Runtime and Cloud Run; seven changes, fixed order (green card). Step 5, Cut off: BigQuery access list; removes only what remains (gray card). Step 6, Prove: Cloud Audit Logs; proves it, changes nothing (gray card). Each card has an open padlock. A band below reads: Says only what its own re-read showed.](images/S1_02_when_each_change_may_happen.webp)
 
 <!-- FIGURE:S1_02 END -->
 
@@ -35,11 +35,11 @@ The skill adds `references/m1.md`, read whole at the first prompt, plus `m1-step
 
 <!-- FIGURE:S1_03 BEGIN -->
 
-![Six prompted steps, one skill: six blue cards: Step 1, Agent Registry; Step 2, IAM + BigQuery; Step 3, Agent Runtime + Cloud Run; Step 4, BigQuery access list; Step 5, Cloud Audit Logs; Step 7, evidence files only. A bar across all six reads SKILL.md + references/m1.md. Extra files sit under three steps: m1-step3.md under Step 3, m1-step5.md under Step 5, showcase.md under Step 7. A second bar reads: Each step saves m1_stepN.txt. A Scorecard pill sits under Step 5.](images/S1_03_prompts_to_skill_map.webp)
+![Six prompted steps, one skill: six blue cards: Step 1, Agent Registry; Step 2, IAM + BigQuery; Step 4, Agent Runtime + Cloud Run; Step 5, BigQuery access list; Step 6, Cloud Audit Logs; Step 8, evidence files only. A bar across all six reads SKILL.md + references/m1.md. Extra files sit under three steps: m1-step4.md under Step 4, m1-step6.md under Step 6, showcase.md under Step 8. A second bar reads: Each step saves m1_stepN.txt. A Scorecard pill sits under Step 6.](images/S1_03_prompts_to_skill_map.webp)
 
 <!-- FIGURE:S1_03 END -->
 
-Step 6 · What's next has no prompt. Commands below come from the COMMANDS sections of the evidence files in `/config/Desktop/novasmart-evidence/m1/`.
+Step 7 · What's next has no prompt. Commands below come from the COMMANDS sections of the evidence files in `/config/Desktop/novasmart-evidence/m1/`.
 
 ### Step 1 · Register the shadow agent
 
@@ -82,22 +82,22 @@ bq show --format=prettyjson "<PROJECT>:customer_data"
 
 **Why it matters:** the step stops at the question, so the leader judges the over-reach before anything changes.
 
-### Step 3 · Give each agent its own login
+### Step 4 · Give each agent its own login
 
 > "Give each agent its own login, with only what its job needs."
 
 | | |
 |---|---|
-| Skill read | `m1-step3.md` |
+| Skill read | `m1-step4.md` |
 | What it required | Seven changes in a fixed order, each re-read and recorded with its undo |
 | Google Cloud | Agent Runtime, IAM, BigQuery, Cloud Storage, Cloud Run |
 | Guardrail | Roles only for the three named logins; nothing for agy's own login; keep every entry when rewriting the dataset's list |
-| Saved | `m1_step3.txt`, seven change records |
+| Saved | `m1_step4.txt`, seven change records |
 | agy answered | "Each agent now signs in under its own distinct identity with access scoped strictly to its operational needs, and the shared login has been vacated." |
 
 <!-- FIGURE:S1_04 BEGIN -->
 
-![Step 3: the order the skill requires. Six boxes joined by arrows: flip to Agent Identity; grant query + read; show one real read (a gray box, a check rather than a change); new login, one role; point promo at it; remove admin last. An amber band reads: Each change: say, do, re-read, record undo. A red band reads: No self-grant, even after a refusal.](images/S1_04_step3_flowchart.webp)
+![Step 4: the order the skill requires. Six boxes joined by arrows: flip to Agent Identity; grant query + read; show one real read (a gray box, a check rather than a change); new login, one role; point promo at it; remove admin last. An amber band reads: Each change: say, do, re-read, record undo. A red band reads: No self-grant, even after a refusal.](images/S1_04_step3_flowchart.webp)
 
 <!-- FIGURE:S1_04 END -->
 
@@ -124,7 +124,7 @@ gcloud projects remove-iam-policy-binding <PROJECT> --member="serviceAccount:nov
 
 **Why it matters:** the flip removes everything the agent inherited, so its badge gets query and read access before anything is taken away. Removing the admin role first would have cut the personalization agent off from customer data.
 
-### Step 4 · Cut off what shouldn't have access
+### Step 5 · Cut off what shouldn't have access
 
 > "Marketing doesn't need our customer database. Take that access away, and leave the others working."
 
@@ -134,26 +134,26 @@ gcloud projects remove-iam-policy-binding <PROJECT> --member="serviceAccount:nov
 | What it required | Re-read both logins' roles and every dataset entry; remove only access that still exists |
 | Google Cloud | IAM, BigQuery (read) |
 | Guardrail | No removal that removes nothing; a setting alone does not prove a refusal |
-| Saved | `m1_step4.txt`, nothing changed |
+| Saved | `m1_step5.txt`, nothing changed |
 | agy answered | "The promo agent now has zero access to the customer database, while the personalization agent's read-only path remains fully operational." |
 
 ```bash
 gcloud projects get-iam-policy <PROJECT> --flatten="bindings[].members" --filter="bindings.members:promo-agent-sa" --format="table(bindings.role)"
 ```
 
-**Why it matters:** Step 3 had already closed the route; saying so with the re-reads is a pass.
+**Why it matters:** Step 4 had already closed the route; saying so with the re-reads is a pass.
 
-### Step 5 · Prove it worked
+### Step 6 · Prove it worked
 
 > "Show me the customer data log again. Can you prove who did what now?"
 
 | | |
 |---|---|
-| Skill read | `m1-step5.md` |
+| Skill read | `m1-step6.md` |
 | What it required | Trigger a real read and a promo attempt, check Price Match still answers, wait for the log, run both log queries, fill the 16-check table, update the scorecard |
 | Google Cloud | Agent Runtime, Cloud Run, Cloud Audit Logs |
-| Guardrail | Change nothing; claim nothing the file doesn't show; don't reuse the denial logged when the promo service restarted in Step 3 |
-| Saved | `m1_step5.txt` with the 16-check table; the scorecard |
+| Guardrail | Change nothing; claim nothing the file doesn't show; don't reuse the denial logged when the promo service restarted in Step 4 |
+| Saved | `m1_step6.txt` with the 16-check table; the scorecard |
 | agy answered | "The audit log now proves that every successful customer read is individually attributable to the personalization agent's own badge, while attempts by the promo agent are actively denied." |
 
 ```bash
@@ -166,7 +166,7 @@ The read at 19:23:22 UTC has a blank `principalEmail` and the badge in `principa
 
 **Why it matters:** the denial is the proof; the app's reply is not.
 
-### Step 7 · Show what you changed
+### Step 8 · Show what you changed
 
 > "Build me a before-and-after map of how each agent got its own login." Or any of four more Show prompts, in any order.
 
@@ -176,7 +176,7 @@ The read at 19:23:22 UTC has a blank `principalEmail` and the badge in `principa
 | What it required | Run `scripts/show_facts.py 1 <demo>`, which prints the fact sheet and that page's recipe; build only from the sheet; run `scripts/show_check.py` until clean (a poster is checked as one by itself); open the screenshots; then run `scripts/show_record.py`, which writes the evidence entry from a log of every run, failed checks included |
 | Google Cloud | None |
 | Guardrail | No change; no identifiers, project ID, email address or customer value on the page |
-| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m1_identity_map.html`; one entry per page in `m1_step7.txt` |
+| Saved | One page per prompt in `/config/Desktop/novasmart-showcase/`, such as `m1_identity_map.html`; one entry per page in `m1_step8.txt` |
 
 **Why it matters:** an evidence file can be too long to re-read in one command, so the fact sheet copies the latest entry of each step with its line numbers, and the check renders the page so agy looks at it before answering. In a later run on October 5, agy built all five pages, 27 to 44 KB each, and each passed the check as it stood then.
 
@@ -203,19 +203,19 @@ Each item was checked against the capture of the October 3 run.
 | What slipped | Lesson |
 |---|---|
 | Customer names reached the screen in Steps 1, 3 and 5. Step 1 also called the promo campaign endpoint, a customer read it did not need. | A check for emails and paths misses personal data. Test it on real replies. |
-| Step 5 said it waited 3 minutes; its first log query ran 23 seconds after the promo trigger (19:23:38 to 19:24:01). | A stated wait is a claim too. Check the timestamps. |
-| `update_scorecard.py` ran but is not in `m1_step5.txt`. | Required evidence still slips. |
-| Step 5 said "zero ambiguity". An optional answer said only the badge can read customer data now, against its own six-entry access list. | Overclaims survive a correct procedure. Read the raw list. |
-| Step 2 used an old product name for Agent Runtime; Step 3 pointed to "today's one change" after seven. | Wording rules and template phrases slip under load. |
+| Step 6 said it waited 3 minutes; its first log query ran 23 seconds after the promo trigger (19:23:38 to 19:24:01). | A stated wait is a claim too. Check the timestamps. |
+| `update_scorecard.py` ran but is not in `m1_step6.txt`. | Required evidence still slips. |
+| Step 6 said "zero ambiguity". An optional answer said only the badge can read customer data now, against its own six-entry access list. | Overclaims survive a correct procedure. Read the raw list. |
+| Step 2 used an old product name for Agent Runtime; Step 4 pointed to "today's one change" after seven. | Wording rules and template phrases slip under load. |
 
 ## Use this at your company
 
 | Situation | What you reuse | Basis |
 |---|---|---|
-| Two apps share one service account | One workload, one login, each with only the role its job needs | Grounded: Step 3, [service account best practices](https://docs.cloud.google.com/iam/docs/best-practices-service-accounts) |
-| An agent on Agent Runtime needs data | Agent Identity: no account to create, no key to leak; grant its badge the data role on the dataset | Grounded: Step 3, [Agent Identity overview](https://docs.cloud.google.com/iam/docs/agent-identity-overview) |
-| Retiring a broad role without an outage | Grant the replacement, show it working, then remove; IAM changes can take several minutes to apply | Grounded: Step 3, [Access change propagation](https://docs.cloud.google.com/iam/docs/access-change-propagation) |
-| Alerts on who read sensitive data | Match `principalSubject` as well as `principalEmail`: an Agent Identity read leaves the email blank, so email-only rules miss it | Grounded: Step 5 |
+| Two apps share one service account | One workload, one login, each with only the role its job needs | Grounded: Step 4, [service account best practices](https://docs.cloud.google.com/iam/docs/best-practices-service-accounts) |
+| An agent on Agent Runtime needs data | Agent Identity: no account to create, no key to leak; grant its badge the data role on the dataset | Grounded: Step 4, [Agent Identity overview](https://docs.cloud.google.com/iam/docs/agent-identity-overview) |
+| Retiring a broad role without an outage | Grant the replacement, show it working, then remove; IAM changes can take several minutes to apply | Grounded: Step 4, [Access change propagation](https://docs.cloud.google.com/iam/docs/access-change-propagation) |
+| Alerts on who read sensitive data | Match `principalSubject` as well as `principalEmail`: an Agent Identity read leaves the email blank, so email-only rules miss it | Grounded: Step 6 |
 
 ## Do it yourself
 
@@ -269,11 +269,11 @@ Each item was checked against the capture of the October 3 run.
 agy -p "What can that shared login actually do today?" --output-format stream-json > step2.ndjson
 ```
 
-**Check the log first.** Before you rely on the Step 5 proof, make one read yourself and confirm the Step 5 query returns it. Some BigQuery Data Access logs are on by default; most services need them [turned on](https://docs.cloud.google.com/logging/docs/audit/configure-data-access).
+**Check the log first.** Before you rely on the Step 6 proof, make one read yourself and confirm the Step 6 query returns it. Some BigQuery Data Access logs are on by default; most services need them [turned on](https://docs.cloud.google.com/logging/docs/audit/configure-data-access).
 
 <!-- FIGURE:S1_07 BEGIN -->
 
-![What to take from this skill. A blue panel, Reusable anywhere: read before you write; one change, then re-read; every change has an undo; grant first, remove last; prove it with a triggered denial; never grant yourself a role. A gray panel, NovaSmart only: NovaSmart names and seed bucket; the 16-check list; Step 7 show formats.](images/S1_07_reusable_vs_novasmart.webp)
+![What to take from this skill. A blue panel, Reusable anywhere: read before you write; one change, then re-read; every change has an undo; grant first, remove last; prove it with a triggered denial; never grant yourself a role. A gray panel, NovaSmart only: NovaSmart names and seed bucket; the 16-check list; Step 8 show formats.](images/S1_07_reusable_vs_novasmart.webp)
 
 <!-- FIGURE:S1_07 END -->
 
@@ -291,7 +291,7 @@ A starting `SKILL.md` addition, not a finished one:
    from the audit log. Configuration alone is not proof.
 ```
 
-In the lab, open `m1_step3.txt` and read the seven change records in order, then `m1_step5.txt` for the 16-check table. Compare them with `m1-step3.md`.
+In the lab, open `m1_step4.txt` and read the seven change records in order, then `m1_step6.txt` for the 16-check table. Compare them with `m1-step4.md`.
 
 ## Read more
 
